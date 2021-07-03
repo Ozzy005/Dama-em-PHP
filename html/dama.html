@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <title>Dama em PHP</title>
+        <link rel="stylesheet" type="text/css" href="../css/reset.css">
+        <link rel="stylesheet" type="text/css" href="../css/dama.css">
+    </head>
+    <body>
+        <div class='main'>
+
+            <div class='controle' >
+
+                <div class='controle-sub'>
+                    <form method='post' action='#'>
+                        <label for='input-peca'>PEÇA</label>
+                        <input id='input-peca' name='input-peca' type='text'/>
+
+                        <label for='input-casa'>CASA</label>
+                        <input id='input-casa' name='input-casa' type='text'>
+
+                        <button name='acao' type='submit' value='mover'>MOVER</button>
+                        <button name='acao' type='submit' value='reset'>RESET</button>
+                    </form>
+                </div>
+
+                <div class='msgerror'>
+                    {msgerror}
+                </div>
+
+            </div>
+
+            <div class='tabuleiro'>
+
+                <div class='line line8'>
+                    <div class='casa-referencia casa line8-casa0'><span>8</span></div>
+                    {line8-casaA}
+                    {line8-casaB}
+                    {line8-casaC}
+                    {line8-casaD}
+                    {line8-casaE}
+                    {line8-casaF}
+                    {line8-casaG}
+                    {line8-casaH}
+                </div>
+
+                <div class='line line7'>
+                    <div class='casa-referencia casa line7-casa0'><span>7</span></div>
+                    {line7-casaA}
+                    {line7-casaB}
+                    {line7-casaC}
+                    {line7-casaD}
+                    {line7-casaE}
+                    {line7-casaF}
+                    {line7-casaG}
+                    {line7-casaH}
+                </div>
+
+                <div class='line line6'>
+                    <div class='casa-referencia casa line6-casa0'><span>6</span></div>
+                    {line6-casaA}
+                    {line6-casaB}
+                    {line6-casaC}
+                    {line6-casaD}
+                    {line6-casaE}
+                    {line6-casaF}
+                    {line6-casaG}
+                    {line6-casaH}
+                </div>
+
+                <div class='line line5'>
+                    <div class='casa-referencia casa line5-casa0'><span>5</span></div>
+                    {line5-casaA}
+                    {line5-casaB}
+                    {line5-casaC}
+                    {line5-casaD}
+                    {line5-casaE}
+                    {line5-casaF}
+                    {line5-casaG}
+                    {line5-casaH}
+                </div>
+
+                <div class='line line4'>
+                    <div class='casa-referencia casa line4-casa0'><span>4</span></div>
+                    {line4-casaA}
+                    {line4-casaB}
+                    {line4-casaC}
+                    {line4-casaD}
+                    {line4-casaE}
+                    {line4-casaF}
+                    {line4-casaG}
+                    {line4-casaH}
+                </div>
+
+                <div class='line line3'>
+                    <div class='casa-referencia casa line3-casa0'><span>3</span></div>
+                    {line3-casaA}
+                    {line3-casaB}
+                    {line3-casaC}
+                    {line3-casaD}
+                    {line3-casaE}
+                    {line3-casaF}
+                    {line3-casaG}
+                    {line3-casaH}
+                </div>
+
+                <div class='line line2'>
+                    <div class='casa-referencia casa line2-casa0'><span>2</span></div>
+                    {line2-casaA}
+                    {line2-casaB}
+                    {line2-casaC}
+                    {line2-casaD}
+                    {line2-casaE}
+                    {line2-casaF}
+                    {line2-casaG}
+                    {line2-casaH}
+                </div>
+
+                <div class='line line1'>
+                    <div class='casa-referencia casa line1-casa0'><span>1</span></div>
+                    {line1-casaA}
+                    {line1-casaB}
+                    {line1-casaC}
+                    {line1-casaD}
+                    {line1-casaE}
+                    {line1-casaF}
+                    {line1-casaG}
+                    {line1-casaH}
+                </div>
+
+                <div class='line line0'>
+                    <div class='casa-referencia casa line0-casa0'><span>0</span></div>
+                    <div class='casa-referencia casa line0-casaA'><span>A</span></div>
+                    <div class='casa-referencia casa line0-casaB'><span>B</span></div>
+                    <div class='casa-referencia casa line0-casaC'><span>C</span></div>
+                    <div class='casa-referencia casa line0-casaD'><span>D</span></div>
+                    <div class='casa-referencia casa line0-casaE'><span>E</span></div>
+                    <div class='casa-referencia casa line0-casaF'><span>F</span></div>
+                    <div class='casa-referencia casa line0-casaG'><span>G</span></div>
+                    <div class='casa-referencia casa line0-casaH'><span>H</span></div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            let pecas = document.querySelectorAll(".peca");
+            let casas = document.querySelectorAll(".casa");
+
+            let idPecaAtual = null;
+            let idCasaAtual = null;
+
+            for(let i = 0 ; i < pecas.length ; i++)
+            {
+                pecas[i].addEventListener('click',function()
+                {
+                    //se elemento atual for diferente de null
+                    if(idPecaAtual != null)
+                    {
+                        //seleciona o elemento atual e zera o estilo
+                        let pecaAtual = document.getElementById(idPecaAtual);
+                        pecaAtual.style.zIndex = "auto";
+                        pecaAtual.style.outline = "0";
+                        pecaAtual.style.boxShadow = "none";
+
+                        idPecaAtual = null;
+                    }
+
+                    let idPecaNova = pecas[i].getAttribute('id');
+                    let inputPeca = document.querySelector('#input-peca');
+
+                    inputPeca.value = idPecaNova;
+
+                    if(inputPeca.value == idPecaNova && idPecaAtual == null)
+                    {
+                        let pecaNova = document.getElementById(idPecaNova);
+
+                        idPecaAtual = idPecaNova;
+
+                        pecaNova.style.zIndex = "1";
+                        pecaNova.style.outline = "3px solid #ff0000";
+                        pecaNova.style.boxShadow = "0px 0px 5px 5px #ff0000";
+
+                    }
+                });
+            }
+
+            for(let i = 0 ; i < casas.length ; i++)
+            {
+                casas[i].addEventListener('click',function()
+                {
+                    //verifica se o elemento não possue nodes filhos
+                    if(casas[i].childNodes.length === 0)
+                    {
+
+                        if(idCasaAtual != null)
+                        {
+                            let casaAtual = document.getElementById(idCasaAtual);
+                            casaAtual.style.zIndex = "auto";
+                            casaAtual.style.outline = "0";
+                            casaAtual.style.boxShadow = "none";
+
+                            idCasaAtual = null;
+                        }
+
+                        //pega o valor do id do elemento clicado
+                        let idCasaNova = casas[i].getAttribute('id');
+
+                        //seleciona o input casa
+                        let inputCasa = document.querySelector('#input-casa');
+
+                        inputCasa.value = idCasaNova;
+
+                        //verifica se o valor do input é igual o valor do elemento clicado
+                        if(inputCasa.value == idCasaNova && idCasaAtual == null)
+                        {
+                            let casaNova = document.getElementById(idCasaNova);
+
+                            idCasaAtual = idCasaNova;
+
+                            casaNova.style.zIndex = "1";
+                            casaNova.style.outline = "3px solid #ff0000";
+                            casaNova.style.boxShadow = "0px 0px 5px 5px #ff0000";
+                        }
+                    }
+                });
+            }
+
+        </script>
+
+    </body>
+</html>
