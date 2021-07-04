@@ -2,10 +2,12 @@
 
 > Status do Projeto: Em desenvolvimento :warning:
 
+---
 O jogo de damas é praticado em um tabuleiro de 64 casas, claras e escuras. A grande diagonal (escura), deve ficar sempre à esquerda de cada jogador. O objetivo do jogo é imobilizar ou capturar todas as peças do adversário.
 
 <img src="img/png1.png"/>
 
+---
 O jogo de damas é praticado entre dois parceiros, com 12 pedras brancas de um lado e com 12 pedras pretas de outro lado.
 O lance inicial cabe sempre a quem estiver com as peças brancas.
 
