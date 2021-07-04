@@ -2,42 +2,65 @@
 
 > Status do Projeto: Em desenvolvimento :warning:
 
+## 1
 O jogo de damas é praticado em um tabuleiro de 64 casas, claras e escuras. A grande diagonal (escura), deve ficar sempre à esquerda de cada jogador. O objetivo do jogo é imobilizar ou capturar todas as peças do adversário.
+
 <img src="img/png1.png"/>
 
+## 2
 O jogo de damas é praticado entre dois parceiros, com 12 pedras brancas de um lado e com 12 pedras pretas de outro lado.
 O lance inicial cabe sempre a quem estiver com as peças brancas.
+
 <img src="img/png2.png"/>
 
+## 3
 A pedra anda só para frente, uma casa de cada vez. Quando a pedra atinge a oitava linha do tabuleiro ela é promovida à dama.
+
 <img src="img/png3.png"/>
 
+## 4
 A dama é uma peça de movimentos mais amplos. Ela anda para frente e para trás, quantas casas quiser. A dama não pode saltar uma peça da mesma cor.
+
 <img src="img/png4.png"/>
 
+## 5
 A captura é obrigatória.
 Não existe sopro.
 Duas ou mais peças juntas, na mesma diagonal, não podem ser capturadas.
+
 <img src="img/png5.png"/>
 
+## 6
 A pedra captura a dama e a dama captura a pedra. Pedra e dama têm o mesmo valor para capturarem ou serem capturadas.
+
 <img src="img/png6.png"/>
 
+## 7
 A pedra e a dama podem capturar tanto para frente como para trás, uma ou mais peças
+
 <img src="img/png7.png"/>
 
+## 8
 Se no mesmo lance se apresentar mais de um modo de capturar, é obrigatório executar o lance que capture o maior número de peças (Lei da Maioria).
+
 <img src="img/png8.png"/>
 
+## 9
 A pedra que durante o lance de captura de várias peças, apenas passe por qualquer casa de coroação, sem aí parar, não será promovida à dama.
+
 <img src="img/png9.png"/>
 
+## 10
 Na execução do lance do lance de captura, é permitido passar mais de uma vez pela mesma casa vazia, não é permitido capturar duas vezes a mesma peça.
-<img src="img/png1.png0"/>
 
+<img src="img/png10.png"/>
+
+## 11
 Na execução do lance de captura, não é permitido capturar a mesma peça mais de uma vez e as peças capturadas não podem ser retiradas do tabuleiro antes de completar o lance de captura.
-<img src="img/png1.png1"/>
 
+<img src="img/png11.png"/>
+
+## 12
 Empate:
 Após 20 lances sucessivos de damas, sem captura ou deslocamento de pedra, a partida é declarada empatada.
 Finais de:
