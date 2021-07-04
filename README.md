@@ -13,44 +13,54 @@ O lance inicial cabe sempre a quem estiver com as peças brancas.
 
 <img src="img/png2.png"/>
 
+---
 A pedra anda só para frente, uma casa de cada vez. Quando a pedra atinge a oitava linha do tabuleiro ela é promovida à dama.
 
 <img src="img/png3.png"/>
 
+---
 A dama é uma peça de movimentos mais amplos. Ela anda para frente e para trás, quantas casas quiser. A dama não pode saltar uma peça da mesma cor.
 
 <img src="img/png4.png"/>
 
+---
 A captura é obrigatória.
 Não existe sopro.
 Duas ou mais peças juntas, na mesma diagonal, não podem ser capturadas.
 
 <img src="img/png5.png"/>
 
+---
 A pedra captura a dama e a dama captura a pedra. Pedra e dama têm o mesmo valor para capturarem ou serem capturadas.
 
 <img src="img/png6.png"/>
 
+---
 A pedra e a dama podem capturar tanto para frente como para trás, uma ou mais peças
 
 <img src="img/png7.png"/>
 
+---
 Se no mesmo lance se apresentar mais de um modo de capturar, é obrigatório executar o lance que capture o maior número de peças (Lei da Maioria).
 
 <img src="img/png8.png"/>
 
+---
 A pedra que durante o lance de captura de várias peças, apenas passe por qualquer casa de coroação, sem aí parar, não será promovida à dama.
 
 <img src="img/png9.png"/>
 
+---
 Na execução do do lance de captura, é permitido passar mais de uma vez pela mesma casa vazia, não é permitido capturar duas vezes a mesma peça.
 
 <img src="img/png10.png"/>
 
+---
 Na execução do lance de captura, não é permitido capturar a mesma peça mais de uma vez e as peças capturadas não podem ser retiradas do tabuleiro antes de completar o lance de captura.
 
 <img src="img/png11.png"/>
 
+---
 Empate:
 Após 20 lances sucessivos de damas, sem captura ou deslocamento de peça, a partida é declarada empatada.
 Finais de:
