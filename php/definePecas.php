@@ -10,33 +10,33 @@
 function definePecas()
 {
     define("PECAS_BRANCAS", [
-        1 => 'PECA-BRANCA-1',
-        2 => 'PECA-BRANCA-2',
-        3 => 'PECA-BRANCA-3',
-        4 => 'PECA-BRANCA-4',
-        5 => 'PECA-BRANCA-5',
-        6 => 'PECA-BRANCA-6',
-        7 => 'PECA-BRANCA-7',
-        8 => 'PECA-BRANCA-8',
-        9 => 'PECA-BRANCA-9',
-        10 => 'PECA-BRANCA-10',
-        11 => 'PECA-BRANCA-11',
-        12 => 'PECA-BRANCA-12'
+        1 => 'peca-branca-1',
+        2 => 'peca-branca-2',
+        3 => 'peca-branca-3',
+        4 => 'peca-branca-4',
+        5 => 'peca-branca-5',
+        6 => 'peca-branca-6',
+        7 => 'peca-branca-7',
+        8 => 'peca-branca-8',
+        9 => 'peca-branca-9',
+        10 => 'peca-branca-10',
+        11 => 'peca-branca-11',
+        12 => 'peca-branca-12'
     ]);
 
     define("PECAS_PRETAS",[
-        1 => 'PECA-PRETA-1',
-        2 => 'PECA-PRETA-2',
-        3 => 'PECA-PRETA-3',
-        4 => 'PECA-PRETA-4',
-        5 => 'PECA-PRETA-5',
-        6 => 'PECA-PRETA-6',
-        7 => 'PECA-PRETA-7',
-        8 => 'PECA-PRETA-8',
-        9 => 'PECA-PRETA-9',
-        10 => 'PECA-PRETA-10',
-        11 => 'PECA-PRETA-11',
-        12 => 'PECA-PRETA-12'
+        1 => 'peca-preta-1',
+        2 => 'peca-preta-2',
+        3 => 'peca-preta-3',
+        4 => 'peca-preta-4',
+        5 => 'peca-preta-5',
+        6 => 'peca-preta-6',
+        7 => 'peca-preta-7',
+        8 => 'peca-preta-8',
+        9 => 'peca-preta-9',
+        10 => 'peca-preta-10',
+        11 => 'peca-preta-11',
+        12 => 'peca-preta-12'
     ]);
 }
 ?>

@@ -8,9 +8,9 @@
 
 function Jogo()
 {
-    $acao = isset($_POST['acao']) ? strtoupper($_POST['acao']) : null;
+    $acao = isset($_POST['acao']) ? $_POST['acao'] : null;
 
-    if($acao == 'RESET')
+    if($acao == 'reset')
     {
         $_SESSION = array();
         startJogo();
@@ -18,13 +18,14 @@ function Jogo()
         exit();
     }
 
-    $peca = isset($_POST['input-peca']) ? strtoupper($_POST['input-peca']) : null;
-    $casa = isset($_POST['input-casa']) ? strtoupper($_POST['input-casa']) : null;
-    $peca_escolhida = isset($_SESSION['peca-escolhida']) ? strtoupper($_SESSION['peca-escolhida']) : null;
+    $peca = isset($_POST['input-peca']) ? $_POST['input-peca'] : null;
+    $casa = isset($_POST['input-casa']) ? $_POST['input-casa'] : null;
+    $peca_escolhida = isset($_SESSION['peca-escolhida']) ? $_SESSION['peca-escolhida'] : null;
 
     definePecas();
     $replace = defineReplace();
 
+    //se session tabuleiro não estiver definido significa que é o primeiro turno
     if(!isset($_SESSION['tabuleiro']))
     {
         $turnoInicial = true;
@@ -32,12 +33,12 @@ function Jogo()
         $tabuleiro = organizaTabuleiro($tabuleiro,$peca_escolhida);
     }
 
+    //se session tabuleiro estiver definido significa que é o segundo turno em diante
     if(isset($_SESSION['tabuleiro']))
     {
         $turnoInicial = (!isset($turnoInicial)) ? true : false;
         $tabuleiro = $_SESSION['tabuleiro'];
     }
-
 
     $returnMoverPeca = moverPeca($acao,$peca,$casa,$tabuleiro,$turnoInicial);
     $tabuleiro = $returnMoverPeca['tabuleiro'];
@@ -49,16 +50,12 @@ function Jogo()
     {
         foreach($linevalue as $casakey => $casavalue)
         {
-
-            $casakey = strtolower($casakey);
-            $casavalue = strtolower($casavalue);
-
             $casakeyparts = explode("-",$casakey);
             $casavalueparts = explode("-",$casavalue);
 
             $tag = "<div type='text' class='{$casakeyparts[0]} {$casakeyparts[0]}-{$casakeyparts[2]}' id='$casakey'>";
 
-            if($casavalue != NULL)
+            if($casavalue != null)
             {
 
                 $tag .= "<div class='{$casavalueparts[0]} {$casavalueparts[0]}-{$casavalueparts[1]}' id='$casavalue'></div>";

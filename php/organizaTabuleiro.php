@@ -18,27 +18,27 @@ function organizaTabuleiro($tabuleiro,$peca_escolhida)
         {
             $casacor = explode('-',$casakey);
 
-            if($peca_escolhida == 'PRETAS')
+            if($peca_escolhida == 'pretas')
             {
-                if($casacor[2] == 'PRETA' && $linekey >= 1 && $linekey <= 3)
+                if($casacor[2] == 'preta' && $linekey >= 1 && $linekey <= 3)
                 {
                     $tabuleiro[$linekey][$casakey] = PECAS_PRETAS[$start_end];
                     $start_end++;
                 }
-                if($casacor[2] == 'PRETA' && $linekey >= 6 && $linekey <= 8)
+                if($casacor[2] == 'preta' && $linekey >= 6 && $linekey <= 8)
                 {
                     $tabuleiro[$linekey][$casakey] = PECAS_BRANCAS[$end_start];
                     $end_start--;
                 }
             }
-            if($peca_escolhida == 'BRANCAS')
+            if($peca_escolhida == 'brancas')
             {
-                if($casacor[2] == 'PRETA' && $linekey >= 1 && $linekey <= 3)
+                if($casacor[2] == 'preta' && $linekey >= 1 && $linekey <= 3)
                 {
                     $tabuleiro[$linekey][$casakey] = PECAS_BRANCAS[$start_end];
                     $start_end++;
                 }
-                if($casacor[2] == 'PRETA' && $linekey >= 6 && $linekey <= 8)
+                if($casacor[2] == 'preta' && $linekey >= 6 && $linekey <= 8)
                 {
                     $tabuleiro[$linekey][$casakey] = PECAS_PRETAS[$end_start];
                     $end_start--;
