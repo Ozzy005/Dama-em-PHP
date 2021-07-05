@@ -27,16 +27,19 @@ function Jogo()
 
     if(!isset($_SESSION['tabuleiro']))
     {
+        $turnoInicial = true;
         $tabuleiro = defineTabuleiro();
         $tabuleiro = organizaTabuleiro($tabuleiro,$peca_escolhida);
     }
 
     if(isset($_SESSION['tabuleiro']))
     {
+        $turnoInicial = (!isset($turnoInicial)) ? true : false;
         $tabuleiro = $_SESSION['tabuleiro'];
     }
 
-    $returnMoverPeca = moverPeca($acao,$peca,$casa,$tabuleiro);
+
+    $returnMoverPeca = moverPeca($acao,$peca,$casa,$tabuleiro,$turnoInicial);
     $tabuleiro = $returnMoverPeca['tabuleiro'];
     $msgerror = $returnMoverPeca['msgerror'];
 

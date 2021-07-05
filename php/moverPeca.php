@@ -7,56 +7,79 @@
  **/
 
  //função responsável por mover a peça no tabuleiro
-function moverPeca($acao,$peca,$casa,$tabuleiro)
+function moverPeca($acao,$peca,$casa,$tabuleiro,$turnoInicial)
 {
+    $lanceInicial = 'BRANCAS'; // ainda não utilizado
+    $jogadasPorTurno = 1; // ainda não utilizado
+    $vezDeJogar = ''; // ainda não utilizado
+
     if($acao == 'MOVER' && $peca != null && $casa != null)
     {
-        //divide a string (CASA-IDENTIFICAÇÃO-COR) em 3 partes
-        $casaparts = explode('-',$casa);
+        //tratamento de valores inválidos recebidos via input do formulário
+        $casaExplode = explode('-',$casa);
+        $pecaExplode = explode('-',$peca);
 
-        //tratamento de valores inválidos
-        if(count($casaparts) == 3 && count(explode('-',$peca)) == 3)
+        if(count($pecaExplode) == 3)
         {
-            $pecaTrue = true;
+            $pecaPosUm = ($pecaExplode[0] == 'PECA') ? true : false;
+            $pecaPosDois = ($pecaExplode[1] == 'BRANCA' || $pecaExplode[1] == 'PRETA') ? true : false;
+            $pecaPosTres = ($pecaExplode[2] >= 1 && $pecaExplode[2] <=12) ? true : false;
 
-            $casapos[0] = strlen($casaparts[1]) == 2 ? substr($casaparts[1],0,-1) : false;
+            $pecaCheck = ($pecaPosUm == true && $pecaPosDois == true && $pecaPosTres == true) ? true : false;
 
-            $casapos[1] = (strlen($casa) == 13 || strlen($casa) == 14) ? $casa : false;
-
-            $linhaTrue = array_key_exists($casapos[0],$tabuleiro);
-
-            $casaTrue = array_key_exists($casapos[1],$tabuleiro[$casapos[0]]);
-
-            $casaCor = ($casaparts[2] == 'PRETA' || $casaparts[2] == 'BRANCA') ? $casaparts[2] : false;
+            $pecaVerified = $pecaCheck == true ? true : false;
         }
 
-        //se atender aos requisitos move a peça
-        if(isset($linhaTrue) == true && isset($casaTrue) == true && $pecaTrue == true && isset($casaCor) != false)
+        if(count($casaExplode) == 3)
         {
-            if($casaCor == 'PRETA')
+            $casaPosUm = ($casaExplode[0] == 'CASA') ? true : false;
+            $caractere = (strlen($casaExplode[1]) == 2) ? substr($casaExplode[1],0,-1) : false;
+            $casaPosDois = ($caractere >=1 && $caractere <= 8) ? true : false;
+            $casaPosTres= ($casaExplode[2] == 'BRANCA' || $casaExplode[2] == 'PRETA') ? true : false;
+
+            $casaCheck = ($casaPosUm == true && $casaPosDois == true && $casaPosTres == true) ? true : false;
+
+            if($casaCheck == true)
             {
-                foreach($tabuleiro as $linekey => $linevalue)
+                $casaVerified = true;
+                $casaPosition[0] = $caractere;
+                $casaPosition[1] = $casa;
+                $casaPosition[2] = $casaExplode[2];
+            }
+        }
+        //final do tratamento dos valores inválidos
+
+
+        //se atender aos requisitos move a peça
+        if(@$casaVerified == true && @$pecaVerified == true)
+        {
+            if($casaPosition[2] == 'PRETA')
+            {
+                //percorre o tabuleiro
+                foreach($tabuleiro as $keyLine => $valueLine)
                 {
-                    if($casakey = array_search($peca,$linevalue))
+                    //verifica se a peca existe na linha
+                    if($keyCasa = array_search($peca,$valueLine))
                     {
-                        $pecapos = [$linekey,$casakey];
+                        //se sim, então guarda a posição da peça em $pecaPosition
+                        $pecaPosition = [$keyLine,$keyCasa];
                         break;
                     }
                 }
-                if(($tabuleiro[$pecapos[0]][$pecapos[1]]) == $peca)
+                if(($tabuleiro[$pecaPosition[0]][$pecaPosition[1]]) == $peca)
                 {
-                    $tabuleiro[$pecapos[0]][$pecapos[1]] = NULL;
-                    $tabuleiro[$casapos[0]][$casapos[1]] = $peca;
+                    $tabuleiro[$pecaPosition[0]][$pecaPosition[1]] = NULL;
+                    $tabuleiro[$casaPosition[0]][$casaPosition[1]] = $peca;
                 }
             }
             else
             {
-                $msgerror = "<div class='casa-invalida'>Movimento ou valores incorretos.</div>";
+                $msgerror = "<div class='casa-invalida'>Movimento inválido.</div>";
             }
         }
         else
         {
-            $msgerror = "<div class='casa-invalida'>Movimento ou valores incorretos.</div>";
+            $msgerror = "<div class='casa-invalida'>Valores de entrada incorretos.</div>";
         }
     }
     return isset($msgerror) ? ['tabuleiro' => $tabuleiro, 'msgerror' => $msgerror] : ['tabuleiro' => $tabuleiro, 'msgerror' => ''];
