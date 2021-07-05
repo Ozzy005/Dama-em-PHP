@@ -7,9 +7,9 @@
  **/
 
 //Criação do tabuleiro
-function defineTabuleiro($peca_escolhida)
+function defineTabuleiro()
 {
-    $TABULEIRO = [
+    $tabuleiro = [
         1 => [
             'CASA-1A-BRANCA' => NULL,
             'CASA-1B-PRETA' => NULL,
@@ -91,46 +91,6 @@ function defineTabuleiro($peca_escolhida)
             'CASA-8H-BRANCA' => NULL
         ]
     ];
-
-
-    //Organiza as peças no tabuleiro de acordo com a cor das peças escolhidas na página inicial
-    $start_end = 1;
-    $end_start = 12;
-
-    foreach($TABULEIRO as $linekey => $linevalue)
-    {
-        foreach($linevalue as $casakey => $casavalue)
-        {
-            $casacor = explode('-',$casakey);
-
-            if($peca_escolhida == 'PRETAS')
-            {
-                if($casacor[2] == 'PRETA' && $linekey >= 1 && $linekey <= 3)
-                {
-                    $TABULEIRO[$linekey][$casakey] = PECAS_PRETAS[$start_end];
-                    $start_end++;
-                }
-                if($casacor[2] == 'PRETA' && $linekey >= 6 && $linekey <= 8)
-                {
-                    $TABULEIRO[$linekey][$casakey] = PECAS_BRANCAS[$end_start];
-                    $end_start--;
-                }
-            }
-            if($peca_escolhida == 'BRANCAS')
-            {
-                if($casacor[2] == 'PRETA' && $linekey >= 1 && $linekey <= 3)
-                {
-                    $TABULEIRO[$linekey][$casakey] = PECAS_BRANCAS[$start_end];
-                    $start_end++;
-                }
-                if($casacor[2] == 'PRETA' && $linekey >= 6 && $linekey <= 8)
-                {
-                    $TABULEIRO[$linekey][$casakey] = PECAS_PRETAS[$end_start];
-                    $end_start--;
-                }
-            }
-        }
-    }
-    return $TABULEIRO;
+    return $tabuleiro;
 }
 ?>

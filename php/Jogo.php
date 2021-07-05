@@ -25,51 +25,24 @@ function Jogo()
     definePecas();
     $replace = defineReplace();
 
-    if(!isset($_SESSION['TABULEIRO']))
+    if(!isset($_SESSION['tabuleiro']))
     {
-        $TABULEIRO = defineTabuleiro($peca_escolhida);
+        $tabuleiro = defineTabuleiro();
+        $tabuleiro = organizaTabuleiro($tabuleiro,$peca_escolhida);
     }
 
-    if(isset($_SESSION['TABULEIRO']))
+    if(isset($_SESSION['tabuleiro']))
     {
-        $TABULEIRO = $_SESSION['TABULEIRO'];
+        $tabuleiro = $_SESSION['tabuleiro'];
     }
 
-    if($acao == 'MOVER' && $peca != null && $casa != null)
-    {
-        $casaparts = explode('-',$casa);
-        $casapos[] = substr($casaparts[1],0,-1);
-        $casapos[] = $casa;
-
-
-        if(($TABULEIRO[$casapos[0]][$casapos[1]]) == NULL && $casaparts[2] == 'PRETA')
-        {
-
-            foreach($TABULEIRO as $linekey => $linevalue)
-            {
-                if($casakey = array_search($peca,$linevalue))
-                {
-                    $pecapos = [$linekey,$casakey];
-                    break;
-                }
-            }
-            if(($TABULEIRO[$pecapos[0]][$pecapos[1]]) == $peca)
-            {
-                $TABULEIRO[$pecapos[0]][$pecapos[1]] = NULL;
-                $TABULEIRO[$casapos[0]][$casapos[1]] = $peca;
-            }
-        }
-        else
-        {
-            $error = 'MOVIMENTO INVÁLIDO';
-
-            $msgerror = "<div class='casa-invalida'>$error</div>";
-        }
-    }
+    $returnMoverPeca = moverPeca($acao,$peca,$casa,$tabuleiro);
+    $tabuleiro = $returnMoverPeca['tabuleiro'];
+    $msgerror = $returnMoverPeca['msgerror'];
 
     $casas = [];
 
-    foreach($TABULEIRO as $linekey => $linevalue)
+    foreach($tabuleiro as $linekey => $linevalue)
     {
         foreach($linevalue as $casakey => $casavalue)
         {
@@ -94,11 +67,6 @@ function Jogo()
         }
     }
 
-    if(!isset($msgerror))
-    {
-        $msgerror = '';
-    }
-
     $content = file_get_contents('html/dama.html');
     $pagina = '';
 
@@ -107,7 +75,7 @@ function Jogo()
 
     if($acao !== 'RESET')
     {
-        $_SESSION['TABULEIRO'] = $TABULEIRO;
+        $_SESSION['tabuleiro'] = $tabuleiro;
     }
 
     print $pagina;
