@@ -7,20 +7,22 @@
  **/
 
  //função responsável por mover a peça no tabuleiro
-function moverPeca($acao,$peca,$casa,$tabuleiro,$turnoInicial)
+function moverPeca($acao,$peca,$casa,$tabuleiro,$contadorTurno)
 {
-
-    $lanceInicial = 'brancas'; // ainda não utilizado
     $jogadasPorTurno = 1; // ainda não utilizado
     $vezDeJogar = ''; // ainda não utilizado
 
-    if($acao == 'mover')
+    $dataCollection = checkInput($casa,$peca);
+
+    //se o valores forem válidos entra no bloco de execução
+    if($acao == 'mover' && $dataCollection != false && $dataCollection['casaSplitada'][2] == 'preta')
     {
-        //se o valores forem válidos entra no bloco de execução
-        if($casaPosition = checkInput($casa,$peca))
+        $casaSplitada = $dataCollection['casaSplitada'];
+        $pecaSplitada = $dataCollection['pecaSplitada'];
+
+        if($contadorTurno == 1)
         {
-            //só ira mover a peça se a casa alvo for da cor preta
-            if($casaPosition[2] == 'preta')
+            if($pecaSplitada[1] == 'branca')
             {
                 //percorre o tabuleiro
                 foreach($tabuleiro as $keyLine => $valueLine)
@@ -28,28 +30,61 @@ function moverPeca($acao,$peca,$casa,$tabuleiro,$turnoInicial)
                     //verifica se a peca existe na linha
                     if($keyCasa = array_search($peca,$valueLine))
                     {
-                        //se sim, então guarda a posição da peça em $pecaPosition e encerra o laço foreach
-                        $pecaPosition = [$keyLine,$keyCasa];
+                        //se sim, então guarda a posição da peça em $pecaSplitada e encerra o laço foreach
+                        $pecaSplitada = [$keyLine,$keyCasa];
                         break;
                     }
                 }
+
                 //move a peça pra nova casa e anula a casa antiga
-                if(($tabuleiro[$pecaPosition[0]][$pecaPosition[1]]) == $peca)
+                if(($tabuleiro[$pecaSplitada[0]][$pecaSplitada[1]]) == $peca)
                 {
-                    $tabuleiro[$pecaPosition[0]][$pecaPosition[1]] = null;
-                    $tabuleiro[$casaPosition[0]][$casaPosition[1]] = $peca;
+                        $tabuleiro[$pecaSplitada[0]][$pecaSplitada[1]] = null;
+                        $tabuleiro[$casaSplitada[0]][$casaSplitada[1]] = $peca;
                 }
+                $contadorTurno++;
+
             }
-            else
-            {
-                $msgerror = "<div class='casa-invalida'>Movimento inválido.</div>";
+            else{
+                $msgerror = "<div class='casa-invalida'>Brancas devem fazer o lance inicial.</div>";
             }
         }
         else
         {
-            $msgerror = "<div class='casa-invalida'>Valores de entrada incorretos.</div>";
+            //percorre o tabuleiro
+            foreach($tabuleiro as $keyLine => $valueLine)
+            {
+                //verifica se a peca existe na linha
+                if($keyCasa = array_search($peca,$valueLine))
+                {
+                    //se sim, então guarda a posição da peça em $pecaSplitada e encerra o laço foreach
+                    $pecaSplitada = [$keyLine,$keyCasa];
+                    break;
+                }
+            }
+
+            //move a peça pra nova casa e anula a casa antiga
+            if(($tabuleiro[$pecaSplitada[0]][$pecaSplitada[1]]) == $peca)
+            {
+                $tabuleiro[$pecaSplitada[0]][$pecaSplitada[1]] = null;
+                $tabuleiro[$casaSplitada[0]][$casaSplitada[1]] = $peca;
+            }
         }
     }
-    return isset($msgerror) ? ['tabuleiro' => $tabuleiro, 'msgerror' => $msgerror] : ['tabuleiro' => $tabuleiro, 'msgerror' => ''];
+    else
+    {
+        $msgerror = "<div class='casa-invalida'>Movimento ou valores de entrada incorretos.</div>";
+    }
+    return isset($msgerror) ?
+                            [
+                                'tabuleiro' => $tabuleiro,
+                                'msgerror' => $msgerror
+                            ]
+                            :
+                            [
+                                'tabuleiro' => $tabuleiro,
+                                'contadorTurno' => $contadorTurno,
+                                'msgerror' => ''
+                            ];
 }
 ?>

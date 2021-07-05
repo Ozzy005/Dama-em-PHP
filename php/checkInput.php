@@ -18,7 +18,16 @@ function checkInput($casa,$peca)
         $pecaPosDois = ($pecaExplode[1] == 'branca' || $pecaExplode[1] == 'preta') ? true : false;
         $pecaPosTres = ($pecaExplode[2] >= 1 && $pecaExplode[2] <=12) ? true : false;
 
-        $pecaVerified = ($pecaPosUm == true && $pecaPosDois == true && $pecaPosTres == true) ? true : false;
+        $pecaCheck = ($pecaPosUm == true && $pecaPosDois == true && $pecaPosTres == true) ? true : false;
+
+        if($pecaCheck == true)
+        {
+            $pecaVerified = true;
+            $pecaSplitada[0] = $pecaExplode[0];
+            $pecaSplitada[1] = $pecaExplode[1];
+            $pecaSplitada[2] = $pecaExplode[2];
+            $dataCollection['pecaSplitada'] = $pecaSplitada;
+        }
     }
 
     if(count($casaExplode) == 3)
@@ -33,12 +42,13 @@ function checkInput($casa,$peca)
         if($casaCheck == true)
         {
             $casaVerified = true;
-            $casaPosition[0] = $caractere;
-            $casaPosition[1] = $casa;
-            $casaPosition[2] = $casaExplode[2];
+            $casaSplitada[0] = $caractere;
+            $casaSplitada[1] = $casa;
+            $casaSplitada[2] = $casaExplode[2];
+            $dataCollection['casaSplitada'] = $casaSplitada;
         }
     }
-    return (@$casaVerified == true && @$pecaVerified == true) ? $casaPosition : false;
+    return (@$casaVerified == true && @$pecaVerified == true) ? $dataCollection : false;
     //final do tratamento dos valores inválidos
 }
 ?>

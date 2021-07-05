@@ -28,7 +28,7 @@ function Jogo()
     //se session tabuleiro não estiver definido significa que é o primeiro turno
     if(!isset($_SESSION['tabuleiro']))
     {
-        $turnoInicial = true;
+        $contadorTurno = 1;
         $tabuleiro = defineTabuleiro();
         $tabuleiro = organizaTabuleiro($tabuleiro,$peca_escolhida);
     }
@@ -36,13 +36,25 @@ function Jogo()
     //se session tabuleiro estiver definido significa que é o segundo turno em diante
     if(isset($_SESSION['tabuleiro']))
     {
-        $turnoInicial = (!isset($turnoInicial)) ? true : false;
+        $contadorTurno = $_SESSION['contadorTurno'];
         $tabuleiro = $_SESSION['tabuleiro'];
     }
 
-    $returnMoverPeca = moverPeca($acao,$peca,$casa,$tabuleiro,$turnoInicial);
-    $tabuleiro = $returnMoverPeca['tabuleiro'];
-    $msgerror = $returnMoverPeca['msgerror'];
+    if(isset($casa,$peca))
+    {
+        $returnMoverPeca = moverPeca($acao,$peca,$casa,$tabuleiro,$contadorTurno);
+        $tabuleiro = $returnMoverPeca['tabuleiro'];
+        $msgerror = $returnMoverPeca['msgerror'];
+
+        if(isset($returnMoverPeca['contadorTurno']))
+        {
+            $contadorTurno = $returnMoverPeca['contadorTurno'];
+        }
+
+    }
+    else{
+        $msgerror = '';
+    }
 
     $casas = [];
 
@@ -73,8 +85,10 @@ function Jogo()
     $pagina = str_replace($replace,$casas,$content);
     $pagina = str_replace('{msgerror}',$msgerror,$pagina);
 
+
     if($acao !== 'RESET')
     {
+        $_SESSION['contadorTurno'] = $contadorTurno;
         $_SESSION['tabuleiro'] = $tabuleiro;
     }
 
