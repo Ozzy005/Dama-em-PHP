@@ -7,7 +7,7 @@
  **/
 
 //Organiza as peças no tabuleiro de acordo com a cor das peças escolhidas na página inicial
-function organizaTabuleiro($tabuleiro,$peca_escolhida)
+function GerarTabuleiro($tabuleiro,$peca_escolhida)
 {
     $start_end = 1;
     $end_start = 12;

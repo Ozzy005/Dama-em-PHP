@@ -7,7 +7,7 @@
  **/
 
 //Criação das peças
-function definePecas()
+function Pecas()
 {
     define("PECAS_BRANCAS", [
         1 => 'peca-branca-1',

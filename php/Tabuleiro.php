@@ -7,7 +7,7 @@
  **/
 
 //Criação do tabuleiro
-function defineTabuleiro()
+function Tabuleiro()
 {
     $tabuleiro = [
         1 => [

@@ -8,88 +8,62 @@
 
 function Jogo()
 {
-    $acao = isset($_POST['acao']) ? $_POST['acao'] : null;
+    //define todas as variáveis
+    Pecas();
 
-    if($acao == 'reset')
+    $tabuleiro = key_exists('tabuleiro',$_SESSION) ? $_SESSION['tabuleiro'] : null;
+    $contadorTurno = key_exists('contadorTurno',$_SESSION) ? $_SESSION['contadorTurno'] : 1;
+    $ultimoMovimento = key_exists('ultimoMovimento',$_SESSION) ? $_SESSION['ultimoMovimento'] : null;
+
+    $peca = key_exists('input-peca',$_POST) ? $_POST['input-peca'] : null;
+    $casa = key_exists('input-casa',$_POST) ? $_POST['input-casa'] : null;
+    $acao = key_exists('acao',$_POST) ? $_POST['acao'] : null;
+
+    $pecaEscolhida = $_SESSION['peca-escolhida'];
+    $msgerror = '';
+
+    if($acao === 'reset')
     {
         $_SESSION = array();
-        startJogo();
+
+        StartJogo();
 
         exit();
     }
 
-    $peca = isset($_POST['input-peca']) ? $_POST['input-peca'] : null;
-    $casa = isset($_POST['input-casa']) ? $_POST['input-casa'] : null;
-    $peca_escolhida = isset($_SESSION['peca-escolhida']) ? $_SESSION['peca-escolhida'] : null;
-
-    definePecas();
-    $replace = defineReplace();
-
-    //se session tabuleiro não estiver definido significa que é o primeiro turno
-    if(!isset($_SESSION['tabuleiro']))
+    if($tabuleiro === null)
     {
-        $contadorTurno = 1;
-        $tabuleiro = defineTabuleiro();
-        $tabuleiro = organizaTabuleiro($tabuleiro,$peca_escolhida);
+        $tabuleiro = GerarTabuleiro(Tabuleiro(),$pecaEscolhida);
     }
 
-    //se session tabuleiro estiver definido significa que é o segundo turno em diante
-    if(isset($_SESSION['tabuleiro']))
+    if($peca !== null && $casa !== null)
     {
-        $contadorTurno = $_SESSION['contadorTurno'];
-        $tabuleiro = $_SESSION['tabuleiro'];
-    }
-
-    if(isset($casa,$peca))
-    {
-        $returnMoverPeca = moverPeca($acao,$peca,$casa,$tabuleiro,$contadorTurno);
-        $tabuleiro = $returnMoverPeca['tabuleiro'];
-        $msgerror = $returnMoverPeca['msgerror'];
-
-        if(isset($returnMoverPeca['contadorTurno']))
+        try
         {
-            $contadorTurno = $returnMoverPeca['contadorTurno'];
+            $resultado = Movimento($tabuleiro,$contadorTurno,$ultimoMovimento,$peca,$casa,$acao);
+        }
+        catch(Exception $e)
+        {
+            $msgerror = "<div class='casa-invalida'>{$e->getMessage()}</div>";
         }
 
-    }
-    else{
-        $msgerror = '';
-    }
-
-    $casas = [];
-
-    foreach($tabuleiro as $linekey => $linevalue)
-    {
-        foreach($linevalue as $casakey => $casavalue)
+        if(isset($resultado))
         {
-            $casakeyparts = explode("-",$casakey);
-            $casavalueparts = explode("-",$casavalue);
+            $contadorTurno = $resultado['contadorTurno'];
+            $ultimoMovimento = $resultado['ultimoMovimento'];
+            $tabuleiro = $resultado['tabuleiro'];
 
-            $tag = "<div type='text' class='{$casakeyparts[0]} {$casakeyparts[0]}-{$casakeyparts[2]}' id='$casakey'>";
-
-            if($casavalue != null)
-            {
-
-                $tag .= "<div class='{$casavalueparts[0]} {$casavalueparts[0]}-{$casavalueparts[1]}' id='$casavalue'></div>";
-            }
-
-            $tag .= "</div>";
-
-            $casas[] = $tag;
         }
     }
 
-    $content = file_get_contents('html/dama.html');
-    $pagina = '';
+    $pagina = ReplaceValores($tabuleiro,$msgerror);
 
-    $pagina = str_replace($replace,$casas,$content);
-    $pagina = str_replace('{msgerror}',$msgerror,$pagina);
-
-
-    if($acao !== 'RESET')
+    if($acao !== 'reset')
     {
-        $_SESSION['contadorTurno'] = $contadorTurno;
         $_SESSION['tabuleiro'] = $tabuleiro;
+        $_SESSION['contadorTurno'] = $contadorTurno;
+        $_SESSION['ultimoMovimento'] = $ultimoMovimento;
+
     }
 
     print $pagina;
