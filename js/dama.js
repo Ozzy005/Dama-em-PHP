@@ -50,6 +50,8 @@ for(let i = 0 ; i < casas.length ; i++)
             if(idCasaAtual != null)
             {
                 let casaAtual = document.getElementById(idCasaAtual);
+                casaAtual.style.borderTop = "2px solid black";
+                casaAtual.style.borderLeft = "2px solid black";
                 casaAtual.style.zIndex = "auto";
                 casaAtual.style.outline = "0";
                 casaAtual.style.boxShadow = "none";
@@ -72,6 +74,7 @@ for(let i = 0 ; i < casas.length ; i++)
 
                 idCasaAtual = idCasaNova;
 
+                casaNova.style.border = "0";
                 casaNova.style.zIndex = "1";
                 casaNova.style.outline = "3px solid #ff0000";
                 casaNova.style.boxShadow = "0px 0px 5px 5px #ff0000";

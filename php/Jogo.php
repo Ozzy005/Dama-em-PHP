@@ -49,14 +49,13 @@ function Jogo()
 
         if(isset($resultado))
         {
+            $tabuleiro = $resultado['tabuleiro'];
             $contadorTurno = $resultado['contadorTurno'];
             $ultimoMovimento = $resultado['ultimoMovimento'];
-            $tabuleiro = $resultado['tabuleiro'];
-
         }
     }
 
-    $pagina = ReplaceValores($tabuleiro,$msgerror);
+    $pagina = ReplaceValores($tabuleiro,$msgerror,$ultimoMovimento,$contadorTurno,$pecaEscolhida);
 
     if($acao !== 'reset')
     {

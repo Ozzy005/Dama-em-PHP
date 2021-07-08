@@ -6,12 +6,114 @@
  *
  **/
 
-//Informa os valores que serem substituídos no conteúdo html
-function ReplaceValores($tabuleiro,$msgerror)
+function ReplaceValores($tabuleiro,$msgerror,$ultimoMovimento,$contadorTurno,$pecaEscolhida)
 {
+    if($ultimoMovimento === null)
+    {
+        $jogadorControle = 'Jogador 1';
+    }
+    elseif($ultimoMovimento === 'preta')
+    {
+        $jogadorControle = 'Jogador 1';
+    }
+    else
+    {
+        $jogadorControle = 'Jogador 2';
+    }
+
+    if($pecaEscolhida === 'brancas')
+    {
+        if($jogadorControle === 'Jogador 2')
+        {
+            $div = "<div class='jogador-atual jogador-superior'>";
+        }
+        else
+        {
+            $div = "<div class='jogador-superior'>";
+        }
+
+        $jogadorSuperior = $div;
+        $jogadorSuperior .= "<span>J</span>
+                            <span>O</span>
+                            <span>G</span>
+                            <span>A</span>
+                            <span>D</span>
+                            <span>O</span>
+                            <span>R</span>
+                            <span>2</span>
+                            </div>";
+
+        if($jogadorControle === 'Jogador 1')
+        {
+            $div = "<div class='jogador-atual jogador-inferior'>";
+        }
+        else
+        {
+            $div = "<div class='jogador-inferior'>";
+        }
+
+        $jogadorInferior = $div;
+        $jogadorInferior .= "<span>J</span>
+                            <span>O</span>
+                            <span>G</span>
+                            <span>A</span>
+                            <span>D</span>
+                            <span>O</span>
+                            <span>R</span>
+                            <span>1</span>
+                            </div>";
+    }
+    else
+    {
+        if($jogadorControle === 'Jogador 1')
+        {
+            $div = "<div class='jogador-atual jogador-superior'>";
+        }
+        else
+        {
+            $div = "<div class='jogador-superior'>";
+        }
+
+        $jogadorSuperior = $div;
+
+        $jogadorSuperior .= "<span>J</span>
+                            <span>O</span>
+                            <span>G</span>
+                            <span>A</span>
+                            <span>D</span>
+                            <span>O</span>
+                            <span>R</span>
+                            <span>1</span>
+                            </div>";
+
+                            
+        if($jogadorControle === 'Jogador 2')
+        {
+            $div = "<div class='jogador-atual jogador-inferior'>";
+        }
+        else
+        {
+            $div = "<div class='jogador-inferior'>";
+        }
+
+        $jogadorInferior = $div;
+
+        $jogadorInferior .= "<span>J</span>
+                            <span>O</span>
+                            <span>G</span>
+                            <span>A</span>
+                            <span>D</span>
+                            <span>O</span>
+                            <span>R</span>
+                            <span>2</span>
+                            </div>";
+    }
+
+
+
     $replace = Replace();
     $pagina = file_get_contents('html/dama.html');
-    $valores = [$msgerror];
+    $valores = [$msgerror,$contadorTurno,$jogadorControle];
 
     foreach($tabuleiro as $keyLine => $valueLine)
     {
@@ -24,7 +126,7 @@ function ReplaceValores($tabuleiro,$msgerror)
 
             if($valueCasa !== null)
             {
-                $tag .= "<div class='{$casaValueParts[0]} {$casaValueParts[0]}-{$casaValueParts[1]}' id='$valueCasa'></div>";
+                $tag .= "<div class='peca {$casaValueParts[0]}-{$casaValueParts[1]}' id='$valueCasa'></div>";
             }
 
             $tag .= "</div>";
@@ -33,8 +135,10 @@ function ReplaceValores($tabuleiro,$msgerror)
         }
     }
 
-    $pagina = str_replace($replace,$valores,$pagina);
+    $valores[] = $jogadorSuperior;
+    $valores[] = $jogadorInferior;
 
+    $pagina = str_replace($replace,$valores,$pagina);
     return $pagina;
 }
 
@@ -43,6 +147,8 @@ function Replace()
     return
     [
         '{msgerror}',
+        '{turno}',
+        '{jogador-controle}',
         '{line1-casaA}',
         '{line1-casaB}',
         '{line1-casaC}',
@@ -106,7 +212,9 @@ function Replace()
         '{line8-casaE}',
         '{line8-casaF}',
         '{line8-casaG}',
-        '{line8-casaH}'
+        '{line8-casaH}',
+        '{jogador-superior}',
+        '{jogador-inferior}'
     ];
 }
 

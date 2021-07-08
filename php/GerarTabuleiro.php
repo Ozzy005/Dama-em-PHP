@@ -6,41 +6,40 @@
  *
  **/
 
-//Organiza as peças no tabuleiro de acordo com a cor das peças escolhidas na página inicial
-function GerarTabuleiro($tabuleiro,$peca_escolhida)
+function GerarTabuleiro($tabuleiro,$pecaEscolhida)
 {
     $start_end = 1;
     $end_start = 12;
 
-    foreach($tabuleiro as $linekey => $linevalue)
+    foreach($tabuleiro as $keyLine => $valueLine)
     {
-        foreach($linevalue as $casakey => $casavalue)
+        foreach($valueLine as $keyCasa => $valueCasa)
         {
-            $casacor = explode('-',$casakey);
+            $keyCasaExplode = explode('-',$keyCasa);
 
-            if($peca_escolhida == 'pretas')
+            if($pecaEscolhida === 'pretas')
             {
-                if($casacor[2] == 'preta' && $linekey >= 1 && $linekey <= 3)
+                if($keyCasaExplode[2] === 'preta' && $keyLine >= 1 && $keyLine <= 3)
                 {
-                    $tabuleiro[$linekey][$casakey] = PECAS_PRETAS[$start_end];
+                    $tabuleiro[$keyLine][$keyCasa] = PECAS_PRETAS[$start_end];
                     $start_end++;
                 }
-                if($casacor[2] == 'preta' && $linekey >= 6 && $linekey <= 8)
+                if($keyCasaExplode[2] === 'preta' && $keyLine >= 6 && $keyLine <= 8)
                 {
-                    $tabuleiro[$linekey][$casakey] = PECAS_BRANCAS[$end_start];
+                    $tabuleiro[$keyLine][$keyCasa] = PECAS_BRANCAS[$end_start];
                     $end_start--;
                 }
             }
-            if($peca_escolhida == 'brancas')
+            if($pecaEscolhida === 'brancas')
             {
-                if($casacor[2] == 'preta' && $linekey >= 1 && $linekey <= 3)
+                if($keyCasaExplode[2] === 'preta' && $keyLine >= 1 && $keyLine <= 3)
                 {
-                    $tabuleiro[$linekey][$casakey] = PECAS_BRANCAS[$start_end];
+                    $tabuleiro[$keyLine][$keyCasa] = PECAS_BRANCAS[$start_end];
                     $start_end++;
                 }
-                if($casacor[2] == 'preta' && $linekey >= 6 && $linekey <= 8)
+                if($keyCasaExplode[2] === 'preta' && $keyLine >= 6 && $keyLine <= 8)
                 {
-                    $tabuleiro[$linekey][$casakey] = PECAS_PRETAS[$end_start];
+                    $tabuleiro[$keyLine][$keyCasa] = PECAS_PRETAS[$end_start];
                     $end_start--;
                 }
             }

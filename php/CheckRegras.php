@@ -25,7 +25,7 @@ function CheckRegras($contadorTurno,$ultimoMovimento,$pecaSplitada,$casaSplitada
 
 function CheckCorCasa($casaSplitada)
 {
-    if($casaSplitada['cor'] !== 'preta')
+    if($casaSplitada['cor'] === 'branca')
     {
         throw new Exception('Não é permitido mover-se para a casa branca');
     }
@@ -35,7 +35,7 @@ function CheckLanceInicial($contadorTurno,$ultimoMovimento,$pecaSplitada)
 {
     if($contadorTurno === 1 && $ultimoMovimento === null)
     {
-        if($pecaSplitada['cor'] !== 'branca')
+        if($pecaSplitada['cor'] === 'preta')
         {
             throw new Exception('Lance inicial deve ser feita pela cor branca');
         }
@@ -44,11 +44,11 @@ function CheckLanceInicial($contadorTurno,$ultimoMovimento,$pecaSplitada)
 
 function CheckUltimoMovimento($ultimoMovimento,$pecaSplitada)
 {
-    if($ultimoMovimento === 'branca' && $pecaSplitada['cor'] !== 'preta')
+    if($ultimoMovimento === 'branca' && $pecaSplitada['cor'] === 'branca')
     {
         throw new Exception('Agora é a vez da cor preta jogar');
     }
-    elseif($ultimoMovimento === 'preta' && $pecaSplitada['cor'] !== 'branca')
+    elseif($ultimoMovimento === 'preta' && $pecaSplitada['cor'] === 'preta')
     {
         throw new Exception('Agora é a vez da cor branca jogar');
     }

@@ -9,9 +9,17 @@
     <body>
         <div class='main'>
 
-            <div class='controle' >
-
-                <div class='controle-sub'>
+            <div class='painel-esquerdo'>
+                <div class='msgerror'>
+                    {msgerror}
+                </div>
+                <div class='controle'>
+                    <div class='turno'>
+                        Turno: {turno}
+                    </div>
+                    <div class='jogador-controle'>
+                        {jogador-controle}
+                    </div>
                     <form method='post' action='#'>
                         <label for='input-peca'>PEÇA</label>
                         <input id='input-peca' name='input-peca' type='text'/>
@@ -23,11 +31,6 @@
                         <button name='acao' type='submit' value='reset'>RESET</button>
                     </form>
                 </div>
-
-                <div class='msgerror'>
-                    {msgerror}
-                </div>
-
             </div>
 
             <div class='tabuleiro'>
@@ -140,6 +143,12 @@
                     <div class='casa-referencia casa line0-casaH'><span>H</span></div>
                 </div>
             </div>
+
+            <div class='painel-direito'>
+                {jogador-superior}
+                {jogador-inferior}
+            </div>
+
         </div>
 
         <script type="text/javascript" src="js/dama.js"></script>

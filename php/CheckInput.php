@@ -13,8 +13,8 @@ function CheckInput($peca,$casa)
 
     if(count($pecaExplode) === 3)
     {
-        //estrutura do nome de uma peca (PECA-COR-NUMERAÇÃO)
-        $pecaPosUm = ($pecaExplode[0] === 'peca') ? true : false;
+        //estrutura do nome de uma peca (PEDRA-COR-NUMERAÇÃO)
+        $pecaPosUm = ($pecaExplode[0] === 'pedra') ? true : false;
         $pecaPosDois = ($pecaExplode[1] === 'branca' || $pecaExplode[1] === 'preta') ? true : false;
         $pecaPosTres = ($pecaExplode[2] >= 1 && $pecaExplode[2] <=12) ? true : false;
 

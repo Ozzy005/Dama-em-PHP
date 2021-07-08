@@ -79,6 +79,7 @@ Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
 - [x] Botão de resete para recomeçar o jogo (volta para a opção de escolher a cor das peças)
 - [x] Selecionar casas e peças de forma interativa destacando-as clicando com o botão esquerdo do mouse, ao mesmo tempo que preenche as entradas do formulário
 - [x] Gerar mensagem de erro se ocorrer um movimento inválido
+- [x] Exibir na tela turno e jogador atual
 - [ ] Confirmar o movimento da peça clicando com o botão direito do mouse
 - [ ] Opção para dois jogadores
 - [ ] Opção para desistir

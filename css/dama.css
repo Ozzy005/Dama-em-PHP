@@ -4,10 +4,10 @@ body{
     min-height: 100vh;
     min-width: 100vw;
 }
-.main,.controle,.tabuleiro,.line,.casa{
+.main,.painel-esquerdo,.tabuleiro,.line,.casa,.painel-direito{
     display: grid;
 }
-body,.controle-sub > form,.msgerror{
+body,form,.msgerror,.controle,.jogador-superior,.jogador-inferior{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,17 +19,15 @@ body,.controle-sub > form,.msgerror{
 .main{
     grid-template-columns: 300px 580px 300px;
     grid-template-rows: 580px;
+    column-gap: 10px;
 }
 /*-----------------------------------------------------*/
 
-
 /*Definições do tabuleiro*/
 .tabuleiro{
-    height: 100%;
-    width: 100%;
     grid-template-rows: repeat(9, 1fr);
-    border-right: 1px solid black;
-    border-bottom: 1px solid black;
+    border-right: 2px solid black;
+    border-bottom: 2px solid black;
     grid-column: 2/3;
 }
 .line{
@@ -43,8 +41,8 @@ body,.controle-sub > form,.msgerror{
 .casa{
     grid-template-columns: 1fr 3fr 1fr;
     grid-template-rows: 1fr 3fr 1fr;
-    border-top: 1px solid black;
-    border-left: 1px solid black;
+    border-top: 2px solid black;
+    border-left: 2px solid black;
 }
 .peca,.casa-referencia > span{
     grid-column: 2/3;
@@ -59,66 +57,115 @@ body,.controle-sub > form,.msgerror{
 .peca{
     border-radius: 19px;
 }
-.peca-preta{
+.pedra-preta{
     background-color: rgb(0, 0, 0);
 }
-.peca-branca{
+.pedra-branca{
     background-color: rgb(255, 255, 255);
 }
 /*-----------------------------------------------------*/
 
 
 /*Definições dos controles*/
-.controle{
+.painel-esquerdo{
     grid-column: 1/2;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
 }
+.controle{
+    color: white;
+    grid-column: 2/3;
+    grid-row: 1/3;
+    background-color: rgb(0, 77, 77);
+    border: 2px solid black;
+    flex-direction: column;
+}
+.turno{
+    width: 80px;
+    box-shadow: 0px 0px 5px 5px rgb(0, 0, 255);
+    padding: 10px;
+    margin: 10px 0 10px 0;
+}
+.jogador-controle{
+    width: 80px;
+    box-shadow: 0px 0px 5px 5px rgb(0, 255, 0);
+    padding: 10px;
+    margin: 10px 0 10px 0;
+}
+form{
+    flex-direction: column;
+    margin: 10px 0 10px 0;
+}
 label{
-    margin: 2px 0 0 0
+    margin: 2px 0 2px 0;
 }
 input{
     width: 70%;
+    height: 20px;
     margin: 2px 0 2px 0;
     border: 0;
-    border-radius: 5px;
+    border-radius: 10px;
     padding: 5px;
     outline: 0;
 }
 button{
-    margin: 10px 0 0 0;
+    margin: 5px 0 5px 0;
     width: 50%;
     height: 30px;
-    padding: 0;
+    padding: 0px;
 }
-.controle-sub{
-    color: white;
-    grid-column: 2/3;
-    grid-row: 2/3;
-    background-color: rgb(0, 77, 77);
-    border-top: 1px solid black;
-    border-left: 1px solid black;
-    border-bottom: 1px solid black;
-}
-.controle-sub > form{
-    flex-direction: column;
-    height: 100%;
-    display: flex;
-}
+/*-----------------------------------------------------*/
+
+
+/*Definições da mensagem de erro*/
 .msgerror{
     background-color: rgb(0, 77, 77);
     grid-column: 2/3;
-    grid-row: 1/2;
-    border-top: 1px solid black;
-    border-left: 1px solid black;
+    grid-row: 3/4;
+    border-bottom: 2px solid black;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
 }
 .casa-invalida{
     color: rgb(255, 153, 153);
     background-color: #330000;
     box-shadow: 0px 0px 10px 10px #ff0000;
-    width: 80%;
-    padding: 5px;
+    width: 70%;
+    padding: 10px;
     border-radius: 10px;
     text-align: center;
+}
+/*-----------------------------------------------------*/
+
+
+/*Painel direito*/
+.painel-direito{
+    grid-template-columns: 1fr 5fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-column: 3/4;
+}
+.jogador-superior,.jogador-inferior{
+    flex-direction: column;
+    border: 2px solid black;
+    background-color: rgb(128, 128, 128);
+}
+.jogador-superior{
+    grid-column:1/2;
+    grid-row: 1/2;
+}
+.jogador-inferior{
+    grid-column: 1/2;
+    grid-row: 3/4;
+}
+.jogador-superior > span,.jogador-inferior > span{
+    padding: 3px;
+}
+.jogador-superior > span:last-child,.jogador-inferior > span:last-child{
+    font-weight: 1000;
+    font-size: 20px;
+}
+.jogador-atual{
+    box-shadow: 0px 0px 5px 5px rgb(0, 255, 0);
+    border-color: rgb(0, 255, 0);
 }
 /*-----------------------------------------------------*/
