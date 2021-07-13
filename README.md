@@ -4,6 +4,12 @@
 
 Para o desenvolvimento desse jogo de dama, foi optado por utilizar as regras de damas brasileiras.
 
+# Screenshot da home page
+<img src="img/homepage.png"/>
+
+# Screenshot da main page
+<img src="img/main.png"/>
+
 ### 📋 Pré-requisitos
 
 Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
@@ -49,17 +55,15 @@ Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
 - [ ] Na execução do lance de captura, é permitido passar mais de uma vez pela mesma casa vazia
 - [ ] Após 20 lances sucessivos de damas, sem captura ou deslocamento de pedra, a partida é declarada empatada.
 
-## 📄 Licença
-
+# 📄 Licença
 Este projeto está sob a licença (GPLv3) - veja o arquivo [LICENSE.md](https://github.com/Ozzy005/Dama-em-PHP/blob/main/README.md) para detalhes.
 
-## ✒️ Autores
-
+# ✒️ Autores
 * **Rafael Arend** - *Todo o projeto* - [Rafael Arend](https://github.com/Ozzy005)
 
-## 📞 Telefone
+# 📞 Telefone
 * **66 9 9604 0978**
 
-## 📧 Email
+# 📧 Email
 * **rafinhaarend123@hotmail.com**
 
