@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <title>Dama em PHP</title>
+        <link rel="stylesheet" type="text/css" href="../css/Reset.css">
+        <link rel="stylesheet" type="text/css" href="../css/Tabuleiro.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+
+    <body>
+
+        <!--Container principal-->
+        <div class='main'>
+
+            <!--Painel esquerdo-->
+            <div class='painel-esquerdo'>
+
+                <!--Controle de jogar-->
+                <div class='controle'>
+                    <form method='post' action='Index.php'>
+                        <label for='input-peca'>PEÇA</label>
+                        <input id='input-peca' name='input-peca' type='text'/>
+
+                        <label for='input-linha'>LINHA</label>
+                        <input id='input-linha' name='input-linha' type='text'>
+
+                        <label for='input-coluna'>COLUNA</label>
+                        <input id='input-coluna' name='input-coluna' type='text'>
+
+                        <button name='acao' type='submit' value='mover'>MOVER</button>
+                        <button name='acao' type='submit' value='reset'>RESET</button>
+                    </form>
+                </div>
+
+                <!--Informações úteis-->
+                <div class='informacoes'>
+                    <div class='turno-atual'>
+                        Turno: {turno-atual}
+                    </div>
+                    <div class='jogador-atual-esquerdo'>
+                        Jogador: {jogador-atual-esquerdo}
+                    </div>
+                    {mensagem-erro}
+                </div>
+
+            </div>
+
+            <!--Inicio do Tabuleiro-->
+            <div class='tabuleiro'>
+
+                <!--Linha 8-->
+                <div id='linha-8' class='linha'>
+
+                    <!--Colunas A-H -->
+                    <div class='coluna-indicativa'><span>8</span></div>
+                    <div id='coluna-a-branca' class='coluna coluna-branca'>{linha-8-coluna-a}</div>
+                    <div id='coluna-b-preta' class='coluna coluna-preta'>{linha-8-coluna-b}</div>
+                    <div id='coluna-c-branca' class='coluna coluna-branca'>{linha-8-coluna-c}</div>
+                    <div id='coluna-d-preta' class='coluna coluna-preta'>{linha-8-coluna-d}</div>
+                    <div id='coluna-e-branca' class='coluna coluna-branca'>{linha-8-coluna-e}</div>
+                    <div id='coluna-f-preta' class='coluna coluna-preta'>{linha-8-coluna-f}</div>
+                    <div id='coluna-g-branca' class='coluna coluna-branca'>{linha-8-coluna-g}</div>
+                    <div id='coluna-h-preta' class='coluna coluna-preta'>{linha-8-coluna-h}</div>
+
+                </div>
+
+                <!--Linha 7-->
+                <div id='linha-7' class='linha'>
+
+                    <!--Colunas A-H -->
+                    <div class='coluna-indicativa'><span>7</span></div>
+                    <div id='coluna-a-preta' class='coluna coluna-preta'>{linha-7-coluna-a}</div>
+                    <div id='coluna-b-branca' class='coluna coluna-branca'>{linha-7-coluna-b}</div>
+                    <div id='coluna-c-preta' class='coluna coluna-preta'>{linha-7-coluna-c}</div>
+                    <div id='coluna-d-branca' class='coluna coluna-branca'>{linha-7-coluna-d}</div>
+                    <div id='coluna-e-preta' class='coluna coluna-preta'>{linha-7-coluna-e}</div>
+                    <div id='coluna-f-branca' class='coluna coluna-branca'>{linha-7-coluna-f}</div>
+                    <div id='coluna-g-preta' class='coluna coluna-preta'>{linha-7-coluna-g}</div>
+                    <div id='coluna-h-branca' class='coluna coluna-branca'>{linha-7-coluna-h}</div>
+
+                </div>
+
+                <!--Linha 6-->
+                <div id='linha-6' class='linha'>
+
+                    <!--Colunas A-H -->
+                    <div class='coluna-indicativa'><span>6</span></div>
+                    <div id='coluna-a-branca' class='coluna coluna-branca'>{linha-6-coluna-a}</div>
+                    <div id='coluna-b-preta' class='coluna coluna-preta'>{linha-6-coluna-b}</div>
+                    <div id='coluna-c-branca' class='coluna coluna-branca'>{linha-6-coluna-c}</div>
+                    <div id='coluna-d-preta' class='coluna coluna-preta'>{linha-6-coluna-d}</div>
+                    <div id='coluna-e-branca' class='coluna coluna-branca'>{linha-6-coluna-e}</div>
+                    <div id='coluna-f-preta' class='coluna coluna-preta'>{linha-6-coluna-f}</div>
+                    <div id='coluna-g-branca' class='coluna coluna-branca'>{linha-6-coluna-g}</div>
+                    <div id='coluna-h-preta' class='coluna coluna-preta'>{linha-6-coluna-h}</div>
+
+                </div>
+
+                <!--Linha 5-->
+                <div id='linha-5' class='linha'>
+
+                    <!--Colunas A-H -->
+                    <div class='coluna-indicativa'><span>5</span></div>
+                    <div id='coluna-a-preta' class='coluna coluna-preta'>{linha-5-coluna-a}</div>
+                    <div id='coluna-b-branca' class='coluna coluna-branca'>{linha-5-coluna-b}</div>
+                    <div id='coluna-c-preta' class='coluna coluna-preta'>{linha-5-coluna-c}</div>
+                    <div id='coluna-d-branca' class='coluna coluna-branca'>{linha-5-coluna-d}</div>
+                    <div id='coluna-e-preta' class='coluna coluna-preta'>{linha-5-coluna-e}</div>
+                    <div id='coluna-f-branca' class='coluna coluna-branca'>{linha-5-coluna-f}</div>
+                    <div id='coluna-g-preta' class='coluna coluna-preta'>{linha-5-coluna-g}</div>
+                    <div id='coluna-h-branca' class='coluna coluna-branca'>{linha-5-coluna-h}</div>
+
+                </div>
+
+                <!--Linha 4-->
+                <div id='linha-4' class='linha'>
+
+                    <!--Colunas A-H -->
+                    <div class='coluna-indicativa'><span>4</span></div>
+                    <div id='coluna-a-branca' class='coluna coluna-branca'>{linha-4-coluna-a}</div>
+                    <div id='coluna-b-preta' class='coluna coluna-preta'>{linha-4-coluna-b}</div>
+                    <div id='coluna-c-branca' class='coluna coluna-branca'>{linha-4-coluna-c}</div>
+                    <div id='coluna-d-preta' class='coluna coluna-preta'>{linha-4-coluna-d}</div>
+                    <div id='coluna-e-branca' class='coluna coluna-branca'>{linha-4-coluna-e}</div>
+                    <div id='coluna-f-preta' class='coluna coluna-preta'>{linha-4-coluna-f}</div>
+                    <div id='coluna-g-branca' class='coluna coluna-branca'>{linha-4-coluna-g}</div>
+                    <div id='coluna-h-preta' class='coluna coluna-preta'>{linha-4-coluna-h}</div>
+
+                </div>
+
+                <!--Linha 3-->
+                <div id='linha-3' class='linha'>
+
+                    <!--Colunas A-H -->
+                    <div class='coluna-indicativa'><span>3</span></div>
+                    <div id='coluna-a-preta' class='coluna coluna-preta'>{linha-3-coluna-a}</div>
+                    <div id='coluna-b-branca' class='coluna coluna-branca'>{linha-3-coluna-b}</div>
+                    <div id='coluna-c-preta' class='coluna coluna-preta'>{linha-3-coluna-c}</div>
+                    <div id='coluna-d-branca' class='coluna coluna-branca'>{linha-3-coluna-d}</div>
+                    <div id='coluna-e-preta' class='coluna coluna-preta'>{linha-3-coluna-e}</div>
+                    <div id='coluna-f-branca' class='coluna coluna-branca'>{linha-3-coluna-f}</div>
+                    <div id='coluna-g-preta' class='coluna coluna-preta'>{linha-3-coluna-g}</div>
+                    <div id='coluna-h-branca' class='coluna coluna-branca'>{linha-3-coluna-h}</div>
+
+                </div>
+
+                <!--Linha 2-->
+                <div id='linha-2' class='linha'>
+
+                    <!--Colunas A-H -->
+                    <div class='coluna-indicativa'><span>2</span></div>
+                    <div id='coluna-a-branca' class='coluna coluna-branca'>{linha-2-coluna-a}</div>
+                    <div id='coluna-b-preta' class='coluna coluna-preta'>{linha-2-coluna-b}</div>
+                    <div id='coluna-c-branca' class='coluna coluna-branca'>{linha-2-coluna-c}</div>
+                    <div id='coluna-d-preta' class='coluna coluna-preta'>{linha-2-coluna-d}</div>
+                    <div id='coluna-e-branca' class='coluna coluna-branca'>{linha-2-coluna-e}</div>
+                    <div id='coluna-f-preta' class='coluna coluna-preta'>{linha-2-coluna-f}</div>
+                    <div id='coluna-g-branca' class='coluna coluna-branca'>{linha-2-coluna-g}</div>
+                    <div id='coluna-h-preta' class='coluna coluna-preta'>{linha-2-coluna-h}</div>
+
+                </div>
+
+                <!--Linha 1-->
+                <div id='linha-1' class='linha'>
+
+                    <!--Colunas A-H -->
+                    <div class='coluna-indicativa'><span>1</span></div>
+                    <div id='coluna-a-preta' class='coluna coluna-preta'>{linha-1-coluna-a}</div>
+                    <div id='coluna-b-branca' class='coluna coluna-branca'>{linha-1-coluna-b}</div>
+                    <div id='coluna-c-preta' class='coluna coluna-preta'>{linha-1-coluna-c}</div>
+                    <div id='coluna-d-branca' class='coluna coluna-branca'>{linha-1-coluna-d}</div>
+                    <div id='coluna-e-preta' class='coluna coluna-preta'>{linha-1-coluna-e}</div>
+                    <div id='coluna-f-branca' class='coluna coluna-branca'>{linha-1-coluna-f}</div>
+                    <div id='coluna-g-preta' class='coluna coluna-preta'>{linha-1-coluna-g}</div>
+                    <div id='coluna-h-branca' class='coluna coluna-branca'>{linha-1-coluna-h}</div>
+
+                </div>
+
+                <!--Linha 0-->
+                <div id='linha-0' class='linha'>
+
+                    <!--Colunas 0-A-H -->
+                    <div class='coluna-indicativa'><span>0</span></div>
+                    <div class='coluna-indicativa'><span>A</span></div>
+                    <div class='coluna-indicativa'><span>B</span></div>
+                    <div class='coluna-indicativa'><span>C</span></div>
+                    <div class='coluna-indicativa'><span>D</span></div>
+                    <div class='coluna-indicativa'><span>E</span></div>
+                    <div class='coluna-indicativa'><span>F</span></div>
+                    <div class='coluna-indicativa'><span>G</span></div>
+                    <div class='coluna-indicativa'><span>H</span></div>
+
+                </div>
+
+            </div>
+
+            <!--Painel direito-->
+            <div class='painel-direito'>
+
+                <div class='{jogador-atual-superior-direito} jogador-superior-direito'>
+                    <span>J</span>
+                    <span>O</span>
+                    <span>G</span>
+                    <span>A</span>
+                    <span>D</span>
+                    <span>O</span>
+                    <span>R</span>
+                    <span>{jogador-superior-direito}</span>
+                </div>
+
+                <div class='{jogador-atual-inferior-direito} jogador-inferior-direito'>
+                    <span>J</span>
+                    <span>O</span>
+                    <span>G</span>
+                    <span>A</span>
+                    <span>D</span>
+                    <span>O</span>
+                    <span>R</span>
+                    <span>{jogador-inferior-direito}</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!--Script responsável pelo efeito de destaque das colunas e peças, e também pelo preenchimento dos input-->
+        <script type="text/javascript" src="js/Tabuleiro.js"></script>
+
+
+    </body>
+</html>

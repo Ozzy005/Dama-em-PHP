@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <title>Dama em PHP</title>
+        <link rel="stylesheet" type="text/css" href="css/Reset.css">
+        <link rel="stylesheet" type="text/css" href="css/HomePage.css">
+    </head>
+    <body>
+
+        <div class='start'>
+
+            <p>Bem vindo</p>
+            <p>Jogo de dama feito em PHP!</p>
+            <p>Escolha a cor das suas peças.</p>
+
+            <form method='post' action='Index.php'>
+                <button id='peca-preta' name='peca-escolhida' type='submit' value='cor-preta'></button>
+                <button id='peca-branca' name='peca-escolhida' type='submit' value='cor-branca'></button>
+            </form>
+
+        </div>
+
+        <script>
+            if(window.history.replaceState)
+            {
+                window.history.replaceState(null,null,window.location.href);
+            }
+        </script>
+
+    </body>
+</html>

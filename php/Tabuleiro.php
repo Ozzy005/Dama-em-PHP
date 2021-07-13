@@ -6,91 +6,194 @@
  *
  **/
 
-//Criação do tabuleiro
-function Tabuleiro()
+class Tabuleiro
 {
-    $tabuleiro = [
-        1 => [
-            'casa-1a-branca' => null,
-            'casa-1b-preta' => null,
-            'casa-1c-branca' => null,
-            'casa-1d-preta' => null,
-            'casa-1e-branca' => null,
-            'casa-1f-preta' => null,
-            'casa-1g-branca' => null,
-            'casa-1h-preta' => null
-        ],
-        2 => [
-            'casa-2a-preta' => null,
-            'casa-2b-branca' => null,
-            'casa-2c-preta' => null,
-            'casa-2d-branca' => null,
-            'casa-2e-preta' => null,
-            'casa-2f-branca' => null,
-            'casa-2g-preta' => null,
-            'casa-2h-branca' => null
-        ],
-        3 => [
-            'casa-3a-branca' => null,
-            'casa-3b-preta' => null,
-            'casa-3c-branca' => null,
-            'casa-3d-preta' => null,
-            'casa-3e-branca' => null,
-            'casa-3f-preta' => null,
-            'casa-3g-branca' => null,
-            'casa-3h-preta' => null
-        ],
-        4 => [
-            'casa-4a-preta' => null,
-            'casa-4b-branca' => null,
-            'casa-4c-preta' => null,
-            'casa-4d-branca' => null,
-            'casa-4e-preta' => null,
-            'casa-4f-branca' => null,
-            'casa-4g-preta' => null,
-            'casa-4h-branca' => null
-        ],
-        5 => [
-            'casa-5a-branca' => null,
-            'casa-5b-preta' => null,
-            'casa-5c-branca' => null,
-            'casa-5d-preta' => null,
-            'casa-5e-branca' => null,
-            'casa-5f-preta' => null,
-            'casa-5g-branca' => null,
-            'casa-5h-preta' => null
-        ],
-        6 => [
-            'casa-6a-preta' => null,
-            'casa-6b-branca' => null,
-            'casa-6c-preta' => null,
-            'casa-6d-branca' => null,
-            'casa-6e-preta' => null,
-            'casa-6f-branca' => null,
-            'casa-6g-preta' => null,
-            'casa-6h-branca' => null
-        ],
-        7 => [
-            'casa-7a-branca' => null,
-            'casa-7b-preta' => null,
-            'casa-7c-branca' => null,
-            'casa-7d-preta' => null,
-            'casa-7e-branca' => null,
-            'casa-7f-preta' => null,
-            'casa-7g-branca' => null,
-            'casa-7h-preta' => null
-        ],
-        8 => [
-            'casa-8a-preta' => null,
-            'casa-8b-branca' => null,
-            'casa-8c-preta' => null,
-            'casa-8d-branca' => null,
-            'casa-8e-preta' => null,
-            'casa-8f-branca' => null,
-            'casa-8g-preta' => null,
-            'casa-8h-branca' => null
-        ]
-    ];
-    return $tabuleiro;
+    private $tabuleiro;
+    private $peca_escolhida;
+    private $pecas_brancas;
+    private $pecas_pretas;
+
+    public function __construct( $peca_escolhida, $pecas_brancas, $pecas_pretas )
+    {
+        $this->peca_escolhida = $peca_escolhida;
+        $this->pecas_brancas = $pecas_brancas;
+        $this->pecas_pretas = $pecas_pretas;
+
+        $this->setTabuleiro();
+    }
+
+    public function mountTabuleiro()
+    {
+        if( $this->peca_escolhida === 'cor-preta' )
+        {
+            $this->selectedColor( $this->pecas_brancas, $this->pecas_pretas );
+        }
+        if( $this->peca_escolhida === 'cor-branca' )
+        {
+            $this->selectedColor( $this->pecas_pretas, $this->pecas_brancas );
+        }
+    }
+
+    public function getTabuleiro()
+    {
+        return $this->tabuleiro;
+    }
+
+    private function selectedColor( $pecas1, $pecas2 )
+    {
+        $n8 = 4;  //4-3-2-1
+        $n7 = 8;  //8-7-6-5
+        $n6 = 12; //12-11-10-9
+
+        $n3 = 9;  //9-10-11-12
+        $n2 = 5;  //5-6-7-8
+        $n1 = 1;  //1-2-3-4
+
+        foreach( $this->tabuleiro as $chave_linha => $valor_linha )
+        {
+            foreach( $valor_linha as $chave_coluna => $valor_coluna )
+            {
+                $linha_explode = explode('-',$chave_linha);
+                $coluna_explode = explode('-',$chave_coluna);
+
+                settype($linha_explode[1],'integer');
+
+                //organiza as peça do lado de cima do tabuleiro
+                if( $linha_explode[1] <= 8 && $linha_explode[1] >= 6 && $coluna_explode[2] === 'preta' )
+                {
+                    if( $linha_explode[1] === 8 && $n8 <= 4 && $n8 >= 1 )
+                    {
+                        $this->tabuleiro[$chave_linha][$chave_coluna] = $pecas1[$n8];
+                        $n8--;
+                    }
+                    if( $linha_explode[1] === 7 && $n7 <= 8 && $n7 >= 5 )
+                    {
+                        $this->tabuleiro[$chave_linha][$chave_coluna] = $pecas1[$n7];
+                        $n7--;
+                    }
+                    if( $linha_explode[1] === 6 && $n6 <= 12 && $n6 >= 9 )
+                    {
+                        $this->tabuleiro[$chave_linha][$chave_coluna] = $pecas1[$n6];
+                        $n6--;
+                    }
+                }
+
+                //organiza as peças do lado de baixo do tabuleiro
+                if( $linha_explode[1] <= 3 && $linha_explode[1] >= 1 && $coluna_explode[2] === 'preta' )
+                {
+                    if( $linha_explode[1] === 3 && $n3 >= 9 && $n3 <= 12 )
+                    {
+                        $this->tabuleiro[$chave_linha][$chave_coluna] = $pecas2[$n3];
+                        $n3++;
+                    }
+                    if( $linha_explode[1] === 2 && $n2 >= 5 && $n2 <= 8 )
+                    {
+                        $this->tabuleiro[$chave_linha][$chave_coluna] = $pecas2[$n2];
+                        $n2++;
+                    }
+                    if( $linha_explode[1] === 1 && $n1 >= 1 && $n1 <= 4 )
+                    {
+                        $this->tabuleiro[$chave_linha][$chave_coluna] = $pecas2[$n1];
+                        $n1++;
+                    }
+                }
+            }
+        }
+    }
+
+    private function setTabuleiro()
+    {
+        $this->tabuleiro =
+        [
+            'linha-8' =>
+            [
+                'coluna-a-branca' => null,
+                'coluna-b-preta' => null,
+                'coluna-c-branca' => null,
+                'coluna-d-preta' => null,
+                'coluna-e-branca' => null,
+                'coluna-f-preta' => null,
+                'coluna-g-branca' => null,
+                'coluna-h-preta' => null
+            ],
+            'linha-7' =>
+            [
+                'coluna-a-preta' => null,
+                'coluna-b-branca' => null,
+                'coluna-c-preta' => null,
+                'coluna-d-branca' => null,
+                'coluna-e-preta' => null,
+                'coluna-f-branca' => null,
+                'coluna-g-preta' => null,
+                'coluna-h-branca' => null
+            ],
+            'linha-6' =>
+            [
+                'coluna-a-branca' => null,
+                'coluna-b-preta' => null,
+                'coluna-c-branca' => null,
+                'coluna-d-preta' => null,
+                'coluna-e-branca' => null,
+                'coluna-f-preta' => null,
+                'coluna-g-branca' => null,
+                'coluna-h-preta' => null
+            ],
+            'linha-5' =>
+            [
+                'coluna-a-preta' => null,
+                'coluna-b-branca' => null,
+                'coluna-c-preta' => null,
+                'coluna-d-branca' => null,
+                'coluna-e-preta' => null,
+                'coluna-f-branca' => null,
+                'coluna-g-preta' => null,
+                'coluna-h-branca' => null
+            ],
+            'linha-4' =>
+            [
+                'coluna-a-branca' => null,
+                'coluna-b-preta' => null,
+                'coluna-c-branca' => null,
+                'coluna-d-preta' => null,
+                'coluna-e-branca' => null,
+                'coluna-f-preta' => null,
+                'coluna-g-branca' => null,
+                'coluna-h-preta' => null
+            ],
+            'linha-3' =>
+            [
+                'coluna-a-preta' => null,
+                'coluna-b-branca' => null,
+                'coluna-c-preta' => null,
+                'coluna-d-branca' => null,
+                'coluna-e-preta' => null,
+                'coluna-f-branca' => null,
+                'coluna-g-preta' => null,
+                'coluna-h-branca' => null
+            ],
+            'linha-2' =>
+            [
+                'coluna-a-branca' => null,
+                'coluna-b-preta' => null,
+                'coluna-c-branca' => null,
+                'coluna-d-preta' => null,
+                'coluna-e-branca' => null,
+                'coluna-f-preta' => null,
+                'coluna-g-branca' => null,
+                'coluna-h-preta' => null
+            ],
+            'linha-1' =>
+            [
+                'coluna-a-preta' => null,
+                'coluna-b-branca' => null,
+                'coluna-c-preta' => null,
+                'coluna-d-branca' => null,
+                'coluna-e-preta' => null,
+                'coluna-f-branca' => null,
+                'coluna-g-preta' => null,
+                'coluna-h-branca' => null
+            ]
+        ];
+    }
 }
 ?>

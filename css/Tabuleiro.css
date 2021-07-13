@@ -1,0 +1,179 @@
+/*Definições genéricas*/
+body{
+    min-height: 100vh;
+    min-width: 100vw;
+    max-height: 100vh;
+    max-width: 100vw;
+}
+body,.coluna-indicativa,form,.turno-atual,.jogador-atual-esquerdo,.jogador-superior-direito,.jogador-inferior-direito
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/*-----------------------------------------------------*/
+
+/*Definições do conteiner principal*/
+.main{
+    display: grid;
+    grid-template-columns: 25vw 45vw 25vw;
+    grid-template-rows: 92vh;
+    column-gap: 10px;
+}
+/*-----------------------------------------------------*/
+
+
+/*Definições do tabuleiro*/
+.tabuleiro{
+    display: grid;
+    grid-template-rows: repeat(9, 1fr);
+    grid-column: 2/3;
+    border-right: 2px solid black;
+    border-bottom: 2px solid black;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.coluna-indicativa{
+    background-color: rgb(0, 77, 77);
+    border-top: 2px solid black;
+    border-left: 2px solid black;
+}
+.linha{
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+}
+.coluna{
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: 1fr 3fr 1fr;
+    border-top: 2px solid black;
+    border-left: 2px solid black;
+}
+.coluna-preta{
+    background-color: rgb(102, 51, 0);
+}
+.coluna-branca{
+    background-color: rgb(230, 204, 179);
+}
+.peca{
+    grid-column: 2/3;
+    grid-row: 2/3;
+    border-radius: 20px;
+}
+.pedra-preta{
+    background-image: linear-gradient(rgb(38, 38, 38),rgb(0, 0, 0)) ;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.pedra-branca{
+    background-image: linear-gradient(rgb(255, 255, 255),rgb(153, 153, 153));
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+/*-----------------------------------------------------*/
+
+
+/*Definições do painel esquerdo*/
+.painel-esquerdo{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-column: 1/2;
+}
+.controle{
+    grid-column: 2/3;
+    grid-row: 1/2;
+    background-color: rgb(0, 77, 77);
+    color: white;
+    border: 2px solid black;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+form{
+    flex-direction: column;
+    font-size: 14px;
+}
+label{
+    margin: 5px 0 0 0;
+}
+input{
+    width: 80%;
+    height: 20px;
+    margin: 5px 0 0 0;
+    border: 0;
+    border-radius: 10px;
+    padding: 5px;
+    outline: 0;
+}
+button{
+    width: 50%;
+    height: 30px;
+    margin: 10px 0 0 0;
+    padding: 0px;
+}
+
+.informacoes{
+    color: white;
+    grid-column: 2/3;
+    grid-row: 2/3;
+    background-color: rgb(0, 77, 77);
+    border: 2px black solid;
+    border-top: 0;
+}
+.turno-atual,.jogador-atual-esquerdo{
+    width: 70%;
+    height: 15%;
+    font-size: 14px;
+    margin: 15px auto 0 auto;
+}
+.turno-atual{
+    background-color: rgb(3, 3, 70);
+    box-shadow: 0px 0px 3px 3px rgb(0, 0, 255);
+}
+.jogador-atual-esquerdo{
+    background-color: rgb(2, 56, 2);
+    box-shadow: 0px 0px 3px 3px rgb(0, 255, 0);
+}
+.mensagem-erro{
+    width: 60%;
+    height: 30%;
+    margin: 15px auto 0 auto;
+    font-size: 14px;
+    text-align: center;
+    padding: 5%;
+    background-color: #330000;
+    box-shadow: 0px 0px 3px 3px #ff0000;
+}
+/*-----------------------------------------------------*/
+
+
+/*Definições do painel direito*/
+.painel-direito{
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-column: 3/4;
+}
+.jogador-superior-direito,.jogador-inferior-direito{
+    flex-direction: column;
+    border: 2px solid black;
+    background-color: rgb(128, 128, 128);
+}
+.jogador-superior-direito{
+    grid-column:1/2;
+    grid-row: 1/2;
+
+}
+.jogador-inferior-direito{
+    grid-column: 1/2;
+    grid-row: 3/4;
+}
+.jogador-superior-direito > span,.jogador-inferior-direito > span{
+    padding: 3px;
+}
+.jogador-superior-direito > span:last-child,.jogador-inferior-direito > span:last-child{
+    font-weight: 1000;
+    font-size: 20px;
+}
+.jogador-atual{
+    box-shadow: 0px 0px 5px 5px rgb(0, 255, 0);
+    border-color: rgb(0, 255, 0);
+}
+/*-----------------------------------------------------*/

@@ -6,10 +6,10 @@
  *
  **/
 
-//Criação das peças
-function Pecas()
+class Pecas
 {
-    define("PECAS_BRANCAS", [
+    private static $pecasBrancas =
+    [
         1 => 'pedra-branca-1',
         2 => 'pedra-branca-2',
         3 => 'pedra-branca-3',
@@ -22,9 +22,10 @@ function Pecas()
         10 => 'pedra-branca-10',
         11 => 'pedra-branca-11',
         12 => 'pedra-branca-12'
-    ]);
+    ];
 
-    define("PECAS_PRETAS",[
+    private static $pecasPretas =
+    [
         1 => 'pedra-preta-1',
         2 => 'pedra-preta-2',
         3 => 'pedra-preta-3',
@@ -37,6 +38,16 @@ function Pecas()
         10 => 'pedra-preta-10',
         11 => 'pedra-preta-11',
         12 => 'pedra-preta-12'
-    ]);
+    ];
+
+    public static function getPecasBrancas()
+    {
+        return self::$pecasBrancas;
+    }
+
+    public static function getPecasPretas()
+    {
+        return self::$pecasPretas;
+    }
 }
 ?>
