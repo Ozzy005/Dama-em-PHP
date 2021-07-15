@@ -33,9 +33,9 @@ class Regras
             $this->firstBid();
             $this->lastMove();
             $this->moveOneLineForward();
-            $this->moveHouseOccupied();
             $this->moveHouseNeighbor();
             $this->columnColor();
+            $this->moveHouseOccupied();
         }
         catch( Exception $e )
         {
