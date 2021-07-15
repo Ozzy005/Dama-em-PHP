@@ -60,7 +60,7 @@ class DataInput
         {
             $peca_tipo = ( $this->peca_explode[0] === 'pedra' ) ? true : false;
             $peca_cor = ( $this->peca_explode[1] === 'branca' || $this->peca_explode[1] === 'preta' ) ? true : false;
-            $id = preg_match('/^[1-9]$|^[0-9][0-9]$/',$this->peca_explode[2]);
+            $id = preg_match('/^[1-9]$|^[1-9][0-9]$/',$this->peca_explode[2]);
             $peca_id = ( $this->peca_explode[2] >= 1 && $this->peca_explode[2] <= 12 && $id ) ? true : false;
 
             $peca_checada = ( $peca_tipo && $peca_cor && $peca_id ) ? true : false;
@@ -89,7 +89,7 @@ class DataInput
         if( count( $this->coluna_explode ) === 3 )
         {
             $coluna_tipo = ( $this->coluna_explode[0] === 'coluna' ) ? true : false;
-            $coluna_id = preg_match( '/^[a-hA-H]$/', $this->coluna_explode[1] );
+            $coluna_id = preg_match( '/^[a-h]$/', $this->coluna_explode[1] );
             $coluna_cor = ( $this->coluna_explode[2] === 'branca' || $this->coluna_explode[2] === 'preta' ) ? true : false;
 
             $coluna_checada = ( $coluna_tipo && $coluna_id && $coluna_cor ) ? true : false;
@@ -117,7 +117,7 @@ class DataInput
         if( count( $this->linha_explode ) === 2 )
         {
             $linha_tipo = ( $this->linha_explode[0] === 'linha' ) ? true : false;
-            $id = preg_match('/^[0-9]$/',$this->linha_explode[1]);
+            $id = preg_match('/^[1-8]$/',$this->linha_explode[1]);
             $linha_id = ( $this->linha_explode[1] >= 1 && $this->linha_explode[1] <= 8 && $id ) ? true : false;
 
             $linha_checada = ( $linha_tipo && $linha_id ) ? true : false;
