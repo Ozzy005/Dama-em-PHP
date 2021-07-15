@@ -8,6 +8,7 @@
 
 class DataInput
 {
+    private $tabuleiro;
     private $peca;
     private $linha;
     private $coluna;
@@ -19,8 +20,9 @@ class DataInput
     private $coluna_checada;
     private $dados = [];
 
-    public function __construct( $peca, $linha, $coluna )
+    public function __construct( $tabuleiro, $peca, $linha, $coluna )
     {
+        $this->tabuleiro = $tabuleiro;
         $this->peca = $peca;
         $this->linha = $linha;
         $this->coluna = $coluna;
@@ -67,11 +69,21 @@ class DataInput
 
             if( $peca_checada )
             {
+                foreach( $this->tabuleiro as $chave_linha => $valor_linha )
+                {
+                    if( $chave_coluna = array_search( $this->peca, $valor_linha ) )
+                    {
+                        $posicao_atual = [$chave_linha, $chave_coluna];
+                        break;
+                    }
+                }
+
                 $this->peca_checada = $peca_checada;
-                $peca['peca-tipo'] = $this->peca_explode[0];
-                $peca['peca-cor'] = $this->peca_explode[1];
-                $peca['peca-id'] = $this->peca_explode[2];
-                $peca['peca-nome'] = $this->peca;
+                $peca['tipo'] = $this->peca_explode[0];
+                $peca['cor'] = $this->peca_explode[1];
+                $peca['id'] = $this->peca_explode[2];
+                $peca['nome'] = $this->peca;
+                $peca['posicao-atual'] = $posicao_atual;
                 $this->dados['peca'] = $peca;
             }
         }
@@ -97,10 +109,10 @@ class DataInput
             if( $coluna_checada )
             {
                 $this->coluna_checada = $coluna_checada;
-                $coluna['coluna-tipo'] = $this->coluna_explode[0];
-                $coluna['coluna-id'] = $this->coluna_explode[1];
-                $coluna['coluna-cor'] = $this->coluna_explode[2];
-                $coluna['coluna-nome'] = $this->coluna;
+                $coluna['tipo'] = $this->coluna_explode[0];
+                $coluna['id'] = $this->coluna_explode[1];
+                $coluna['cor'] = $this->coluna_explode[2];
+                $coluna['nome'] = $this->coluna;
                 $this->dados['coluna'] = $coluna;
             }
         }
@@ -125,9 +137,9 @@ class DataInput
             if( $linha_checada )
             {
                 $this->linha_checada = $linha_checada;
-                $linha['linha-tipo'] = $this->linha_explode[0];
-                $linha['linha-id'] = $this->linha_explode[1];
-                $linha['linha-nome'] = $this->linha;
+                $linha['tipo'] = $this->linha_explode[0];
+                $linha['id'] = $this->linha_explode[1];
+                $linha['nome'] = $this->linha;
                 $this->dados['linha'] = $linha;
             }
         }

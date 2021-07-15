@@ -29,23 +29,13 @@ class MoverPeca
 
     public function mover()
     {
-        foreach( $this->tabuleiro as $chave_linha => $valor_linha )
+        if( ( $this->tabuleiro[$this->peca['posicao-atual'][0]][$this->peca['posicao-atual'][1]] ) === $this->peca['nome'])
         {
-            if( $chave_coluna = array_search( $this->peca['peca-nome'], $valor_linha ) )
-            {
-                $peca_pos = [$chave_linha, $chave_coluna];
-                break;
-            }
-        }
-
-        if( ( $this->tabuleiro[$peca_pos[0]][$peca_pos[1]] ) === $this->peca['peca-nome'])
-        {
-            $this->tabuleiro[$this->linha['linha-nome']][$this->coluna['coluna-nome']] = $this->peca['peca-nome'];
-            $this->tabuleiro[$peca_pos[0]][$peca_pos[1]] = null;
-
+            $this->tabuleiro[$this->linha['nome']][$this->coluna['nome']] = $this->peca['nome'];
+            $this->tabuleiro[$this->peca['posicao-atual'][0]][$this->peca['posicao-atual'][1]] = null;
             $this->dados['tabuleiro'] = $this->tabuleiro;
             $this->dados['turno'] = ++$this->turno;
-            $this->dados['ultimo-movimento'] = $this->peca['peca-cor'];
+            $this->dados['ultimo-movimento'] = $this->peca['cor'];
         }
     }
 

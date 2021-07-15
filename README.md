@@ -39,10 +39,11 @@ Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
 
 ### Funcionalidades referentes as regras do jogo
 
-- [x] Não é permitido mover-se para as casas brancas
+- [x] Proibido mover-se para as casas brancas
 - [x] Cada jogador só pode mover suas peças no seu turno e somente uma vez a cada turno
 - [x] O lance inicial cabe sempre a quem estiver com as peças brancas
-- [ ] A pedra move-se só para frente
+- [x] Permitido a pedra mover-se apenas uma linha para frente
+- [x] Permitido a pedra mover-se apenas para sua casa vizinha
 - [ ] Captura de peças
 - [ ] A pedra e a dama podem capturar tanto para frente como para trás
 - [ ] Duas ou mais peças juntas, na mesma diagonal, não podem ser capturadas

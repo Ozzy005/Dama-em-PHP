@@ -54,11 +54,11 @@ class Game
         {
             try
             {
-                $DataInput = new DataInput( $this->peca, $this->linha, $this->coluna );
+                $DataInput = new DataInput( $this->tabuleiro, $this->peca, $this->linha, $this->coluna );
                 $DataInput->check();
                 $dados = $DataInput->getData();
 
-                $Regras = new Regras( $this->turno, $this->ultimo_movimento , $dados );
+                $Regras = new Regras( $this->tabuleiro, $this->turno, $this->peca_escolhida, $this->ultimo_movimento , $dados );
                 $Regras->check();
 
                 $MoverPeca = new MoverPeca( $this->tabuleiro, $this->turno, $this->ultimo_movimento, $dados );
