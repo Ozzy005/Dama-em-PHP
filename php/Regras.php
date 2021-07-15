@@ -30,11 +30,12 @@ class Regras
     {
         try
         {
-            $this->columnColor();
             $this->firstBid();
             $this->lastMove();
             $this->moveOneLineForward();
+            $this->moveHouseOccupied();
             $this->moveHouseNeighbor();
+            $this->columnColor();
         }
         catch( Exception $e )
         {
@@ -42,38 +43,54 @@ class Regras
         }
     }
 
+    private function moveHouseOccupied()
+    {
+        $tabuleiro = $this->tabuleiro;
+        $linha_alvo = $this->linha['nome'];
+        $coluna_alvo = $this->coluna['nome'];
+
+        if( $tabuleiro[$linha_alvo][$coluna_alvo] !== null )
+        {
+            throw new Exception( 'Não é possível mover-se para uma casa ocupada!' );
+        }
+    }
+
     private function moveHouseNeighbor()
     {
+        $tabuleiro = $this->tabuleiro;
+        $linha_alvo = $this->linha['nome'];
+        $coluna_alvo = $this->coluna['nome'];
         $linha_atual = $this->peca['posicao-atual'][0];
         $coluna_atual = $this->peca['posicao-atual'][1];
 
-        $chaves_linha_atual = array_keys($this->tabuleiro[$linha_atual]);
-        $chaves_linha_alvo = array_keys($this->tabuleiro[$this->linha['nome']]);
+        $keys_linha_atual = array_keys( $tabuleiro[$linha_atual] );
+        $keys_linha_alvo = array_keys( $tabuleiro[$linha_alvo] );
 
-        $key_atual = array_search($coluna_atual,$chaves_linha_atual);
-        $key_alvo = array_search($this->coluna['nome'],$chaves_linha_alvo);
+        $key_atual = array_search( $coluna_atual, $keys_linha_atual );
+        $key_alvo = array_search( $coluna_alvo, $keys_linha_alvo );
 
-        if( $key_alvo === ( $key_atual - 1 ) xor $key_alvo === ( $key_atual + 1 ) )
+        if( $key_alvo === ( $key_atual - 1 ) xor $key_alvo === $key_atual xor $key_alvo === ( $key_atual + 1 ) )
         {
             return true;
         }
         else
         {
-            throw new Exception( 'Permitido apenas mover-se para sua casa vizinha!' );
+            throw new Exception( 'Permitido mover-se apenas para sua casa vizinha!' );
         }
 
     }
 
     private function moveOneLineForward()
     {
-        settype( $this->linha['id'], 'integer' );
+        $peca_cor = $this->peca['cor'];
+        $peca_escolhida = $this->peca_escolhida;
+        $linha_id = (integer)$this->linha['id'];
         $linha_atual = $this->peca['posicao-atual'][0];
         $linha_atual_explode = explode('-',$linha_atual);
 
-
-        if( $this->peca['cor'] === 'preta' )
+        if( $peca_cor === 'preta' )
         {
-            if( $this->peca_escolhida === 'cor-preta' )
+            if( $peca_escolhida === 'cor-preta' )
             {
                 $linha_permitida = ++$linha_atual_explode[1];
             }
@@ -84,7 +101,7 @@ class Regras
         }
         else
         {
-            if( $this->peca_escolhida === 'cor-branca' )
+            if( $peca_escolhida === 'cor-branca' )
             {
                 $linha_permitida = ++$linha_atual_explode[1];
             }
@@ -94,7 +111,7 @@ class Regras
             }
         }
 
-        if( $linha_permitida !== $this->linha['id'] )
+        if( $linha_permitida !== $linha_id )
         {
             throw new Exception( 'Permitido mover-se apenas uma linha para frente !' );
         }

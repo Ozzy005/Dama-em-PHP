@@ -34,8 +34,8 @@ class DataInput
     public function check()
     {
         $this->checkPeca();
-        $this->checkLinha();
         $this->checkColuna();
+        $this->checkLinha();
 
         if(  !$this->peca_checada  || !$this->coluna_checada || !$this->linha_checada )
         {
@@ -102,9 +102,10 @@ class DataInput
         {
             $coluna_tipo = ( $this->coluna_explode[0] === 'coluna' ) ? true : false;
             $coluna_id = preg_match( '/^[a-h]$/', $this->coluna_explode[1] );
+            $coluna_exists = @key_exists($this->coluna,$this->tabuleiro[$this->linha]);
             $coluna_cor = ( $this->coluna_explode[2] === 'branca' || $this->coluna_explode[2] === 'preta' ) ? true : false;
 
-            $coluna_checada = ( $coluna_tipo && $coluna_id && $coluna_cor ) ? true : false;
+            $coluna_checada = ( $coluna_tipo && $coluna_id && $coluna_exists && $coluna_cor ) ? true : false;
 
             if( $coluna_checada )
             {

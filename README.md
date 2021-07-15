@@ -44,6 +44,7 @@ Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
 - [x] O lance inicial cabe sempre a quem estiver com as peças brancas
 - [x] Permitido a pedra mover-se apenas uma linha para frente
 - [x] Permitido a pedra mover-se apenas para sua casa vizinha
+- [x] Não é possível mover-se para uma casa ocupada
 - [ ] Captura de peças
 - [ ] A pedra e a dama podem capturar tanto para frente como para trás
 - [ ] Duas ou mais peças juntas, na mesma diagonal, não podem ser capturadas
