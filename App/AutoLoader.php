@@ -10,16 +10,25 @@ class AutoLoader
 {
     protected $directories;
 
+    /**
+     * Adiciona um diretório a ser vasculhado
+     */
     public function addDirectory($directory)
     {
         $this->directories[] = $directory;
     }
 
+    /**
+     * Registra o AppLoader
+     */
     public function register()
     {
         spl_autoload_register(array($this, 'loadClass'));
     }
 
+    /**
+     * Carrega uma classe
+     */
     public function loadClass($class)
     {
         $folders = $this->directories;

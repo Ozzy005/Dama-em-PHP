@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <title>Dama em PHP</title>
+        <link rel="stylesheet" type="text/css" href="css/reset-style.css">
+        <link rel="stylesheet" type="text/css" href="css/board.css">
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+
+    <body>
+
+        <!--Container main-->
+        <div class='main'>
+
+            <!--Panel left-->
+            <div class='panel-left'>
+
+                <!--Player control-->
+                <div class='control'>
+                    <form method='post' action='index.php' enctype="application/x-www-form-urlencoded">
+                        <input id='piece' name='piece' type='text'/>
+                        <input id='line-source' name='line-source' type='text'>
+                        <input id='column-source' name='column-source' type='text'>
+                        <input id='line-target' name='line-target' type='text'>
+                        <input id='column-target' name='column-target' type='text'>
+                        <button name='method' type='submit' value='move'>MOVER</button>
+                        <button name='method' type='submit' value='capture'>CAPTURAR</button>
+                        <button name='method' type='submit' value='reset'>RESET</button>
+                    </form>
+                </div>
+
+                <!--Useful information-->
+                <div class='information'>
+                    <div class='turn-current'>
+                        Turno: {turn-current}
+                    </div>
+                    <div class='player-current-left'>
+                        Jogador: {player-current-left}
+                    </div>
+                    {message-error}
+                </div>
+
+            </div>
+
+            <!--Start of the board-->
+            <div class='board'>
+
+                <!--line 8-->
+                <div id='line-8' class='line'>
+
+                    <!--Columns A-H -->
+                    <div class='column-indicative'><span>8</span></div>
+                    <div id='column-a-white' class='column column-white'>{line-8-column-a}</div>
+                    <div id='column-b-black' class='column column-black'>{line-8-column-b}</div>
+                    <div id='column-c-white' class='column column-white'>{line-8-column-c}</div>
+                    <div id='column-d-black' class='column column-black'>{line-8-column-d}</div>
+                    <div id='column-e-white' class='column column-white'>{line-8-column-e}</div>
+                    <div id='column-f-black' class='column column-black'>{line-8-column-f}</div>
+                    <div id='column-g-white' class='column column-white'>{line-8-column-g}</div>
+                    <div id='column-h-black' class='column column-black'>{line-8-column-h}</div>
+
+                </div>
+
+                <!--line 7-->
+                <div id='line-7' class='line'>
+
+                    <!--Columns A-H -->
+                    <div class='column-indicative'><span>7</span></div>
+                    <div id='column-a-black' class='column column-black'>{line-7-column-a}</div>
+                    <div id='column-b-white' class='column column-white'>{line-7-column-b}</div>
+                    <div id='column-c-black' class='column column-black'>{line-7-column-c}</div>
+                    <div id='column-d-white' class='column column-white'>{line-7-column-d}</div>
+                    <div id='column-e-black' class='column column-black'>{line-7-column-e}</div>
+                    <div id='column-f-white' class='column column-white'>{line-7-column-f}</div>
+                    <div id='column-g-black' class='column column-black'>{line-7-column-g}</div>
+                    <div id='column-h-white' class='column column-white'>{line-7-column-h}</div>
+
+                </div>
+
+                <!--line 6-->
+                <div id='line-6' class='line'>
+
+                    <!--Columns A-H -->
+                    <div class='column-indicative'><span>6</span></div>
+                    <div id='column-a-white' class='column column-white'>{line-6-column-a}</div>
+                    <div id='column-b-black' class='column column-black'>{line-6-column-b}</div>
+                    <div id='column-c-white' class='column column-white'>{line-6-column-c}</div>
+                    <div id='column-d-black' class='column column-black'>{line-6-column-d}</div>
+                    <div id='column-e-white' class='column column-white'>{line-6-column-e}</div>
+                    <div id='column-f-black' class='column column-black'>{line-6-column-f}</div>
+                    <div id='column-g-white' class='column column-white'>{line-6-column-g}</div>
+                    <div id='column-h-black' class='column column-black'>{line-6-column-h}</div>
+
+                </div>
+
+                <!--line 5-->
+                <div id='line-5' class='line'>
+
+                    <!--Columns A-H -->
+                    <div class='column-indicative'><span>5</span></div>
+                    <div id='column-a-black' class='column column-black'>{line-5-column-a}</div>
+                    <div id='column-b-white' class='column column-white'>{line-5-column-b}</div>
+                    <div id='column-c-black' class='column column-black'>{line-5-column-c}</div>
+                    <div id='column-d-white' class='column column-white'>{line-5-column-d}</div>
+                    <div id='column-e-black' class='column column-black'>{line-5-column-e}</div>
+                    <div id='column-f-white' class='column column-white'>{line-5-column-f}</div>
+                    <div id='column-g-black' class='column column-black'>{line-5-column-g}</div>
+                    <div id='column-h-white' class='column column-white'>{line-5-column-h}</div>
+
+                </div>
+
+                <!--line 4-->
+                <div id='line-4' class='line'>
+
+                    <!--Columns A-H -->
+                    <div class='column-indicative'><span>4</span></div>
+                    <div id='column-a-white' class='column column-white'>{line-4-column-a}</div>
+                    <div id='column-b-black' class='column column-black'>{line-4-column-b}</div>
+                    <div id='column-c-white' class='column column-white'>{line-4-column-c}</div>
+                    <div id='column-d-black' class='column column-black'>{line-4-column-d}</div>
+                    <div id='column-e-white' class='column column-white'>{line-4-column-e}</div>
+                    <div id='column-f-black' class='column column-black'>{line-4-column-f}</div>
+                    <div id='column-g-white' class='column column-white'>{line-4-column-g}</div>
+                    <div id='column-h-black' class='column column-black'>{line-4-column-h}</div>
+
+                </div>
+
+                <!--line 3-->
+                <div id='line-3' class='line'>
+
+                    <!--Columns A-H -->
+                    <div class='column-indicative'><span>3</span></div>
+                    <div id='column-a-black' class='column column-black'>{line-3-column-a}</div>
+                    <div id='column-b-white' class='column column-white'>{line-3-column-b}</div>
+                    <div id='column-c-black' class='column column-black'>{line-3-column-c}</div>
+                    <div id='column-d-white' class='column column-white'>{line-3-column-d}</div>
+                    <div id='column-e-black' class='column column-black'>{line-3-column-e}</div>
+                    <div id='column-f-white' class='column column-white'>{line-3-column-f}</div>
+                    <div id='column-g-black' class='column column-black'>{line-3-column-g}</div>
+                    <div id='column-h-white' class='column column-white'>{line-3-column-h}</div>
+
+                </div>
+
+                <!--line 2-->
+                <div id='line-2' class='line'>
+
+                    <!--Columns A-H -->
+                    <div class='column-indicative'><span>2</span></div>
+                    <div id='column-a-white' class='column column-white'>{line-2-column-a}</div>
+                    <div id='column-b-black' class='column column-black'>{line-2-column-b}</div>
+                    <div id='column-c-white' class='column column-white'>{line-2-column-c}</div>
+                    <div id='column-d-black' class='column column-black'>{line-2-column-d}</div>
+                    <div id='column-e-white' class='column column-white'>{line-2-column-e}</div>
+                    <div id='column-f-black' class='column column-black'>{line-2-column-f}</div>
+                    <div id='column-g-white' class='column column-white'>{line-2-column-g}</div>
+                    <div id='column-h-black' class='column column-black'>{line-2-column-h}</div>
+
+                </div>
+
+                <!--line 1-->
+                <div id='line-1' class='line'>
+
+                    <!--Columns A-H -->
+                    <div class='column-indicative'><span>1</span></div>
+                    <div id='column-a-black' class='column column-black'>{line-1-column-a}</div>
+                    <div id='column-b-white' class='column column-white'>{line-1-column-b}</div>
+                    <div id='column-c-black' class='column column-black'>{line-1-column-c}</div>
+                    <div id='column-d-white' class='column column-white'>{line-1-column-d}</div>
+                    <div id='column-e-black' class='column column-black'>{line-1-column-e}</div>
+                    <div id='column-f-white' class='column column-white'>{line-1-column-f}</div>
+                    <div id='column-g-black' class='column column-black'>{line-1-column-g}</div>
+                    <div id='column-h-white' class='column column-white'>{line-1-column-h}</div>
+
+                </div>
+
+                <!--line 0-->
+                <div id='line-0' class='line'>
+
+                    <!--Columns 0-A-H -->
+                    <div class='column-indicative'><span>0</span></div>
+                    <div class='column-indicative'><span>A</span></div>
+                    <div class='column-indicative'><span>B</span></div>
+                    <div class='column-indicative'><span>C</span></div>
+                    <div class='column-indicative'><span>D</span></div>
+                    <div class='column-indicative'><span>E</span></div>
+                    <div class='column-indicative'><span>F</span></div>
+                    <div class='column-indicative'><span>G</span></div>
+                    <div class='column-indicative'><span>H</span></div>
+
+                </div>
+
+            </div>
+
+            <!--Panel right-->
+            <div class='panel-right'>
+
+                <div class='{player-current-top-right} player-top-right'>
+                    <span>J</span>
+                    <span>O</span>
+                    <span>G</span>
+                    <span>A</span>
+                    <span>D</span>
+                    <span>O</span>
+                    <span>R</span>
+                    <span>{player-top-right}</span>
+                </div>
+
+                <div class='{player-current-lower-right} player-lower-right'>
+                    <span>J</span>
+                    <span>O</span>
+                    <span>G</span>
+                    <span>A</span>
+                    <span>D</span>
+                    <span>O</span>
+                    <span>R</span>
+                    <span>{player-lower-right}</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <script type="text/javascript" src="js/board.js"></script>
+
+    </body>
+</html>

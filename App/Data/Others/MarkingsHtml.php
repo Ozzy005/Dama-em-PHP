@@ -1,0 +1,90 @@
+<?php
+
+/**
+ *
+ * @author Rafael Arend
+ *
+ **/
+
+class MarkingsHtml
+{
+    private static $markings_html =
+    [
+        "{turn-current}",
+        "{player-current-left}",
+        "{message-error}",
+        "{line-8-column-a}",
+        "{line-8-column-b}",
+        "{line-8-column-c}",
+        "{line-8-column-d}",
+        "{line-8-column-e}",
+        "{line-8-column-f}",
+        "{line-8-column-g}",
+        "{line-8-column-h}",
+        "{line-7-column-a}",
+        "{line-7-column-b}",
+        "{line-7-column-c}",
+        "{line-7-column-d}",
+        "{line-7-column-e}",
+        "{line-7-column-f}",
+        "{line-7-column-g}",
+        "{line-7-column-h}",
+        "{line-6-column-a}",
+        "{line-6-column-b}",
+        "{line-6-column-c}",
+        "{line-6-column-d}",
+        "{line-6-column-e}",
+        "{line-6-column-f}",
+        "{line-6-column-g}",
+        "{line-6-column-h}",
+        "{line-5-column-a}",
+        "{line-5-column-b}",
+        "{line-5-column-c}",
+        "{line-5-column-d}",
+        "{line-5-column-e}",
+        "{line-5-column-f}",
+        "{line-5-column-g}",
+        "{line-5-column-h}",
+        "{line-4-column-a}",
+        "{line-4-column-b}",
+        "{line-4-column-c}",
+        "{line-4-column-d}",
+        "{line-4-column-e}",
+        "{line-4-column-f}",
+        "{line-4-column-g}",
+        "{line-4-column-h}",
+        "{line-3-column-a}",
+        "{line-3-column-b}",
+        "{line-3-column-c}",
+        "{line-3-column-d}",
+        "{line-3-column-e}",
+        "{line-3-column-f}",
+        "{line-3-column-g}",
+        "{line-3-column-h}",
+        "{line-2-column-a}",
+        "{line-2-column-b}",
+        "{line-2-column-c}",
+        "{line-2-column-d}",
+        "{line-2-column-e}",
+        "{line-2-column-f}",
+        "{line-2-column-g}",
+        "{line-2-column-h}",
+        "{line-1-column-a}",
+        "{line-1-column-b}",
+        "{line-1-column-c}",
+        "{line-1-column-d}",
+        "{line-1-column-e}",
+        "{line-1-column-f}",
+        "{line-1-column-g}",
+        "{line-1-column-h}",
+        "{player-current-top-right}",
+        "{player-top-right}",
+        "{player-current-lower-right}",
+        "{player-lower-right}"
+    ];
+
+    public static function getValue()
+    {
+        return self::$markings_html;
+    }
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <title>Dama em PHP</title>
+        <link rel="stylesheet" type="text/css" href="css/reset-style.css">
+        <link rel="stylesheet" type="text/css" href="css/home.css">
+        <link rel="shortcut icon" href="img/favicon.ico">
+    </head>
+    <body>
+
+        <div class='start'>
+
+            <p>Bem vindo</p>
+            <p>Jogo de dama feito em PHP!</p>
+            <p>Escolha a cor das suas peças.</p>
+
+            <form method='post' action='index.php' enctype="application/x-www-form-urlencoded">
+                <input id='piece-chosen' name='piece-chosen' type='text'>
+                <button id='color-black' class='piece-black' name='method' type='submit' value='mountBoard'></button>
+                <button id='color-white' class='piece-white' name='method' type='submit' value='mountBoard'></button>
+            </form>
+
+        </div>
+
+        <script type="text/javascript" src="js/home.js"></script>
+
+    </body>
+</html>
