@@ -5,10 +5,10 @@
 Para o desenvolvimento desse jogo de dama, foi optado por utilizar as regras de damas brasileiras.
 
 ### Screenshot da home page
-<img src="img/homepage.png"/>
+<img src="Screenshot/home.png"/>
 
 ### Screenshot da main page
-<img src="img/main.png"/>
+<img src="Screenshot/game.png"/>
 
 ### 📋 Pré-requisitos
 
