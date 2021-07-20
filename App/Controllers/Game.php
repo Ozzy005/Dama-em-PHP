@@ -71,7 +71,7 @@ class Game
 
     public function show()
     {
-        if(empty(array_filter($_SESSION)))
+        if(empty($_SESSION))
         {
             $vb = new ViewHome();
             $vb->show();

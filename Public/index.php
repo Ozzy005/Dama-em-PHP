@@ -10,9 +10,11 @@ require_once '../App/AutoLoader.php';
 
 $AutoLoader = new AutoLoader;
 $AutoLoader->addDirectory('../App/Controllers');
-$AutoLoader->addDirectory('../App/Models');
-$AutoLoader->addDirectory('../App/Views');
 $AutoLoader->addDirectory('../App/Data');
+$AutoLoader->addDirectory('../App/Data/Others');
+$AutoLoader->addDirectory('../App/Models');
+$AutoLoader->addDirectory('../App/Views/Board');
+$AutoLoader->addDirectory('../App/Views/Home');
 $AutoLoader->register();
 
 $method = $_POST['method'] ?? false;
