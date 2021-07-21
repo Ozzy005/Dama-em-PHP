@@ -62,5 +62,8 @@ class PlayerCurrent
         $this->data->setValue('player-current-left',$player_current_left);
         $this->data->setValue('player-current-top-right',$player_current_top_right);
         $this->data->setValue('player-current-lower-right',$player_current_lower_right);
+        Session::setValue('player-current-left',$player_current_left);
+        Session::setValue('player-current-top-right',$player_current_top_right);
+        Session::setValue('player-current-lower-right',$player_current_lower_right);
     }
 }

@@ -32,6 +32,8 @@ class PlayerBoardSide
 
         $this->data->setValue('player-top-right',$player_top_right);
         $this->data->setValue('player-lower-right',$player_lower_right);
+        Session::setValue('player-top-right',$player_top_right);
+        Session::setValue('player-lower-right',$player_lower_right);
     }
 }
 

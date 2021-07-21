@@ -29,6 +29,8 @@ class Mountboard
         {
             $this->mount( $pieces_black, $pieces_white );
         }
+
+        Session::setValue('piece-chosen',$piece_chosen);
     }
 
     private function mount( $piece_one, $piece_two )
@@ -95,6 +97,7 @@ class Mountboard
         }
 
         $this->data->setValue('board',$board);
+        Session::setValue('board',$board);
     }
 }
 ?>

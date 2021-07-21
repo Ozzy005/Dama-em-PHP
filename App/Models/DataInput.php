@@ -40,13 +40,6 @@ class DataInput
 
     private function piece($piece,$piece_explode)
     {
-        /*
-        * exemplo
-        * [0] => stone
-        * [1] => white
-        * [2] => 1
-        */
-
         if(count( $piece_explode ) === 3)
         {
             $piece_type = ($piece_explode[0] === 'stone' ) ? true : false;
@@ -70,13 +63,6 @@ class DataInput
 
     private function column($column, $column_explode, $line, $type)
     {
-        /*
-         * exemplo
-         * [0] => column
-         * [1] => a
-         * [2] => white
-        */
-
         $board = $this->data->getValue('board');
 
         if( count( $column_explode ) === 3 )
@@ -102,12 +88,6 @@ class DataInput
 
     private function line($line, $line_explode, $type)
     {
-        /*
-         * exemplo
-         * [0] => line
-         * [1] => 8
-        */
-
         if( count( $line_explode ) === 2 )
         {
             $line_type = ( $line_explode[0] === 'line' ) ? true : false;

@@ -36,6 +36,9 @@ class MovePiece
             $this->data->setValue('board',$board);
             $this->data->setValue('turn',++$turn);
             $this->data->setValue('last-move',$piece_color);
+            Session::setValue('board',$board);
+            Session::setValue('turn',++$turn);
+            Session::setValue('last-move',$piece_color);
         }
     }
 }

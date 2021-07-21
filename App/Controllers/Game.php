@@ -30,8 +30,6 @@ class Game
 
         $pc = new PlayerCurrent($this->data);
         $pc->make();
-
-        Session::save($this->data);
     }
 
     public function move()
@@ -49,9 +47,6 @@ class Game
 
             $pc = new PlayerCurrent($this->data);
             $pc->make();
-
-            Session::save($this->data);
-
         }
         catch(Exception $e)
         {

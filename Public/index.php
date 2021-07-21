@@ -21,17 +21,14 @@ $method = $_POST['method'] ?? false;
 
 $controller = new Game();
 
-if(!empty($_SESSION) xor $method === 'mountBoard')
+if($method !== 'reset' && (!empty($_SESSION) xor $method === 'mountBoard'))
 {
     if(empty($_SESSION))
     {
         Session::setVars();
     }
-
-    if($method !== 'reset')
-    {
-        $controller->setData();
-    }
+    
+    $controller->setData();
 }
 
 if($method)
