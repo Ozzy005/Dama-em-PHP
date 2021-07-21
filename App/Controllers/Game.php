@@ -8,27 +8,22 @@
 
 class Game
 {
-    private $data;
-
     public function __construct()
     {
         new Session();
     }
 
-    public function setData()
-    {
-        $this->data = new Data;
-    }
-
     public function mountBoard()
     {
-        $mb = new MountBoard($this->data);
+        Session::setVars();
+
+        $mb = new MountBoard();
         $mb->make();
 
-        $pbs = new PlayerBoardSide($this->data);
+        $pbs = new PlayerBoardSide();
         $pbs->make();
 
-        $pc = new PlayerCurrent($this->data);
+        $pc = new PlayerCurrent();
         $pc->make();
     }
 
@@ -36,21 +31,22 @@ class Game
     {
         try
         {
-            $di = new DataInput($this->data);
+            $di = new DataInput();
             $di->check();
 
-            $rules = new Rules($this->data);
+            $rules = new Rules();
             $rules->check();
 
-            $mp = new MovePiece($this->data);
+            $mp = new MovePiece();
             $mp->make();
 
-            $pc = new PlayerCurrent($this->data);
+            $pc = new PlayerCurrent();
             $pc->make();
         }
         catch(Exception $e)
         {
-            $this->data->setValue('message-error',$e->getMessage());
+            $data = Data::getInstance();
+            $data->setValue('message-error',$e->getMessage());
         }
     }
 
@@ -66,26 +62,22 @@ class Game
 
     public function show()
     {
-        if(empty($_SESSION))
+        if(!Session::empty())
+        {
+            $p = new Pieces();
+            $p->make();
+
+            $me = new MessageError();
+            $me->make();
+
+            $vh = new ViewBoard();
+            $vh->make();
+            $vh->show();
+        }
+        else
         {
             $vb = new ViewHome();
             $vb->show();
         }
-        else
-        {
-            $pieces = new Pieces($this->data);
-            $pieces->make();
-
-            $me = new MessageError($this->data);
-            $me->make();
-
-            $vh = new ViewBoard($this->data);
-            $vh->make();
-            $vh->show();
-        }
     }
 }
-
-
-
-?>

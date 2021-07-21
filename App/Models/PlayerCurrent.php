@@ -10,15 +10,17 @@ class PlayerCurrent
 {
     private $data;
 
-    public function __construct($data)
+    public function __construct()
     {
-        $this->data = $data;
+        $this->data = Data::getInstance();
     }
 
     public function make()
     {
-        $last_move = $this->data->getValue('last-move');
-        $player_top_right = $this->data->getValue('player-top-right');
+        $data = $this->data;
+
+        $last_move = $data->getValue('last-move');
+        $player_top_right = $data->getValue('player-top-right');
 
         $player_current_left = $last_move === 'white' ? '2' : '1';
 
@@ -59,9 +61,9 @@ class PlayerCurrent
             }
         }
 
-        $this->data->setValue('player-current-left',$player_current_left);
-        $this->data->setValue('player-current-top-right',$player_current_top_right);
-        $this->data->setValue('player-current-lower-right',$player_current_lower_right);
+        $data->setValue('player-current-left',$player_current_left);
+        $data->setValue('player-current-top-right',$player_current_top_right);
+        $data->setValue('player-current-lower-right',$player_current_lower_right);
         Session::setValue('player-current-left',$player_current_left);
         Session::setValue('player-current-top-right',$player_current_top_right);
         Session::setValue('player-current-lower-right',$player_current_lower_right);

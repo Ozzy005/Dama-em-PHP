@@ -11,9 +11,9 @@ class DataInput
     private $data;
     private $checked = [];
 
-    public function __construct($data)
+    public function __construct()
     {
-        $this->data = $data;
+        $this->data = Data::getInstance();
     }
 
     public function check()
@@ -106,6 +106,3 @@ class DataInput
         }
     }
 }
-
-
-?>

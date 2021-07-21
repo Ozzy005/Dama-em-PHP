@@ -10,9 +10,9 @@ class Rules
 {
     private $data;
 
-    public function __construct( $data )
+    public function __construct()
     {
-        $this->data = $data;
+        $this->data = Data::getInstance();
     }
 
     public function check()
@@ -134,8 +134,6 @@ class Rules
         }
     }
 
-
-
     private function columnColor()
     {
         $column_target_color = $this->data->getValue('column-target')['color'];
@@ -145,9 +143,4 @@ class Rules
             throw new Exception( 'Proibido mover-se para uma casa branca' );
         }
     }
-
-
 }
-
-
-?>

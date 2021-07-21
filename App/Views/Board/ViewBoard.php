@@ -11,10 +11,10 @@ class ViewBoard
     private $page;
     private $data;
 
-    public function __construct($data)
+    public function __construct()
     {
         $this->page = file_get_contents('html/board.html');
-        $this->data = $data;
+        $this->data = Data::getInstance();
     }
 
     public function show()
@@ -46,4 +46,3 @@ class ViewBoard
         $this->page = str_replace($markings_html, $replace, $page);
     }
 }
-?>

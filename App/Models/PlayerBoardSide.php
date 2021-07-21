@@ -10,14 +10,16 @@ class PlayerBoardSide
 {
     private $data;
 
-    public function __construct($data)
+    public function __construct()
     {
-        $this->data = $data;
+        $this->data = Data::getInstance();
     }
 
     public function make()
     {
-        $piece_chosen = $this->data->getValue('piece-chosen');
+        $data = $this->data;
+
+        $piece_chosen = $data->getValue('piece-chosen');
 
         if( $piece_chosen === 'color-white' )
         {
@@ -30,8 +32,8 @@ class PlayerBoardSide
             $player_lower_right = '2';
         }
 
-        $this->data->setValue('player-top-right',$player_top_right);
-        $this->data->setValue('player-lower-right',$player_lower_right);
+        $data->setValue('player-top-right',$player_top_right);
+        $data->setValue('player-lower-right',$player_lower_right);
         Session::setValue('player-top-right',$player_top_right);
         Session::setValue('player-lower-right',$player_lower_right);
     }

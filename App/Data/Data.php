@@ -6,17 +6,12 @@
  *
  **/
 
-//  invenção minha, eu chamo ela de mini database de tempo de execução =D
-//  o propósito dessa classe é reunir todos os dados utilizados em tempo de execução em um lugar só
-//  o benefício dela é que deixa o controller mais organizado e legível
-//  em vez de passar 5 a 10 valores via parâmetros, passa apenas o objeto Data
-//  a classe que precisar de algum valor presente nesse objeto pega ele através de getValue
-
 class Data
 {
+    private static $instance;
     private $data = [];
 
-    public function __construct()
+    private function __construct()
     {
         $this->data['markings-html'] = MarkingsHtml::getValue();
         $this->data['pieces-white'] = PiecesWhite::getValue();
@@ -25,7 +20,7 @@ class Data
         $this->data['turn'] = Session::getValue('turn') ?? 1;
         $this->data['cemetery'] = Session::getValue('cemetery') ?? null;
         $this->data['last-move'] = Session::getValue('last-move') ?? null;
-        $this->data['piece-chosen'] = Session::getValue('piece-chosen') ?? $_POST['piece-chosen'];
+        $this->data['piece-chosen'] = $_POST['piece-chosen'] ?? Session::getValue('piece-chosen');
         $this->data['player-current-left'] = Session::getValue('player-current-left') ?? null;
         $this->data['player-top-right'] = Session::getValue('player-top-right') ?? null;
         $this->data['player-lower-right'] = Session::getValue('player-lower-right') ?? null;
@@ -40,6 +35,16 @@ class Data
         $this->data['pieces'] = null;
     }
 
+    public static function getInstance()
+    {
+        if(empty(self::$instance))
+        {
+            self::$instance = new self;
+        }
+
+        return self::$instance;
+    }
+
     public function setValue($param, $value)
     {
         if(array_key_exists($param,$this->data))
@@ -50,9 +55,6 @@ class Data
 
     public function getValue($param)
     {
-        if(array_key_exists($param,$this->data))
-        {
-            return $this->data[$param];
-        }
+        return $this->data[$param];
     }
 }

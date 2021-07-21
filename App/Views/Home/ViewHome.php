@@ -20,4 +20,3 @@ class ViewHome
         print $this->page;
     }
 }
-?>

@@ -10,9 +10,9 @@ class MessageError
 {
     private $data;
 
-    public function __construct($data)
+    public function __construct()
     {
-        $this->data = $data;
+        $this->data = Data::getInstance();
     }
 
     public function make()

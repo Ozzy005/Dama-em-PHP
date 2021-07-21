@@ -8,28 +8,18 @@
 
 require_once '../App/AutoLoader.php';
 
-$AutoLoader = new AutoLoader;
-$AutoLoader->addDirectory('../App/Controllers');
-$AutoLoader->addDirectory('../App/Data');
-$AutoLoader->addDirectory('../App/Data/Others');
-$AutoLoader->addDirectory('../App/Models');
-$AutoLoader->addDirectory('../App/Views/Board');
-$AutoLoader->addDirectory('../App/Views/Home');
-$AutoLoader->register();
+$al = new AutoLoader;
+$al->addDirectory('../App/Controllers');
+$al->addDirectory('../App/Data');
+$al->addDirectory('../App/Data/Others');
+$al->addDirectory('../App/Models');
+$al->addDirectory('../App/Views/Board');
+$al->addDirectory('../App/Views/Home');
+$al->register();
 
 $method = $_POST['method'] ?? false;
 
 $controller = new Game();
-
-if($method !== 'reset' && (!empty($_SESSION) xor $method === 'mountBoard'))
-{
-    if(empty($_SESSION))
-    {
-        Session::setVars();
-    }
-    
-    $controller->setData();
-}
 
 if($method)
 {
@@ -37,10 +27,3 @@ if($method)
 }
 
 $controller->show();
-
-
-
-
-
-
-?>
