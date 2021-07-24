@@ -16,6 +16,22 @@ class Session
         }
     }
 
+    public static function save()
+    {
+        $data = Data::getInstance();
+
+        self::setValue('board',$data->getValue('board'));
+        self::setValue('turn',$data->getValue('turn'));
+        self::setValue('last-move',$data->getValue('last-move'));
+        self::setValue('cemetery',$data->getValue('cemetery'));
+        self::setValue('piece-chosen',$data->getValue('piece-chosen'));
+        self::setValue('player-current-left',$data->getValue('player-current-left'));
+        self::setValue('player-top-right',$data->getValue('player-top-right'));
+        self::setValue('player-lower-right',$data->getValue('player-lower-right'));
+        self::setValue('player-current-top-right',$data->getValue('player-current-top-right'));
+        self::setValue('player-current-lower-right',$data->getValue('player-current-lower-right'));
+    }
+
     public static function setVars()
     {
         if(self::empty())

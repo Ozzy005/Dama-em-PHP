@@ -12,6 +12,7 @@ $al = new AutoLoader;
 $al->addDirectory('../App/Controllers');
 $al->addDirectory('../App/Data');
 $al->addDirectory('../App/Data/Others');
+$al->addDirectory('../App/Core');
 $al->addDirectory('../App/Models');
 $al->addDirectory('../App/Views/Board');
 $al->addDirectory('../App/Views/Home');

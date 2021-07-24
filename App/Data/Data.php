@@ -18,7 +18,7 @@ class Data
         $this->data['pieces-black'] = PiecesBlack::getValue();
         $this->data['board'] = Session::getValue('board') ?? Board::getValue();
         $this->data['turn'] = Session::getValue('turn') ?? 1;
-        $this->data['cemetery'] = Session::getValue('cemetery') ?? null;
+        $this->data['cemetery'] = Session::getValue('cemetery') ?? [];
         $this->data['last-move'] = Session::getValue('last-move') ?? null;
         $this->data['piece-chosen'] = $_POST['piece-chosen'] ?? Session::getValue('piece-chosen');
         $this->data['player-current-left'] = Session::getValue('player-current-left') ?? null;
@@ -31,6 +31,10 @@ class Data
         $this->data['column-source'] = $_POST['column-source'] ?? null;
         $this->data['line-target'] = $_POST['line-target'] ?? null;
         $this->data['column-target'] = $_POST['column-target'] ?? null;
+        $this->data['piece-target'] = null;
+        $this->data['line-middle'] = null;
+        $this->data['column-middle'] = null;
+        $this->data['move-type'] = null;
         $this->data['message-error'] = null;
         $this->data['pieces'] = null;
     }

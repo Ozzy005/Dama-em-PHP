@@ -17,12 +17,9 @@ class Mountboard
 
     public function make()
     {
-        $data = $this->data;
-
-        $piece_chosen = $data->getValue('piece-chosen');
-        $pieces_white = $data->getValue('pieces-white');
-        $pieces_black = $data->getValue('pieces-black');
-        Session::setValue('piece-chosen',$piece_chosen);
+        $piece_chosen = $this->data->getValue('piece-chosen');
+        $pieces_white = $this->data->getValue('pieces-white');
+        $pieces_black = $this->data->getValue('pieces-black');
 
         if( $piece_chosen === 'color-black' )
         {
@@ -36,9 +33,7 @@ class Mountboard
 
     private function mount( $piece_one, $piece_two )
     {
-        $data = $this->data;
-
-        $board = $data->getValue('board');
+        $board = $this->data->getValue('board');
 
         $n8 = 4;  //4-3-2-1
         $n7 = 8;  //8-7-6-5
@@ -99,7 +94,6 @@ class Mountboard
             }
         }
 
-        $data->setValue('board',$board);
-        Session::setValue('board',$board);
+        $this->data->setValue('board',$board);
     }
 }

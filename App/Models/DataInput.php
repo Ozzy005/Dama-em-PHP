@@ -18,13 +18,11 @@ class DataInput
 
     public function check()
     {
-        $data = $this->data;
-
-        $piece = $data->getValue('piece');
-        $line_source = $data->getValue('line-source');
-        $column_source = $data->getValue('column-source');
-        $line_target = $data->getValue('line-target');
-        $column_target = $data->getValue('column-target');
+        $piece = $this->data->getValue('piece');
+        $line_source = $this->data->getValue('line-source');
+        $column_source = $this->data->getValue('column-source');
+        $line_target = $this->data->getValue('line-target');
+        $column_target = $this->data->getValue('column-target');
 
         $this->piece($piece, explode('-', $piece));
         $this->column($column_source, explode('-', $column_source), $line_source, 'column-source');
@@ -55,7 +53,7 @@ class DataInput
                 $piece_parts ['name'] = $piece;
                 $piece_parts ['type'] = $piece_explode[0];
                 $piece_parts ['color'] = $piece_explode[1];
-                $piece_parts ['id'] = $piece_explode[2];
+                $piece_parts ['id'] = (int)$piece_explode[2];
                 $this->data->setValue('piece', $piece_parts);
             }
         }
@@ -100,7 +98,7 @@ class DataInput
                 $this->checked[] = $line_checked;
                 $line_parts['name'] = $line;
                 $line_parts['type'] = $line_explode[0];
-                $line_parts['id'] = $line_explode[1];
+                $line_parts['id'] = (int)$line_explode[1];
                 $this->data->setValue($type,$line_parts);
             }
         }

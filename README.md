@@ -25,7 +25,7 @@ Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
 - [x] Gerar mensagem de erro se ocorrer um movimento inválido
 - [x] Exibir na tela turno e jogador atual
 - [x] Implementado Orientação a objetos e Padrão MVC
-- [ ] Confirmar o movimento da peça clicando com o botão direito do mouse
+- [ ] Confirmar o movimento da peça clicando duas vezes na casa de destino
 - [ ] Opção para um jogador
 - [ ] Opção para dois jogadores
 - [ ] Opção para jogar online
@@ -40,20 +40,22 @@ Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
 
 ### Funcionalidades referentes as regras do jogo
 
-- [x] Proibido mover-se para as casas brancas
-- [x] Cada jogador só pode mover suas peças no seu turno e somente uma vez a cada turno
 - [x] O lance inicial cabe sempre a quem estiver com as peças brancas
-- [x] Permitido a pedra mover-se apenas uma linha para frente
-- [x] Permitido a pedra mover-se apenas para sua casa vizinha
-- [x] Não é possível mover-se para uma casa ocupada
-- [ ] Captura de peças
-- [ ] A pedra e a dama podem capturar tanto para frente como para trás
-- [ ] Duas ou mais peças juntas, na mesma diagonal, não podem ser capturadas
+- [x] Cada jogador só pode mover suas peças no seu turno e somente uma vez a cada turno
+- [x] Proibido a pedra mover-se para trás
+- [x] Proibido a pedra mover-se duas casas de uma vez
+- [x] Proibido mover-se para as casas brancas
+- [x] Proibido mover-se para uma casa ocupada
+- [x] Captura de peças
+- [x] Permitido a pedra capturar tanto para frente quanto para trás
+- [x] Proibido capturar uma peça da mesma cor
+- [x] Duas ou mais peças juntas, na mesma diagonal, não podem ser capturadas
 - [ ] Quando a pedra atinge a oitava linha do tabuleiro ela é promovida à dama
 - [ ] A dama anda para frente e para trás, quantas casas quiser
 - [ ] A dama não pode saltar uma peça da mesma cor
+- [ ] Permitido a dama capturar tanto para frente quanto para trás
 - [ ] A pedra captura a dama e a dama captura a pedra
-- [ ] Se no mesmo lance se apresentar mais de um modo de capturar, é obrigatório executar o lance que capture o maior número de peças
+- [ ] Se no mesmo lance se apresentar mais de um modo de captura, é obrigatório executar o lance que capture o maior número de peças
 - [ ] A pedra que durante o lance de captura de várias peças, apenas passe por qualquer casa de coroação, sem aí parar, não será promovida à dama
 - [ ] Na execução do lance de captura, é permitido passar mais de uma vez pela mesma casa vazia
 - [ ] Após 20 lances sucessivos de damas, sem captura ou deslocamento de pedra, a partida é declarada empatada.

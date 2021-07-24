@@ -25,6 +25,8 @@ class Game
 
         $pc = new PlayerCurrent();
         $pc->make();
+
+        Session::save();
     }
 
     public function move()
@@ -34,25 +36,24 @@ class Game
             $di = new DataInput();
             $di->check();
 
+            $tm = new TypeMove();
+            $tm->check();
+
             $rules = new Rules();
             $rules->check();
 
-            $mp = new MovePiece();
-            $mp->make();
+            $m = new Move();
+            $m->make();
 
             $pc = new PlayerCurrent();
             $pc->make();
+
+            Session::save();
         }
         catch(Exception $e)
         {
-            $data = Data::getInstance();
-            $data->setValue('message-error',$e->getMessage());
+            Data::getInstance()->setValue('message-error',$e->getMessage());
         }
-    }
-
-    public function capture()
-    {
-        //ainda não criado
     }
 
     public function reset()

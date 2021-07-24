@@ -24,24 +24,23 @@ class ViewBoard
 
     public function make()
     {
-        $data = $this->data;
         $page = $this->page;
-        $markings_html = $data->getValue('markings-html');
+        $markings_html = $this->data->getValue('markings-html');
         $replace = [];
 
-        $replace[] = $data->getValue('turn');
-        $replace[] = $data->getValue('player-current-left');
-        $replace[] = $data->getValue('message-error');
+        $replace[] = $this->data->getValue('turn');
+        $replace[] = $this->data->getValue('player-current-left');
+        $replace[] = $this->data->getValue('message-error');
 
-        foreach($data->getValue('pieces') as $piece)
+        foreach($this->data->getValue('pieces') as $piece)
         {
             $replace[] = $piece;
         }
 
-        $replace[] = $data->getValue('player-current-top-right');
-        $replace[] = $data->getValue('player-top-right');
-        $replace[] = $data->getValue('player-current-lower-right');
-        $replace[] = $data->getValue('player-lower-right');
+        $replace[] = $this->data->getValue('player-current-top-right');
+        $replace[] = $this->data->getValue('player-top-right');
+        $replace[] = $this->data->getValue('player-current-lower-right');
+        $replace[] = $this->data->getValue('player-lower-right');
 
         $this->page = str_replace($markings_html, $replace, $page);
     }
