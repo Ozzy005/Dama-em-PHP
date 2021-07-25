@@ -25,7 +25,7 @@ Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
 - [x] Gerar mensagem de erro se ocorrer um movimento inválido
 - [x] Exibir na tela turno e jogador atual
 - [x] Implementado Orientação a objetos e Padrão MVC
-- [ ] Confirmar o movimento da peça clicando duas vezes na casa de destino
+- [x] Confirmar o movimento da peça clicando duas vezes na casa de destino
 - [ ] Opção para um jogador
 - [ ] Opção para dois jogadores
 - [ ] Opção para jogar online

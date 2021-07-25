@@ -20,6 +20,9 @@ body,form,.column-indicative,.turn-current,.player-current-left,.message-error,.
     grid-template-rows: 92vh;
     column-gap: 0.8%;
 }
+*{
+    user-select: none;
+}
 /*-----------------------------------------------------*/
 
 

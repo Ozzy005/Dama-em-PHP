@@ -73,3 +73,21 @@ for(let i = 0 ; i < columns.length ; i++)
         }
     });
 }
+
+for(let i = 0 ; i < columns.length ; i++)
+{
+    window.addEventListener('DOMContentLoaded', function ()
+    {
+        var form = document.getElementById('form');
+
+        columns[i].addEventListener('dblclick', function ()
+        {
+            input = document.createElement('input');
+            input.setAttribute('name','method');
+            input.setAttribute('value','move');
+            form.appendChild(input);
+            form.submit();
+        });
+    });
+}
+
