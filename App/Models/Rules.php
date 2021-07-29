@@ -30,6 +30,7 @@ class Rules
             {
                 $this->firstMove();
                 $this->whoseTurn();
+                $this->mandatoryCapture();
                 $this->forward();
                 $this->houseOccupied();
             }
@@ -42,6 +43,82 @@ class Rules
         catch( Exception $e )
         {
             throw new Exception( $e->getMessage() );
+        }
+    }
+
+    //método responsável por verificar obrigatoriedade de captura
+    private function mandatoryCapture()
+    {
+        $board = $this->data->getValue('board');
+        $p_color = $this->data->getValue('piece')['color'];
+
+        foreach($board as $l_key => $l_value)
+        {
+            foreach($l_value as $c_key => $p)
+            {
+                if($p !== null && explode('-',$p)[1] === $p_color)
+                {
+                    $code = ord(explode('-',$c_key)[1]);
+
+                    $c_inc1 = 'column-'.(chr($code+1)).'-black';
+                    $c_dec1 = 'column-'.(chr($code-1)).'-black';
+                    $l_inc1 = 'line-'.(explode('-',$l_key)[1]+1);
+                    $l_dec1 = 'line-'.(explode('-',$l_key)[1]-1);
+
+                    $c_inc2 = 'column-'.(chr($code+2)).'-black';
+                    $c_dec2 = 'column-'.(chr($code-2)).'-black';
+                    $l_inc2 = 'line-'.(explode('-',$l_key)[1]+2);
+                    $l_dec2 = 'line-'.(explode('-',$l_key)[1]-2);
+
+                    //verificar coluna superior esquerda
+                    if($code-1 >= 97 && $code-2 >= 97 && substr($l_inc1,-1) <= 8 && substr($l_inc2,-1) <= 8)
+                    {
+                        if($board[$l_inc1][$c_dec1] !== null && explode('-',$board[$l_inc1][$c_dec1])[1] !== $p_color )
+                        {
+                            if($board[$l_inc2][$c_dec2] === null)
+                            {
+                                throw new Exception( 'Captura de peça obrigatória' );
+                            }
+                        }
+                    }
+
+                    //verificar coluna superior direita
+                    if($code+1 <= 104 && $code+2 <= 104 && substr($l_inc1,-1) <= 8 && substr($l_inc2,-1) <= 8)
+                    {
+                        if($board[$l_inc1][$c_inc1] !== null && explode('-',$board[$l_inc1][$c_inc1])[1] !== $p_color )
+                        {
+                            if($board[$l_inc2][$c_inc2] === null)
+                            {
+                                throw new Exception( 'Captura de peça obrigatória' );
+                            }
+                        }
+                    }
+
+                    //verificar coluna inferior esquerda
+                    if($code-1 >= 97 && $code-2 >= 97 && substr($l_dec1,-1) >= 1 && substr($l_dec2,-1) >= 1)
+                    {
+                        if($board[$l_dec1][$c_dec1] !== null && explode('-',$board[$l_dec1][$c_dec1])[1] !== $p_color )
+                        {
+                            if($board[$l_dec2][$c_dec2] === null)
+                            {
+                                throw new Exception( 'Captura de peça obrigatória' );
+                            }
+                        }
+                    }
+
+                    //verificar coluna inferior direita
+                    if($code+1 <= 104 && $code+2 <= 104 && substr($l_dec1,-1) >= 1 && substr($l_dec2,-1) >= 1)
+                    {
+                        if($board[$l_dec1][$c_inc1] !== null && explode('-',$board[$l_dec1][$c_inc1])[1] !== $p_color )
+                        {
+                            if($board[$l_dec2][$c_inc2] === null)
+                            {
+                                throw new Exception( 'Captura de peça obrigatória' );
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

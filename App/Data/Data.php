@@ -20,6 +20,7 @@ class Data
         $this->data['turn'] = Session::getValue('turn') ?? 1;
         $this->data['cemetery'] = Session::getValue('cemetery') ?? [];
         $this->data['last-move'] = Session::getValue('last-move') ?? null;
+        $this->data['movement-history'] = Session::getValue('movement-history') ?? [];
         $this->data['piece-chosen'] = $_POST['piece-chosen'] ?? Session::getValue('piece-chosen');
         $this->data['player-current-left'] = Session::getValue('player-current-left') ?? null;
         $this->data['player-top-right'] = Session::getValue('player-top-right') ?? null;

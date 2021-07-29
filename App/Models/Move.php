@@ -27,6 +27,7 @@ class Move
         $data = $this->data;
         $turn = $data->getValue('turn');
         $pieca_color = $data->getValue('piece')['color'];
+        $movement_history = $data->getValue('movement-history');
         $board = $data->getValue('board');
         $piece = $data->getValue('piece')['name'];
         $line_source = $data->getValue('line-source')['name'];
@@ -37,6 +38,16 @@ class Move
         $board[$line_target][$column_target] = $piece;
         $board[$line_source][$column_source] = null;
 
+        $movement_history[$turn] =
+        [
+            'line-source' => $line_source,
+            'column-source' => $column_source,
+            'line-target' => $line_target,
+            'column-target' => $column_target,
+            'piece' => $piece
+        ];
+
+        $data->setValue('movement-history',$movement_history);
         $data->setValue('board',$board);
         $data->setValue('turn',++$turn);
         $data->setValue('last-move',$pieca_color);
@@ -47,6 +58,7 @@ class Move
         $data = $this->data;
         $turn = $data->getValue('turn');
         $pieca_color = $data->getValue('piece')['color'];
+        $movement_history = $data->getValue('movement-history');
         $cemetery = $data->getValue('cemetery');
         $board = $data->getValue('board');
         $piece = $data->getValue('piece')['name'];
@@ -63,6 +75,17 @@ class Move
         $board[$line_middle][$column_middle] = null;
         $cemetery[] = $piece_target;
 
+        $movement_history[$turn] =
+        [
+            'line-source' => $line_source,
+            'column-source' => $column_source,
+            'line-target' => $line_target,
+            'column-target' => $column_target,
+            'piece' => $piece,
+            'piece-target' => $piece_target
+        ];
+
+        $data->setValue('movement-history',$movement_history);
         $data->setValue('board',$board);
         $data->setValue('turn',++$turn);
         $data->setValue('last-move',$pieca_color);

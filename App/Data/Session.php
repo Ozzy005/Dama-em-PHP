@@ -23,6 +23,7 @@ class Session
         self::setValue('board',$data->getValue('board'));
         self::setValue('turn',$data->getValue('turn'));
         self::setValue('last-move',$data->getValue('last-move'));
+        self::setValue('movement-history',$data->getValue('movement-history'));
         self::setValue('cemetery',$data->getValue('cemetery'));
         self::setValue('piece-chosen',$data->getValue('piece-chosen'));
         self::setValue('player-current-left',$data->getValue('player-current-left'));
@@ -39,6 +40,7 @@ class Session
             $_SESSION['board'] = null;
             $_SESSION['turn'] = null;
             $_SESSION['last-move'] = null;
+            $_SESSION['movement-history'] = null;
             $_SESSION['cemetery'] = null;
             $_SESSION['piece-chosen'] = null;
             $_SESSION['player-current-left'] = null;
