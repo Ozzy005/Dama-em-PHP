@@ -6,220 +6,182 @@
  *
  **/
 
+namespace App\Models;
+
+use Core\Data;
+use Exception;
+
 class Rules
 {
-    private $data;
+    private $data,$board,$p_current,$l_src,$c_src,$l_trt,$c_trt;
+    private $neighbors = [];
+    private $pieces_targets = [];
+    private $pos_check = [];
+    private $loop = true;
 
     public function __construct()
     {
         $this->data = Data::getInstance();
+        list('board' => $this->board, 'piece' => $this->p_current, 'line-source' => $this->l_src, 'column-source' => $this->c_src, 'line-target' => $this->l_trt, 'column-target' => $this->c_trt) = $this->data->getData();
     }
 
     public function check()
-    {
-        try
-        {
-            if($this->data->getValue('move-type') === 'capturePiece')
-            {
-                $this->firstMove();
-                $this->whoseTurn();
-                $this->houseOccupied();
-                $this->pieceTarget();
-            }
-            elseif($this->data->getValue('move-type') === 'movePiece')
-            {
-                $this->firstMove();
-                $this->whoseTurn();
-                $this->mandatoryCapture();
-                $this->forward();
-                $this->houseOccupied();
-            }
-            else
-            {
-                throw new Exception('Movimento inválido');
-            }
-
-        }
-        catch( Exception $e )
-        {
-            throw new Exception( $e->getMessage() );
-        }
+    {   
+        if($this->movement()){return true;}
+        elseif($this->capture()){return true;}
+        elseif($this->multipleCapture()){return true;}
+        else{throw new Exception('Jogada inválida');}
     }
 
-    //método responsável por verificar obrigatoriedade de captura
-    private function mandatoryCapture()
+    private function movement($type = 0, $i = 0)
     {
-        $board = $this->data->getValue('board');
-        $p_color = $this->data->getValue('piece')['color'];
-
-        foreach($board as $l_key => $l_value)
+        if($i < count($this->pos_check))
         {
-            foreach($l_value as $c_key => $p)
+            $this->l_src = $this->pos_check[$i]['line-source'];
+            $this->c_src = $this->pos_check[$i]['column-source'];
+        }
+
+        for($n = 1 ; $n <= 4 ; $n++)
+        {
+            switch($n)
             {
-                if($p !== null && explode('-',$p)[1] === $p_color)
+                case 1: $l = $this->l_src+1; $c = $this->c_src-1; $side = 'cse'; break; //coluna superior esquerda
+                case 2: $l = $this->l_src+1; $c = $this->c_src+1; $side = 'csd'; break; //coluna superior direita
+                case 3: $l = $this->l_src-1; $c = $this->c_src-1; $side = 'cie'; break; //coluna inferior esquerda
+                case 4: $l = $this->l_src-1; $c = $this->c_src+1; $side = 'cid'; break; //coluna inferior direita
+            }
+
+            if($l >= 1 && $l <= 8 && $c >= 97 && $c <= 104)
+            {
+                switch($type)
                 {
-                    $code = ord(explode('-',$c_key)[1]);
-
-                    $c_inc1 = 'column-'.(chr($code+1)).'-black';
-                    $c_dec1 = 'column-'.(chr($code-1)).'-black';
-                    $l_inc1 = 'line-'.(explode('-',$l_key)[1]+1);
-                    $l_dec1 = 'line-'.(explode('-',$l_key)[1]-1);
-
-                    $c_inc2 = 'column-'.(chr($code+2)).'-black';
-                    $c_dec2 = 'column-'.(chr($code-2)).'-black';
-                    $l_inc2 = 'line-'.(explode('-',$l_key)[1]+2);
-                    $l_dec2 = 'line-'.(explode('-',$l_key)[1]-2);
-
-                    //verificar coluna superior esquerda
-                    if($code-1 >= 97 && $code-2 >= 97 && substr($l_inc1,-1) <= 8 && substr($l_inc2,-1) <= 8)
-                    {
-                        if($board[$l_inc1][$c_dec1] !== null && explode('-',$board[$l_inc1][$c_dec1])[1] !== $p_color )
+                    case 0:
+                        if($this->board->isEmpty($l,$c) && $l == $this->l_trt && $c == $this->c_trt)
                         {
-                            if($board[$l_inc2][$c_dec2] === null)
+                            $this->data->setValue('move-type','movePiece');
+                            return true;
+                        }
+                        break;
+                    case 1:
+                        if($this->board->notEmpty($l,$c))
+                        {
+                            $p_last_id = 0;
+                            $p_trt = $this->board->getPiece($l,$c);
+
+                            for($j = 0 ; $j < count($this->pieces_targets); $j++)
                             {
-                                throw new Exception( 'Captura de peça obrigatória' );
+                                $p_last_id = $this->pieces_targets[$j]['piece-target']->getId();
+                                $l_middle = $this->pieces_targets[$j]['line-middle'];
+                                $c_middle = $this->pieces_targets[$j]['column-middle'];
+
+                                if($l == $l_middle && $c == $c_middle && $p_trt->getId() == $p_last_id)
+                                {
+                                    break;
+                                }
+                            }
+
+                            if($this->p_current->getColor() != $p_trt->getColor() && $p_trt->getId() != $p_last_id)
+                            {
+                                $this->neighbors[] = [
+                                    'side' => $side,
+                                    'p-trt' => $p_trt,
+                                    'l-middle' => $l,
+                                    'c-middle' => $c
+                                ];
                             }
                         }
-                    }
-
-                    //verificar coluna superior direita
-                    if($code+1 <= 104 && $code+2 <= 104 && substr($l_inc1,-1) <= 8 && substr($l_inc2,-1) <= 8)
-                    {
-                        if($board[$l_inc1][$c_inc1] !== null && explode('-',$board[$l_inc1][$c_inc1])[1] !== $p_color )
-                        {
-                            if($board[$l_inc2][$c_inc2] === null)
-                            {
-                                throw new Exception( 'Captura de peça obrigatória' );
-                            }
-                        }
-                    }
-
-                    //verificar coluna inferior esquerda
-                    if($code-1 >= 97 && $code-2 >= 97 && substr($l_dec1,-1) >= 1 && substr($l_dec2,-1) >= 1)
-                    {
-                        if($board[$l_dec1][$c_dec1] !== null && explode('-',$board[$l_dec1][$c_dec1])[1] !== $p_color )
-                        {
-                            if($board[$l_dec2][$c_dec2] === null)
-                            {
-                                throw new Exception( 'Captura de peça obrigatória' );
-                            }
-                        }
-                    }
-
-                    //verificar coluna inferior direita
-                    if($code+1 <= 104 && $code+2 <= 104 && substr($l_dec1,-1) >= 1 && substr($l_dec2,-1) >= 1)
-                    {
-                        if($board[$l_dec1][$c_inc1] !== null && explode('-',$board[$l_dec1][$c_inc1])[1] !== $p_color )
-                        {
-                            if($board[$l_dec2][$c_inc2] === null)
-                            {
-                                throw new Exception( 'Captura de peça obrigatória' );
-                            }
-                        }
-                    }
+                        break;
                 }
             }
         }
-    }
 
-    //método responsável por verificar se trata-se do primeiro movimento
-    private function firstMove()
-    {
-        $turn = $this->data->getValue('turn');
-        $last_move = $this->data->getValue('last-move');
-        $piece_color = $this->data->getValue('piece')['color'];
+        $i++;
 
-        if( $turn === 1 && $last_move === null )
+        if($i < count($this->pos_check))
         {
-            if( $piece_color === 'black' )
-            {
-                throw new Exception( 'Peça branca deve fazer o primeiro movimento' );
-            }
+            $this->movement(1,$i);
         }
     }
 
-    //método responsável por verificar de quem é a vez de jogar
-    private function whoseTurn()
+    private function capture($type = 0)
     {
-        $last_move = $this->data->getValue('last-move');
-        $piece_color = $this->data->getValue('piece')['color'];
+        $this->movement(1);
 
-        if( $last_move === 'white' && $piece_color === 'white' )
+        $this->pos_check = [];
+
+        for($n = 0 ; $n < count($this->neighbors) ; $n++)
         {
-            throw new Exception( 'Agora é a vez da peça preta jogar' );
-        }
-        if( $last_move === 'black' && $piece_color === 'black' )
-        {
-            throw new Exception(' Agora é a vez da peça branca jogar' );
-        }
-    }
+            $side = $this->neighbors[$n]['side'];
+            $p_trt = $this->neighbors[$n]['p-trt'];
+            $l_middle = $this->neighbors[$n]['l-middle'];
+            $c_middle = $this->neighbors[$n]['c-middle'];
 
-    //método responsável por verificar se a casa pra onde está sendo movida a peça está ocupada
-    private function houseOccupied()
-    {
-        $board = $this->data->getValue('board');
-        $line_target = $this->data->getValue('line-target')['name'];
-        $column_target = $this->data->getValue('column-target')['name'];
-
-        if( $board[$line_target][$column_target] !== null )
-        {
-            throw new Exception( 'Proibido mover-se para uma casa ocupada' );
-        }
-    }
-
-    //método responsável por verificar se a peça está movendo-se para direção correta
-    private function forward()
-    {
-        $piece_color = $this->data->getValue('piece')['color'];
-        $piece_chosen = $this->data->getValue('piece-chosen');
-        $line_target_id = (integer)$this->data->getValue('line-target')['id'];
-        $line_source_id = (integer)$this->data->getValue('line-source')['id'];
-
-        if( $piece_color === 'black' )
-        {
-            if( $piece_chosen === 'color-black' && $line_target_id <= $line_source_id )
+            switch($side)
             {
-                throw new Exception( 'Permitido mover-se apenas para frente' );
+                case 'cse': $l = $l_middle+1; $c = $c_middle-1; break; //coluna superior esquerda
+                case 'csd': $l = $l_middle+1; $c = $c_middle+1; break; //coluna superior direita
+                case 'cie': $l = $l_middle-1; $c = $c_middle-1; break; //coluna inferior esquerda
+                case 'cid': $l = $l_middle-1; $c = $c_middle+1; break; //coluna inferior direita
             }
-            if( $piece_chosen === 'color-white' && $line_target_id >= $line_source_id )
+
+            if($l >= 1 && $l <= 8 && $c >= 97 && $c <= 104)
             {
-                throw new Exception( 'Permitido mover-se apenas para frente' );
-            }
-        }
-        if( $piece_color === 'white' )
-        {
-            if( $piece_chosen === 'color-white' && $line_target_id <= $line_source_id )
-            {
-                throw new Exception( 'Permitido mover-se apenas para frente' );
-            }
-            if( $piece_chosen === 'color-black' && $line_target_id >= $line_source_id )
-            {
-                throw new Exception( 'Permitido mover-se apenas para frente' );
+                switch($type)
+                {
+                    case 0:
+                        if($this->board->isEmpty($l,$c) && $l == $this->l_trt && $c == $this->c_trt)
+                        {
+                            $this->data->setValue('move-type','capturePiece');
+                            $this->data->setValue('pieces-targets', [['piece-target' => $p_trt,'line-middle' => $l_middle,'column-middle' => $c_middle]]);
+
+                            return true;
+                        }
+                        break;
+                    case 1:
+                        if($this->board->isEmpty($l,$c) && ($l != $this->l_trt || $c != $this->c_trt))
+                        {
+                            $this->pos_check[] = [
+                                    'line-source' => $l,
+                                    'column-source' => $c
+                            ];
+
+                            $this->pieces_targets[] = [
+                                'piece-target' => $p_trt,
+                                'line-middle' => $l_middle,
+                                'column-middle' => $c_middle
+                            ];
+                        }
+                        elseif($this->board->isEmpty($l,$c) && $l == $this->l_trt && $c == $this->c_trt)
+                        {
+                            $this->loop = false;
+                            $this->pieces_targets[] = [
+                                'piece-target' => $p_trt,
+                                'line-middle' => $l_middle,
+                                'column-middle' => $c_middle
+                            ];
+
+                            return true;
+                        }
+                        break;
+                 }
             }
         }
     }
 
-    //método responsável por verificar se o movimento de captura é válido
-    private function pieceTarget()
+    private function multipleCapture()
     {
-        $board = $this->data->getValue('board');
-        $piece_color = $this->data->getValue('piece')['color'];
-        $piece_target = $this->data->getValue('piece-target');
-        $line_middle = $this->data->getValue('line-middle');
-        $column_middle = $this->data->getValue('column-middle');
-
-        $p_trt_parts = explode('-',$piece_target);
-
-        if($board[$line_middle][$column_middle] === null)
+        do
         {
-            throw new Exception('Movimento inválido');
-        }
-        if($board[$line_middle][$column_middle] !== null)
-        {
-            if($piece_color === $p_trt_parts[1])
+            $old = count($this->pieces_targets);
+            $this->neighbors = [];
+
+            if($this->capture(1))
             {
-                throw new Exception('Proibido capturar sua própria peça =D');
+                $this->data->setValue('move-type','capturePiece');
+                $this->data->setValue('pieces-targets', $this->pieces_targets);
+                return true;
             }
         }
+        while($this->loop xor $old === count($this->pieces_targets));
     }
 }

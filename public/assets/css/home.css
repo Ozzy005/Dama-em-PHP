@@ -31,11 +31,12 @@ button{
     width: 50px;
     border-radius: 50px;
 }
-.piece-black{
+.color-black{
     background-image: linear-gradient(rgb(38, 38, 38),rgb(0, 0, 0)) ;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-.piece-white{
+.color-white{
     background-image: linear-gradient(rgb(255, 255, 255),rgb(153, 153, 153));
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-left: 5px;
 }

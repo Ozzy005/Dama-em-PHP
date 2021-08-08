@@ -6,6 +6,10 @@
  *
  **/
 
+namespace App\Models;
+
+use Core\Data;
+
 class PlayerBoardSide
 {
     private $data;
@@ -17,17 +21,17 @@ class PlayerBoardSide
 
     public function make()
     {
-        $piece_chosen = $this->data->getValue('piece-chosen');
+        $cc = $this->data->getValue('color-chosen');
 
-        if( $piece_chosen === 'color-white' )
+        if( $cc == 1 )
         {
-            $player_top_right = '2';
-            $player_lower_right = '1';
+            $player_top_right = 2;
+            $player_lower_right = 1;
         }
-        if( $piece_chosen === 'color-black' )
+        if( $cc == 2 )
         {
-            $player_top_right = '1';
-            $player_lower_right = '2';
+            $player_top_right = 1;
+            $player_lower_right = 2;
         }
 
         $this->data->setValue('player-top-right',$player_top_right);

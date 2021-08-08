@@ -6,89 +6,58 @@
  *
  **/
 
+namespace App\Models;
+
+use Core\Data;
+
 class Move
 {
-    private $data;
-
-    public function __construct()
-    {
-        $this->data = Data::getInstance();
-    }
-
     public function make()
     {
-        $move_type = $this->data->getValue('move-type');
+        $data = Data::getInstance();
+        list('board' => $b,'turn' => $turn,'movement-history' => $move_his,'cemetery' => $cemetery,'piece' => $p,'line-source' => $l_src,'column-source' => $c_src,'line-target' => $l_trt,'column-target' => $c_trt,'pieces-targets' => $ps_trts,'move-type' => $mt) = $data->getData();
 
-        $this->$move_type();
+        if($mt == 'movePiece')
+        {
+            $this->movePiece($data,$b,$turn,$move_his,$p,$l_src,$c_src,$l_trt,$c_trt);
+        }
+        elseif($mt == 'capturePiece')
+        {
+            $this->capturePiece($data,$b,$turn,$move_his,$cemetery,$p,$l_src,$c_src,$l_trt,$c_trt,$ps_trts);
+        }
     }
 
-    private function movePiece()
+    private function movePiece($data,$b,$turn,$move_his,$p,$l_src,$c_src,$l_trt,$c_trt)
     {
-        $data = $this->data;
-        $turn = $data->getValue('turn');
-        $pieca_color = $data->getValue('piece')['color'];
-        $movement_history = $data->getValue('movement-history');
-        $board = $data->getValue('board');
-        $piece = $data->getValue('piece')['name'];
-        $line_source = $data->getValue('line-source')['name'];
-        $line_target = $data->getValue('line-target')['name'];
-        $column_source = $data->getValue('column-source')['name'];
-        $column_target = $data->getValue('column-target')['name'];
-
-        $board[$line_target][$column_target] = $piece;
-        $board[$line_source][$column_source] = null;
-
-        $movement_history[$turn] =
-        [
-            'line-source' => $line_source,
-            'column-source' => $column_source,
-            'line-target' => $line_target,
-            'column-target' => $column_target,
-            'piece' => $piece
-        ];
-
-        $data->setValue('movement-history',$movement_history);
-        $data->setValue('board',$board);
+        $b->unsetPiece($l_src,$c_src);
+        $b->setPiece($l_trt,$c_trt,$p);
+        $move_his->setValues($turn,$p,$l_src,$c_src,$l_trt,$c_trt);
+        $data->setValue('board',$b);
         $data->setValue('turn',++$turn);
-        $data->setValue('last-move',$pieca_color);
+        $data->setValue('movement-history',$move_his);
     }
 
-    private function capturePiece()
+    private function capturePiece($data,$b,$turn,$move_his,$cemetery,$p,$l_src,$c_src,$l_trt,$c_trt,$ps_trts)
     {
-        $data = $this->data;
-        $turn = $data->getValue('turn');
-        $pieca_color = $data->getValue('piece')['color'];
-        $movement_history = $data->getValue('movement-history');
-        $cemetery = $data->getValue('cemetery');
-        $board = $data->getValue('board');
-        $piece = $data->getValue('piece')['name'];
-        $piece_target = $data->getValue('piece-target');
-        $line_source = $data->getValue('line-source')['name'];
-        $line_target = $data->getValue('line-target')['name'];
-        $column_source = $data->getValue('column-source')['name'];
-        $column_target = $data->getValue('column-target')['name'];
-        $line_middle = $data->getValue('line-middle');
-        $column_middle = $data->getValue('column-middle');
+        $b->unsetPiece($l_src,$c_src);
+        $b->setPiece($l_trt,$c_trt,$p);
 
-        $board[$line_target][$column_target] = $piece;
-        $board[$line_source][$column_source] = null;
-        $board[$line_middle][$column_middle] = null;
-        $cemetery[] = $piece_target;
+        $cemetery[$turn] = [];
 
-        $movement_history[$turn] =
-        [
-            'line-source' => $line_source,
-            'column-source' => $column_source,
-            'line-target' => $line_target,
-            'column-target' => $column_target,
-            'piece' => $piece,
-            'piece-target' => $piece_target
-        ];
+        for($n = 0 ; $n < count($ps_trts) ; $n++)
+        {
+            $p_trt = $ps_trts[$n]['piece-target'];
+            $l_middle = $ps_trts[$n]['line-middle'];
+            $c_middle = $ps_trts[$n]['column-middle'];
 
-        $data->setValue('movement-history',$movement_history);
-        $data->setValue('board',$board);
+            $b->unsetPiece($l_middle,$c_middle);
+            $cemetery[$turn][$n] = $p_trt;
+        }
+
+        $move_his->setValues($turn,$p,$l_src,$c_src,$l_trt,$c_trt,$ps_trts);
+
+        $data->setValue('board',$b);
         $data->setValue('turn',++$turn);
-        $data->setValue('last-move',$pieca_color);
-        $data->setValue('cemetery',$cemetery);
+        $data->setValue('movement-history',$move_his);
     }
 }

@@ -4,9 +4,9 @@ if(window.history.replaceState)
     window.history.replaceState(null,null,window.location.href);
 }
 
-let color_black = document.getElementById('color-black');
-let color_white = document.getElementById('color-white');
-let piece_chosen = document.getElementById('piece-chosen');
+let color_black = document.getElementById('2');
+let color_white = document.getElementById('1');
+let piece_chosen = document.getElementById('color-chosen');
 
 color_black.addEventListener('click',function()
 {

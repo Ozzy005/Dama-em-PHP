@@ -6,6 +6,10 @@
  *
  **/
 
+namespace App\Models;
+
+use Core\Data;
+
 class PlayerCurrent
 {
     private $data;
@@ -17,14 +21,15 @@ class PlayerCurrent
 
     public function make()
     {
-        $last_move = $this->data->getValue('last-move');
+        $mh = $this->data->getValue('movement-history');
+        $last_move = $mh->getLastMove();
         $player_top_right = $this->data->getValue('player-top-right');
 
-        $player_current_left = $last_move === 'white' ? '2' : '1';
-
-        if( $player_top_right === '1' )
+        if(is_array($last_move))
         {
-            if( $last_move === 'white' )
+            $player_current_left = $last_move['piece']->isBlack() ? '1' : '2';
+
+            if($player_top_right == 2 && $last_move['piece']->isBlack())
             {
                 $player_current_top_right = '';
                 $player_current_lower_right = 'player-current';
@@ -35,17 +40,19 @@ class PlayerCurrent
                 $player_current_lower_right = '';
             }
         }
-        if( $player_top_right === '2' )
+        elseif(is_null($last_move))
         {
-            if( $last_move === 'white' )
-            {
-                $player_current_top_right = 'player-current';
-                $player_current_lower_right = '';
-            }
-            else
+            $player_current_left = 1;
+
+            if($player_top_right == 2)
             {
                 $player_current_top_right = '';
                 $player_current_lower_right = 'player-current';
+            }
+            else
+            {
+                $player_current_top_right = 'player-current';
+                $player_current_lower_right = '';
             }
         }
 

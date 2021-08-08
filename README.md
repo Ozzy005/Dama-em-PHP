@@ -14,45 +14,46 @@ Para o desenvolvimento desse jogo de dama, foi optado por utilizar as regras de 
 
 Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
 
-### Funcionalidades desenvolvidas e não desenvolvidas
+### Funcionalidades
 
 - [x] Definição das peças
 - [x] Definição do tabuleiro
 - [x] Definição do controle
-- [x] Possibilidade de escolher com qual peça jogar
+- [x] Possibilidade de escolher com qual peça jogar (1 = branca, 2 = preta)
 - [x] Botão de resete para recomeçar o jogo (volta para a opção de escolher com qual peça jogar)
-- [x] Selecionar colunas e peças de forma interativa destacando-as clicando com o botão esquerdo do mouse, ao mesmo tempo que preenche as entradas do formulário
+- [x] Selecionar colunas e peças de forma interativa destacando-as clicando com o botão esquerdo do mouse
+- [x] Confirmar o movimento clicando duas vezes com botão esquerdo na casa de destino
 - [x] Gerar mensagem de erro se ocorrer um movimento inválido
 - [x] Exibir na tela turno e jogador atual
-- [x] Confirmar o movimento da peça clicando duas vezes na casa de destino
 - [ ] Opção para um jogador
-- [ ] Opção para dois jogadores
+- [x] Opção para dois jogadores
 - [ ] Opção para jogar online
 - [ ] Opção para desistir
 - [ ] Opção para sugerir empate
-- [ ] Ensinar o computador a jogar
+- [ ] Ensinar o computador a jogar (para opção de um jogador)
 - [ ] Histórico de movimentos
 - [ ] Opção entrar como visitante com um codinome
 - [ ] Opção entrar com credênciais
 - [ ] Ranking dos melhores jogadores
 - [ ] Opção de jogar contra o criador
 
-### Funcionalidades referentes as regras do jogo
+### Regras
 
-- [x] O lance inicial cabe sempre a quem estiver com as peças brancas
-- [x] Cada jogador só pode mover suas peças no seu turno e somente uma vez a cada turno
-- [x] Proibido a pedra mover-se para trás
+- [ ] O lance inicial cabe sempre a quem estiver com as peças brancas
+- [ ] Cada jogador só pode mover suas peças no seu turno e somente uma vez a cada turno
+- [ ] Proibido a pedra mover-se para trás
 - [x] Proibido a pedra mover-se duas casas de uma vez
 - [x] Proibido mover-se para as casas brancas
 - [x] Proibido mover-se para uma casa ocupada
-- [x] Captura de peças
+- [x] Captura de peça única
+- [x] Captura de peças múltiplas
 - [x] Permitido a pedra capturar tanto para frente quanto para trás
 - [x] Proibido capturar uma peça da mesma cor
 - [x] Duas ou mais peças juntas, na mesma diagonal, não podem ser capturadas
-- [x] Se em um lance se apresentar uma situação captura, é obrigátorio executar a captura.
-- [ ] Se no mesmo lance se apresentar mais de um modo de captura, é obrigatório executar o lance que capture o maior número de peças
+- [ ] Se em um lance se apresentar uma possibilidade de captura, é obrigátorio executar a captura
+- [ ] Se no mesmo lance se apresentar mais de uma possibilidade de captura, é obrigatório executar o lance que capture o maior número de peças
 - [ ] Quando a pedra atinge a oitava linha do tabuleiro ela é promovida à dama
-- [ ] A dama anda para frente e para trás, quantas casas quiser
+- [ ] A dama move-se para frente e para trás, quantas casas quiser
 - [ ] A dama não pode saltar uma peça da mesma cor
 - [ ] Permitido a dama capturar tanto para frente quanto para trás
 - [ ] A pedra captura a dama e a dama captura a pedra
