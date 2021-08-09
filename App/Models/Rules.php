@@ -26,7 +26,7 @@ class Rules
     }
 
     public function check()
-    {   
+    {
         if($this->movement()){return true;}
         elseif($this->capture()){return true;}
         elseif($this->multipleCapture()){return true;}
@@ -71,23 +71,12 @@ class Rules
                             for($j = 0 ; $j < count($this->pieces_targets); $j++)
                             {
                                 $p_last_id = $this->pieces_targets[$j]['piece-target']->getId();
-                                $l_middle = $this->pieces_targets[$j]['line-middle'];
-                                $c_middle = $this->pieces_targets[$j]['column-middle'];
-
-                                if($l == $l_middle && $c == $c_middle && $p_trt->getId() == $p_last_id)
-                                {
-                                    break;
-                                }
+                                if($p_trt->getId() == $p_last_id){break;}
                             }
 
                             if($this->p_current->getColor() != $p_trt->getColor() && $p_trt->getId() != $p_last_id)
                             {
-                                $this->neighbors[] = [
-                                    'side' => $side,
-                                    'p-trt' => $p_trt,
-                                    'l-middle' => $l,
-                                    'c-middle' => $c
-                                ];
+                                $this->neighbors[] = ['side' => $side,'p-trt' => $p_trt,'l-middle' => $l,'c-middle' => $c];
                             }
                         }
                         break;
@@ -140,25 +129,13 @@ class Rules
                     case 1:
                         if($this->board->isEmpty($l,$c) && ($l != $this->l_trt || $c != $this->c_trt))
                         {
-                            $this->pos_check[] = [
-                                    'line-source' => $l,
-                                    'column-source' => $c
-                            ];
-
-                            $this->pieces_targets[] = [
-                                'piece-target' => $p_trt,
-                                'line-middle' => $l_middle,
-                                'column-middle' => $c_middle
-                            ];
+                            $this->pos_check[] = ['line-source' => $l,'column-source' => $c];
+                            $this->pieces_targets[] = ['piece-target' => $p_trt,'line-middle' => $l_middle,'column-middle' => $c_middle];
                         }
                         elseif($this->board->isEmpty($l,$c) && $l == $this->l_trt && $c == $this->c_trt)
                         {
                             $this->loop = false;
-                            $this->pieces_targets[] = [
-                                'piece-target' => $p_trt,
-                                'line-middle' => $l_middle,
-                                'column-middle' => $c_middle
-                            ];
+                            $this->pieces_targets[] = ['piece-target' => $p_trt,'line-middle' => $l_middle,'column-middle' => $c_middle];
 
                             return true;
                         }
