@@ -10,7 +10,6 @@ namespace Core;
 
 class Board
 {
-
     private $board = [
         8 => [97 => null, 98 => null, 99 => null, 100 => null, 101 => null, 102 => null, 103 => null, 104 => null],
         7 => [97 => null, 98 => null, 99 => null, 100 => null, 101 => null, 102 => null, 103 => null, 104 => null],
