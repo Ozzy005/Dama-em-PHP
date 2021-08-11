@@ -13,21 +13,33 @@ use Exception;
 
 class Rules
 {
-    private $options = [];
-    private $p_catchable = [];
+    private $path = [];
+    private $path_base = [];
+    private $ignored = [];
+    private $option = 1;
     private $depth_level = 0;
+    private $depth_level_max = 0;
+
 
     public function check()
     {
         $data = Data::getInstance();
-        ['color-chosen' => $player, 'board' => $board, 'piece' => $p_att, 'line-source' => $l_src, 'column-source' => $c_src, 'line-target' => $l_dst, 'column-target' => $c_dst] = $data->getData();
+
+        [
+            'color-chosen' => $player,
+            'board' => $board,
+            'piece' => $p_att,
+            'line-source' => $l_src,
+            'column-source' => $c_src,
+            'line-target' => $l_dst,
+            'column-target' => $c_dst
+        ] = $data->getData();
+
         if($this->movement($data,$player,$board,$p_att,$l_src,$c_src,$l_dst,$c_dst)){return true;}
         if($this->capture($data,$board,$p_att,$l_src,$c_src,$l_dst,$c_dst)){return true;}
         else{throw new Exception('Movimento Inválido');}
     }
 
-    // verifica se a peça está movendo-se pra coluna, linha e direção correta
-    // verifica se a peça não está movendo-se pra uma casa ocupada
     private function movement($data,$player,$board,$p_att,$l_src,$c_src,$l_dst,$c_dst)
     {
         for($n = 1 ; $n <= 4 ; $n++)
@@ -69,117 +81,94 @@ class Rules
         }
     }
 
-    // obs: ainda não terminado, mas quase =D
-    // 1 verifica todas as possibilidades de captura
-    // 2 compara as possibilidade, verificando qual captura o maior numero possível de peças
-    // 3 se a casa de destino corresponder a possibilidade que capture o maior numero possível de peças então faz o movimento de multiplas capturas
-    // 3 se houver duas possibilidades ou mais igualmente benéficas que leva a mesma casa de destino então opta por uma possibilidade aleatória
-    private function capture($data,$board,$p_att,$l_src,$c_src,$l_dst,$c_dst, $pos = [])
+    private function capture($data,$board,$p_att,$l_src,$c_src,$l_dst,$c_dst)
     {
-        $this->depth_level++;
-
         for($n = 1 ; $n <= 4 ; $n++)
         {
-            if($n == 1) //coluna superior esquerda
-            {
-                $side = 'cse';
-                $l1 = $l_src + 1; $c1 = $c_src - 1;
-                $l2 = $l_src + 2; $c2 = $c_src - 2;
-            }
-            elseif($n == 2) //coluna superior direita
-            {
-                $side = 'csd';
-                $l1 = $l_src + 1; $c1 = $c_src + 1;
-                $l2 = $l_src + 2; $c2 = $c_src + 2;
-            }
-            elseif($n == 3) //coluna inferior esquerda
-            {
-                $side = 'cie';
-                $l1 = $l_src - 1; $c1 = $c_src - 1;
-                $l2 = $l_src - 2; $c2 = $c_src - 2;
-            }
-            elseif($n == 4) //coluna inferior direita
-            {
-                $side = 'cid';
-                $l1 = $l_src - 1; $c1 = $c_src + 1;
-                $l2 = $l_src - 2; $c2 = $c_src + 2;
-            }
+            if($n == 1){$side = 'cse'; $l1 = $l_src + 1; $c1 = $c_src - 1; $l2 = $l_src + 2; $c2 = $c_src - 2;}
+            elseif($n == 2){$side = 'csd'; $l1 = $l_src + 1; $c1 = $c_src + 1; $l2 = $l_src + 2; $c2 = $c_src + 2;}
+            elseif($n == 3){$side = 'cie'; $l1 = $l_src - 1; $c1 = $c_src - 1; $l2 = $l_src - 2; $c2 = $c_src - 2;}
+            elseif($n == 4){$side = 'cid'; $l1 = $l_src - 1; $c1 = $c_src + 1; $l2 = $l_src - 2; $c2 = $c_src + 2;}
 
             if($l1 >= 1 && $l1 <= 8 && $c1 >= 97 && $c1 <= 104 && $l2 >= 1 && $l2 <= 8 && $c2 >= 97 && $c2 <= 104)
             {
-                if($board->notEmpty($l1,$c1) && $board->getPiece($l1,$c1)->getColor() != $p_att->getColor())
+                if($board->notEmpty($l1,$c1) && $board->isEmpty($l2,$c2) && $board->getPiece($l1,$c1)->getColor() != $p_att->getColor())
                 {
-                    $p_catchable_id = 0;
+                    $ignored_id = 0;
                     $p_enemy = $board->getPiece($l1,$c1);
 
-                    for ($i = 0; $i < count($this->p_catchable); $i++)
+                    for ($i = 0; $i < count($this->ignored); $i++)
                     {
-                        $p_catchable_id = $this->p_catchable[$i];
+                        $ignored_id = $this->ignored[$i]->getId();
 
-                        if($p_enemy->getId() == $p_catchable_id){break;}
+                        if($p_enemy->getId() == $ignored_id){break;}
                     }
 
-                    if($p_enemy->getId() != $p_catchable_id)
+                    if($p_enemy->getId() != $ignored_id)
                     {
-                        if($this->depth_level == 1)
+                        if($this->depth_level < $this->depth_level_max)
                         {
-                            $this->p_catchable[] = $p_enemy->getId();
-                            $this->options[$n] = [];
-                            $pos[] = $n;
+                            $this->option++;
+                            $this->path[$this->option] = array_merge($this->path_base);
                         }
-                        if($this->depth_level == 2)
-                        {
-                            $this->p_catchable[] = $p_enemy->getId();
-                            $this->options[$pos[0]][$n] = [];
-                            $pos[] = $n;
-                        }
-                        if($this->depth_level == 3)
-                        {
-                            $this->p_catchable[] = $p_enemy->getId();
-                            $this->options[$pos[0]][$pos[1]][$n] = [];
-                            $pos[] = $n;
-                        }
-                        if($this->depth_level == 4)
-                        {
-                            $this->p_catchable[] = $p_enemy->getId();
-                            $this->options[$pos[0]][$pos[1]][$pos[2]][$n] = [];
-                            $pos[] = $n;
-                        }
-                        if($this->depth_level == 5)
-                        {
-                            $this->p_catchable[] = $p_enemy->getId();
-                            $this->options[$pos[0]][$pos[1]][$pos[2]][$pos[3]][$n] = [];
-                            $pos[] = $n;
-                        }
-                        if($this->depth_level == 6)
-                        {
-                            $this->p_catchable[] = $p_enemy->getId();
-                            $this->options[$pos[0]][$pos[1]][$pos[2]][$pos[3]][$pos[4]][$n] = [];
-                            $pos[] = $n;
-                        }
-                        if($this->depth_level == 7)
-                        {
-                            $this->p_catchable[] = $p_enemy->getId();
-                            $this->options[$pos[0]][$pos[1]][$pos[2]][$pos[3]][$pos[4]][$pos[5]][$n] = [];
-                            $pos[] = $n;
-                        }
+
+                        $this->depth_level_max = ++$this->depth_level;
+
+                        $this->ignored[] = $p_enemy;
+
+                        $this->path_base[] = $this->path[$this->option][] = [
+                            'l-src' => $l_src,
+                            'c-src' => $c_src,
+                            'p-enemy' => $p_enemy,
+                            'l-mdw' => $l1,
+                            'c-mdw' => $c1,
+                            'l-dst' => $l2,
+                            'c-dst' => $c2
+                        ];
 
                         $l_src = $l2; $c_src = $c2;
 
-                        $this->capture($data,$board,$p_att,$l_src,$c_src,$l_dst,$c_dst,$pos);
+                        $this->capture($data,$board,$p_att,$l_src,$c_src,$l_dst,$c_dst);
 
                         if($side == 'cse'){$l_src -= 2; $c_src += 2;}
                         elseif($side == 'csd'){$l_src -= 2; $c_src -= 2;}
                         elseif($side == 'cie'){$l_src += 2; $c_src += 2;}
-                        if($side == 'cid'){$l_src += 2; $c_src -= 2;}
-
-                        array_pop($pos);
+                        elseif($side == 'cid'){$l_src += 2; $c_src -= 2;}
                     }
                 }
             }
         }
-        array_pop($this->p_catchable);
+
+        array_pop($this->path_base);
+        array_pop($this->ignored);
         $this->depth_level--;
+
+        if($this->depth_level == -1)
+        {
+            $count = array_map('count', $this->path);
+            $max = array_keys($count , max($count))[0];
+            $key = array_key_last($this->path[$max]);
+
+            if($this->path[$max][$key]['l-dst'] == $l_dst && $this->path[$max][$key]['c-dst'] == $c_dst)
+            {
+                $data->setValue('move-type','capturePiece');
+                $pieces_targets = [];
+
+                foreach($this->path[$max] as $value)
+                {
+                    $pieces_targets[] =
+                    [
+                        'piece-target' => $value['p-enemy'],
+                        'line-middle' => $value['l-mdw'],
+                        'column-middle' => $value['c-mdw']
+                    ];
+                }
+
+                $data->setValue('pieces-targets',$pieces_targets);
+
+                return true;
+            }
+        }
     }
 }
 

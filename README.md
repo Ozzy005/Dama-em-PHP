@@ -41,7 +41,7 @@ Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
 
 - [ ] O lance inicial cabe sempre a quem estiver com as peças brancas
 - [ ] Cada jogador só pode mover suas peças no seu turno e somente uma vez a cada turno
-- [ ] Proibido a pedra mover-se para trás
+- [x] Proibido a pedra mover-se para trás
 - [x] Proibido a pedra mover-se duas casas de uma vez
 - [x] Proibido mover-se para as casas brancas
 - [x] Proibido mover-se para uma casa ocupada
@@ -51,14 +51,14 @@ Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
 - [x] Proibido capturar uma peça da mesma cor
 - [x] Duas ou mais peças juntas, na mesma diagonal, não podem ser capturadas
 - [ ] Se em um lance se apresentar uma possibilidade de captura, é obrigátorio executar a captura
-- [ ] Se no mesmo lance se apresentar mais de uma possibilidade de captura, é obrigatório executar o lance que capture o maior número de peças
+- [x] Se no mesmo lance se apresentar mais de uma possibilidade de captura, é obrigatório executar o lance que capture o maior número possível de peças
 - [ ] Quando a pedra atinge a oitava linha do tabuleiro ela é promovida à dama
 - [ ] A dama move-se para frente e para trás, quantas casas quiser
 - [ ] A dama não pode saltar uma peça da mesma cor
 - [ ] Permitido a dama capturar tanto para frente quanto para trás
 - [ ] A pedra captura a dama e a dama captura a pedra
 - [ ] A pedra que durante o lance de captura de várias peças, apenas passe por qualquer casa de coroação, sem aí parar, não será promovida à dama
-- [ ] Na execução do lance de captura, é permitido passar mais de uma vez pela mesma casa vazia
+- [x] Na execução do lance de captura, é permitido passar mais de uma vez pela mesma casa vazia
 - [ ] Após 20 lances sucessivos de damas, sem captura ou deslocamento de pedra, a partida é declarada empatada.
 
 ### 📄 Licença
