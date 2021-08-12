@@ -23,23 +23,16 @@ class DataInput
 
     public function check()
     {
-        [
-            'board' => $b,
-            'piece' => $p_id,
-            'line-source' => $l_src,
-            'column-source' => $c_src,
-            'line-target' => $l_trt,
-            'column-target' => $c_trt
-        ] = $this->data->getData();
+        ['board' => $board, 'piece-attacking' => $p_att_id, 'line-source' => $l_src, 'column-source' => $c_src, 'line-destiny' => $l_dst, 'column-destiny' => $c_dst] = $this->data->getData();
 
-        $this->piece($p_id);
+        $this->piece($p_att_id);
         $this->both($l_src, $c_src);
-        $this->both($l_trt, $c_trt);
+        $this->both($l_dst, $c_dst);
 
-        if(count($this->checked) == 3 && $b->getPiece($l_src, $c_src, $p_id))
+        if(count($this->checked) == 3 && $board->getPiece($l_src, $c_src, $p_att_id))
         {
-            $p = $b->getPiece($l_src, $c_src, $p_id);
-            $this->data->setValue('piece',$p);
+            $p_att = $board->getPiece($l_src, $c_src, $p_att_id);
+            $this->data->setValue('piece-attacking',$p_att);
         }
         else
         {
@@ -47,9 +40,9 @@ class DataInput
         }
     }
 
-    private function piece($p_id)
+    private function piece($p_att_id)
     {
-        if(preg_match('/^[1-9]$|^[1-9][0-2]$/',$p_id))
+        if(preg_match('/^[1-9]$|^[1-9][0-2]$/',$p_att_id))
         {
             $this->checked[] = true;
         }
@@ -63,11 +56,11 @@ class DataInput
         }
     }
 
-    public function colorChosen()
+    public function playerChosen()
     {
-        $cc = $this->data->getValue('color-chosen');
+        $player_chosen = $this->data->getValue('player-chosen');
 
-        if(preg_match('/^[1-2]$/', $cc))
+        if(preg_match('/^[1-2]$/', $player_chosen))
         {
             return true;
         }

@@ -15,49 +15,59 @@ class Move
     public function make()
     {
         $data = Data::getInstance();
-        list('board' => $b,'turn' => $turn,'movement-history' => $move_his,'cemetery' => $cemetery,'piece' => $p,'line-source' => $l_src,'column-source' => $c_src,'line-target' => $l_trt,'column-target' => $c_trt,'pieces-targets' => $ps_trts,'move-type' => $mt) = $data->getData();
+        [
+            'board' => $board,
+            'turn' => $turn,
+            'movement-history' => $mh,
+            'cemetery' => $cemetery,
+            'piece-attacking' => $p_att,
+            'line-source' => $l_src,
+            'column-source' => $c_src,
+            'line-destiny' => $l_dst,
+            'column-destiny' => $c_dst,
+            'pieces-captured' => $pieces_captured,
+            'move-type' => $mt
+        ] = $data->getData();
 
         if($mt == 'movePiece')
         {
-            $this->movePiece($data,$b,$turn,$move_his,$p,$l_src,$c_src,$l_trt,$c_trt);
+            $this->movePiece($data, $board, $turn, $mh, $p_att, $l_src, $c_src, $l_dst, $c_dst);
         }
         elseif($mt == 'capturePiece')
         {
-            $this->capturePiece($data,$b,$turn,$move_his,$cemetery,$p,$l_src,$c_src,$l_trt,$c_trt,$ps_trts);
+            $this->capturePiece($data, $board, $turn, $mh, $cemetery, $p_att, $l_src, $c_src, $l_dst, $c_dst, $pieces_captured);
         }
     }
 
-    private function movePiece($data,$b,$turn,$move_his,$p,$l_src,$c_src,$l_trt,$c_trt)
+    private function movePiece($data, $board, $turn, $mh, $p_att, $l_src, $c_src, $l_dst, $c_dst)
     {
-        $b->unsetPiece($l_src,$c_src);
-        $b->setPiece($l_trt,$c_trt,$p);
-        $move_his->setValues($turn,$p,$l_src,$c_src,$l_trt,$c_trt);
-        $data->setValue('board',$b);
-        $data->setValue('turn',++$turn);
-        $data->setValue('movement-history',$move_his);
+        $board->unsetPiece($l_src, $c_src);
+        $board->setPiece($l_dst, $c_dst, $p_att);
+        $mh->setValues($turn ,$p_att, $l_src, $c_src, $l_dst, $c_dst);
+        $data->setValue('board', $board);
+        $data->setValue('turn', ++$turn);
+        $data->setValue('movement-history', $mh);
     }
 
-    private function capturePiece($data,$b,$turn,$move_his,$cemetery,$p,$l_src,$c_src,$l_trt,$c_trt,$ps_trts)
+    private function capturePiece($data, $board, $turn, $mh, $cemetery, $p_att, $l_src, $c_src, $l_dst, $c_dst, $pieces_captured)
     {
-        $b->unsetPiece($l_src,$c_src);
-        $b->setPiece($l_trt,$c_trt,$p);
-
+        $board->unsetPiece($l_src, $c_src);
+        $board->setPiece($l_dst, $c_dst, $p_att);
         $cemetery[$turn] = [];
 
-        for($n = 0 ; $n < count($ps_trts) ; $n++)
+        for($n = 0 ; $n < count($pieces_captured) ; $n++)
         {
-            $p_trt = $ps_trts[$n]['piece-target'];
-            $l_middle = $ps_trts[$n]['line-middle'];
-            $c_middle = $ps_trts[$n]['column-middle'];
+            $piece_captured = $pieces_captured[$n]['piece-captured'];
+            $l_midway = $pieces_captured[$n]['line-midway'];
+            $c_midway = $pieces_captured[$n]['column-midway'];
 
-            $b->unsetPiece($l_middle,$c_middle);
-            $cemetery[$turn][$n] = $p_trt;
+            $board->unsetPiece($l_midway, $c_midway);
+            $cemetery[$turn][$n] = $pieces_captured;
         }
 
-        $move_his->setValues($turn,$p,$l_src,$c_src,$l_trt,$c_trt,$ps_trts);
-
-        $data->setValue('board',$b);
-        $data->setValue('turn',++$turn);
-        $data->setValue('movement-history',$move_his);
+        $mh->setValues($turn, $p_att, $l_src, $c_src, $l_dst, $c_dst, $pieces_captured);
+        $data->setValue('board', $board);
+        $data->setValue('turn', ++$turn);
+        $data->setValue('movement-history', $mh);
     }
 }

@@ -4,16 +4,16 @@ if(window.history.replaceState)
     window.history.replaceState(null,null,window.location.href);
 }
 
-let color_black = document.getElementById('2');
-let color_white = document.getElementById('1');
-let piece_chosen = document.getElementById('color-chosen');
+let player_black = document.getElementById('2');
+let player_white = document.getElementById('1');
+let player_chosen = document.getElementById('player-chosen');
 
-color_black.addEventListener('click',function()
+player_black.addEventListener('click',function()
 {
-    piece_chosen.value = color_black.getAttribute('id');
+    player_chosen.value = player_black.getAttribute('id');
 });
 
-color_white.addEventListener('click',function()
+player_white.addEventListener('click',function()
 {
-    piece_chosen.value = color_white.getAttribute('id');
+    player_chosen.value = player_white.getAttribute('id');
 });

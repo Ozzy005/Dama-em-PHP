@@ -39,8 +39,8 @@ class Home
 
         $input1 = $doc->createElement('input');
         $input1->setAttribute('type', 'text');
-        $input1->setAttribute('id', 'color-chosen');
-        $input1->setAttribute('name', 'color-chosen');
+        $input1->setAttribute('id', 'player-chosen');
+        $input1->setAttribute('name', 'player-chosen');
 
         $input2 = $doc->createElement('input');
         $input2->setAttribute('type', 'text');
@@ -50,14 +50,14 @@ class Home
         $button1 = $doc->createElement('button');
         $button1->setAttribute('type', 'submit');
         $button1->setAttribute('id', '2');
-        $button1->setAttribute('class', 'color-black');
+        $button1->setAttribute('class', 'player-black');
         $button1->setAttribute('name', 'method');
         $button1->setAttribute('value', 'mount');
 
         $button2 = $doc->createElement('button');
         $button2->setAttribute('type', 'submit');
         $button2->setAttribute('id', '1');
-        $button2->setAttribute('class', 'color-white');
+        $button2->setAttribute('class', 'player-white');
         $button2->setAttribute('name', 'method');
         $button2->setAttribute('value', 'mount');
 

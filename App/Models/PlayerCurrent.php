@@ -27,9 +27,9 @@ class PlayerCurrent
 
         if(is_array($last_move))
         {
-            $player_current_left = $last_move['piece']->isBlack() ? '1' : '2';
+            $player_current_left = $last_move['piece-attacking']->isBlack() ? '1' : '2';
 
-            if($player_top_right == 2 && $last_move['piece']->isBlack())
+            if($player_top_right == 2 && $last_move['piece-attacking']->isBlack())
             {
                 $player_current_top_right = '';
                 $player_current_lower_right = 'player-current';

@@ -20,7 +20,7 @@ for(let i = 0 ; i < pieces.length ; i++)
         }
 
         let id_piece = pieces[i].getAttribute('id');
-        let input_piece = document.querySelector('#piece');
+        let input_piece = document.querySelector('#piece-attacking');
         input_piece.value = id_piece;
 
         let id_column = pieces[i].parentNode.getAttribute('id');
@@ -58,11 +58,11 @@ for(let i = 0 ; i < columns.length ; i++)
             }
 
             let id_column = columns[i].getAttribute('id');
-            let input_column = document.querySelector('#column-target');
+            let input_column = document.querySelector('#column-destiny');
             input_column.value = id_column;
 
             let id_line = columns[i].parentNode.getAttribute('id');
-            let input_line = document.querySelector('#line-target');
+            let input_line = document.querySelector('#line-destiny');
             input_line.value = id_line;
 
             column_current = columns[i];

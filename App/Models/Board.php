@@ -23,13 +23,13 @@ class Board
 
     public function make()
     {
-        $cc = $this->data->getValue('color-chosen');
+        $player_chosen = $this->data->getValue('player-chosen');
 
-        if($cc == 1)
+        if($player_chosen  == 1)
         {
             $this->mount(1, 2);
         }
-        if($cc == 2)
+        if($player_chosen  == 2)
         {
             $this->mount(2, 1);
         }
@@ -37,7 +37,7 @@ class Board
 
     private function mount($pc1, $pc2 )
     {
-        $bc = new BoardCore;
+        $board = new BoardCore;
         $pc1_id = 1;
         $pc2_id = 12;
 
@@ -45,22 +45,22 @@ class Board
         {
             for($c = 97 ; $c <= 104 ; $c++)
             {
-                if($bc->isBlack($l, $c))
+                if($board->isBlack($l, $c))
                 {
                     if($l >= 1 && $l <= 3)
                     {
-                        $bc->setPiece($l, $c, new Piece($pc1_id, 3, $pc1));
+                        $board->setPiece($l, $c, new Piece($pc1_id, 3, $pc1));
                         $pc1_id++;
                     }
                     if($l >= 6 && $l <= 8)
                     {
-                        $bc->setPiece($l, $c, new Piece($pc2_id, 3, $pc2));
+                        $board->setPiece($l, $c, new Piece($pc2_id, 3, $pc2));
                         $pc2_id--;
                     }
                 }
             }
         }
 
-        $this->data->setValue('board', $bc);
+        $this->data->setValue('board', $board);
     }
 }

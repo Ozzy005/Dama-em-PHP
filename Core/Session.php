@@ -22,16 +22,12 @@ class Session
         }
     }
 
-    //obs: desnecessário salvar variáveis objetos
-    //pois variáveis objetos não contém o próprio objeto como valor
-    //elas contém um identificador do objeto que aponta para o mesmo objeto
-    //mas por enquanto deixarei assim
-
     public static function save()
     {
         $data = Data::getInstance();
 
         self::setValue('board',$data->getValue('board'));
+        self::setValue('player-chosen',$data->getValue('player-chosen'));
         self::setValue('turn',$data->getValue('turn'));
         self::setValue('movement-history',$data->getValue('movement-history'));
         self::setValue('cemetery',$data->getValue('cemetery'));
@@ -42,23 +38,6 @@ class Session
         self::setValue('player-current-lower-right',$data->getValue('player-current-lower-right'));
     }
 
-    public static function setVars()
-    {
-        if(self::empty())
-        {
-            $_SESSION['board'] = null;
-            $_SESSION['color-chosen'] = Post::getValue('color-chosen');
-            $_SESSION['turn'] = 1;
-            $_SESSION['movement-history'] = new MovementHistory;
-            $_SESSION['cemetery'] = [];
-            $_SESSION['player-current-left'] = null;
-            $_SESSION['player-top-right'] = null;
-            $_SESSION['player-lower-right'] = null;
-            $_SESSION['player-current-top-right'] = null;
-            $_SESSION['player-current-lower-right'] = null;
-        }
-    }
-
     public static function empty()
     {
         return empty($_SESSION);
@@ -66,11 +45,7 @@ class Session
 
     public static function setValue($param, $value)
     {
-        if(array_key_exists($param, $_SESSION))
-        {
-            $_SESSION[$param] = $value;
-        }
-
+        $_SESSION[$param] = $value;
     }
 
     public static function getValue($param)

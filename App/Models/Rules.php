@@ -20,38 +20,28 @@ class Rules
     private $depth_level = 0;
     private $depth_level_max = 0;
 
-
     public function check()
     {
         $data = Data::getInstance();
-
-        [
-            'color-chosen' => $player,
-            'board' => $board,
-            'piece' => $p_att,
-            'line-source' => $l_src,
-            'column-source' => $c_src,
-            'line-target' => $l_dst,
-            'column-target' => $c_dst
-        ] = $data->getData();
-
-        if($this->movement($data,$player,$board,$p_att,$l_src,$c_src,$l_dst,$c_dst)){return true;}
-        if($this->capture($data,$board,$p_att,$l_src,$c_src,$l_dst,$c_dst)){return true;}
+        ['player-chosen' => $p_chosen, 'board' => $board, 'piece-attacking' => $p_att, 'line-source' => $l_src, 'column-source' => $c_src, 'line-destiny' => $l_dst, 'column-destiny' => $c_dst] = $data->getData();
+        //$data->setValue('move-type','movePiece');
+        if($this->movement($data ,$p_chosen, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst)){return true;}
+        if($this->capture($data, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst)){return true;}
         else{throw new Exception('Movimento Inválido');}
     }
 
-    private function movement($data,$player,$board,$p_att,$l_src,$c_src,$l_dst,$c_dst)
+    private function movement($data, $p_chosen, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst)
     {
         for($n = 1 ; $n <= 4 ; $n++)
         {
-            if($n == 1){$l = $l_src + 1; $c = $c_src - 1;} //coluna superior esquerda
-            elseif($n == 2){$l = $l_src + 1; $c = $c_src + 1;} //coluna superior direita
-            elseif($n == 3){$l = $l_src - 1; $c = $c_src - 1;} //coluna inferior esquerda
-            elseif($n == 4){$l = $l_src - 1; $c = $c_src + 1;} //coluna inferior direita
+            if($n == 1){$l = $l_src + 1; $c = $c_src - 1;}
+            elseif($n == 2){$l = $l_src + 1; $c = $c_src + 1;}
+            elseif($n == 3){$l = $l_src - 1; $c = $c_src - 1;}
+            elseif($n == 4){$l = $l_src - 1; $c = $c_src + 1;}
 
             if($l >= 1 && $l <= 8 && $c >= 97 && $c <= 104 && $board->isEmpty($l,$c) && $l == $l_dst && $c == $c_dst)
             {
-                if($player == 1)
+                if($p_chosen == 1)
                 {
                     if($p_att->isWhite() && $l_src < $l_dst)
                     {
@@ -64,7 +54,7 @@ class Rules
                         return true;
                     }
                 }
-                elseif($player == 2)
+                elseif($p_chosen == 2)
                 {
                     if($p_att->isBlack() && $l_src < $l_dst)
                     {
@@ -81,7 +71,7 @@ class Rules
         }
     }
 
-    private function capture($data,$board,$p_att,$l_src,$c_src,$l_dst,$c_dst)
+    private function capture($data, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst)
     {
         for($n = 1 ; $n <= 4 ; $n++)
         {
@@ -92,10 +82,10 @@ class Rules
 
             if($l1 >= 1 && $l1 <= 8 && $c1 >= 97 && $c1 <= 104 && $l2 >= 1 && $l2 <= 8 && $c2 >= 97 && $c2 <= 104)
             {
-                if($board->notEmpty($l1,$c1) && $board->isEmpty($l2,$c2) && $board->getPiece($l1,$c1)->getColor() != $p_att->getColor())
+                if($board->notEmpty($l1, $c1) && $board->isEmpty($l2, $c2) && $board->getPiece($l1, $c1)->getColor() != $p_att->getColor())
                 {
                     $ignored_id = 0;
-                    $p_enemy = $board->getPiece($l1,$c1);
+                    $p_enemy = $board->getPiece($l1, $c1);
 
                     for ($i = 0; $i < count($this->ignored); $i++)
                     {
@@ -113,22 +103,11 @@ class Rules
                         }
 
                         $this->depth_level_max = ++$this->depth_level;
-
                         $this->ignored[] = $p_enemy;
-
-                        $this->path_base[] = $this->path[$this->option][] = [
-                            'l-src' => $l_src,
-                            'c-src' => $c_src,
-                            'p-enemy' => $p_enemy,
-                            'l-mdw' => $l1,
-                            'c-mdw' => $c1,
-                            'l-dst' => $l2,
-                            'c-dst' => $c2
-                        ];
-
+                        $this->path_base[] = $this->path[$this->option][] = ['l-src' => $l_src, 'c-src' => $c_src, 'p-enemy' => $p_enemy, 'l-mdw' => $l1, 'c-mdw' => $c1, 'l-dst' => $l2, 'c-dst' => $c2];
                         $l_src = $l2; $c_src = $c2;
 
-                        $this->capture($data,$board,$p_att,$l_src,$c_src,$l_dst,$c_dst);
+                        $this->capture($data, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst);
 
                         if($side == 'cse'){$l_src -= 2; $c_src += 2;}
                         elseif($side == 'csd'){$l_src -= 2; $c_src -= 2;}
@@ -143,7 +122,7 @@ class Rules
         array_pop($this->ignored);
         $this->depth_level--;
 
-        if($this->depth_level == -1)
+        if($this->depth_level == -1 && count($this->path) > 0)
         {
             $count = array_map('count', $this->path);
             $max = array_keys($count , max($count))[0];
@@ -152,20 +131,19 @@ class Rules
             if($this->path[$max][$key]['l-dst'] == $l_dst && $this->path[$max][$key]['c-dst'] == $c_dst)
             {
                 $data->setValue('move-type','capturePiece');
-                $pieces_targets = [];
+                $pieces_captured = [];
 
                 foreach($this->path[$max] as $value)
                 {
-                    $pieces_targets[] =
+                    $pieces_captured[] =
                     [
-                        'piece-target' => $value['p-enemy'],
-                        'line-middle' => $value['l-mdw'],
-                        'column-middle' => $value['c-mdw']
+                        'piece-captured' => $value['p-enemy'],
+                        'line-midway' => $value['l-mdw'],
+                        'column-midway' => $value['c-mdw']
                     ];
                 }
 
-                $data->setValue('pieces-targets',$pieces_targets);
-
+                $data->setValue('pieces-captured',$pieces_captured);
                 return true;
             }
         }

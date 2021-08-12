@@ -12,15 +12,15 @@ class MovementHistory
 {
     private $movement_history = [];
 
-    public function setValues($turn, Piece $p, $l_src, $c_src, $l_trt, $c_trt, $ps_trts = null)
+    public function setValues($turn, Piece $p_att, $l_src, $c_src, $l_dst, $c_dst, $p_captured = null)
     {
         $this->movement_history[$turn] = [
-            'piece' => $p,
+            'piece-attacking' => $p_att,
             'line-source' => $l_src,
             'column-source' => $c_src,
-            'line-target' => $l_trt,
-            'column-target' => $c_trt,
-            'pieces-targets' => $ps_trts
+            'line-destiny' => $l_dst,
+            'column-destiny' => $c_dst,
+            'pieces-captured' => $p_captured
         ];
     }
 

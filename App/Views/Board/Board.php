@@ -47,11 +47,7 @@ class Board
 
     private function panelLeft($doc )
     {
-        [
-            'turn' => $turn,
-            'player-current-left' => $pcl,
-            'message-error' => $msg_error
-        ] = $this->data->getData();
+        ['turn' => $turn, 'player-current-left' => $pcl, 'message-error' => $msg_error] = $this->data->getData();
 
         $panel_left = $doc->createElement('div');
         $panel_left->setAttribute('class','panel-left');
@@ -67,8 +63,8 @@ class Board
 
         $input1 = $doc->createElement('input');
         $input1->setAttribute('type','text');
-        $input1->setAttribute('id','piece');
-        $input1->setAttribute('name','piece');
+        $input1->setAttribute('id','piece-attacking');
+        $input1->setAttribute('name','piece-attacking');
 
         $input2 = $doc->createElement('input');
         $input2->setAttribute('type','text');
@@ -82,13 +78,13 @@ class Board
 
         $input4 = $doc->createElement('input');
         $input4->setAttribute('type','text');
-        $input4->setAttribute('id','line-target');
-        $input4->setAttribute('name','line-target');
+        $input4->setAttribute('id','line-destiny');
+        $input4->setAttribute('name','line-destiny');
 
         $input5 = $doc->createElement('input');
         $input5->setAttribute('type','text');
-        $input5->setAttribute('id','column-target');
-        $input5->setAttribute('name','column-target');
+        $input5->setAttribute('id','column-destiny');
+        $input5->setAttribute('name','column-destiny');
 
         $input6 = $doc->createElement('input');
         $input6->setAttribute('type', 'text');
@@ -219,12 +215,7 @@ class Board
 
     public function panelRight($doc)
     {
-        [
-            'player-top-right' => $ptr,
-            'player-current-top-right' => $pctr,
-            'player-lower-right' => $plr,
-            'player-current-lower-right' => $pclr
-        ] = $this->data->getData();
+        ['player-top-right' => $ptr, 'player-current-top-right' => $pctr, 'player-lower-right' => $plr, 'player-current-lower-right' => $pclr] = $this->data->getData();
 
         $panel_right = $doc->createElement('div');
         $panel_right->setAttribute('class','panel-right');

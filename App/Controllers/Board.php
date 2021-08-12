@@ -10,16 +10,14 @@ namespace App\Controllers;
 
 use Core\Session;
 use Core\Data;
+use App\Models\DataInput;
 use App\Models\Board as BoardModel;
 use App\Models\PlayerBoardSide;
 use App\Models\PlayerCurrent;
-use App\Models\DataInput;
-use App\Models\Move;
 use App\Models\Rules;
-
+use App\Models\Move;
 use App\Views\Board\Board as BoardView;
 use Exception;
-
 
 class Board
 {
@@ -27,10 +25,8 @@ class Board
     {
         try
         {
-            Session::setVars();
-
             $di = new DataInput();
-            $di->colorChosen();
+            $di->playerChosen();
 
             $bm = new BoardModel();
             $bm->make();
@@ -46,6 +42,8 @@ class Board
         catch(Exception $e)
         {
             //por enquanto é só um improviso, mas juro que vou melhorar essa parte =D
+            //não é pra entrar aqui, a não ser que algum usuário malicioso
+            //altere alguma informação no lado do cliente que não deveria ser alterada
             Session::destroy();
             header( 'Location: index.php', true, 302 );
         }
@@ -73,7 +71,6 @@ class Board
         {
             Data::getInstance()->setValue('message-error',$e->getMessage());
         }
-
     }
 
     public function reset()
@@ -84,8 +81,8 @@ class Board
 
     public function show()
     {
-        $vh = new BoardView();
-        $vh->make();
-        $vh->show();
+        $bv = new BoardView();
+        $bv->make();
+        $bv->show();
     }
 }

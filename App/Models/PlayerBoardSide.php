@@ -21,14 +21,14 @@ class PlayerBoardSide
 
     public function make()
     {
-        $cc = $this->data->getValue('color-chosen');
+        $player_chosen = $this->data->getValue('player-chosen');
 
-        if( $cc == 1 )
+        if($player_chosen == 1)
         {
             $player_top_right = 2;
             $player_lower_right = 1;
         }
-        if( $cc == 2 )
+        else
         {
             $player_top_right = 1;
             $player_lower_right = 2;
