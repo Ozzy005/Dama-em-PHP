@@ -13,7 +13,7 @@ use Exception;
 
 class Rules
 {
-    private $path = [];
+    private $paths = [];
     private $path_base = [];
     private $ignored = [];
     private $option = 1;
@@ -24,7 +24,7 @@ class Rules
     {
         $data = Data::getInstance();
         ['player-chosen' => $p_chosen, 'board' => $board, 'piece-attacking' => $p_att, 'line-source' => $l_src, 'column-source' => $c_src, 'line-destiny' => $l_dst, 'column-destiny' => $c_dst] = $data->getData();
-        //$data->setValue('move-type','movePiece');
+
         if($this->movement($data ,$p_chosen, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst)){return true;}
         if($this->capture($data, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst)){return true;}
         else{throw new Exception('Movimento Inválido');}
@@ -99,12 +99,12 @@ class Rules
                         if($this->depth_level < $this->depth_level_max)
                         {
                             $this->option++;
-                            $this->path[$this->option] = array_merge($this->path_base);
+                            $this->paths[$this->option] = array_merge($this->path_base);
                         }
 
                         $this->depth_level_max = ++$this->depth_level;
                         $this->ignored[] = $p_enemy;
-                        $this->path_base[] = $this->path[$this->option][] = ['l-src' => $l_src, 'c-src' => $c_src, 'p-enemy' => $p_enemy, 'l-mdw' => $l1, 'c-mdw' => $c1, 'l-dst' => $l2, 'c-dst' => $c2];
+                        $this->path_base[] = $this->paths[$this->option][] = ['l-src' => $l_src, 'c-src' => $c_src, 'p-enemy' => $p_enemy, 'l-mdw' => $l1, 'c-mdw' => $c1, 'l-dst' => $l2, 'c-dst' => $c2];
                         $l_src = $l2; $c_src = $c2;
 
                         $this->capture($data, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst);
@@ -122,29 +122,60 @@ class Rules
         array_pop($this->ignored);
         $this->depth_level--;
 
-        if($this->depth_level == -1 && count($this->path) > 0)
+        if($this->depth_level == -1 && count($this->paths) > 0)
         {
-            $count = array_map('count', $this->path);
-            $max = array_keys($count , max($count))[0];
-            $key = array_key_last($this->path[$max]);
+            $options_counted = array_map('count', $this->paths);
+            $best_options = array_keys($options_counted , max($options_counted));
 
-            if($this->path[$max][$key]['l-dst'] == $l_dst && $this->path[$max][$key]['c-dst'] == $c_dst)
+            if(count($best_options) == 1)
             {
-                $data->setValue('move-type','capturePiece');
-                $pieces_captured = [];
+                $option = $best_options[0];
+                $last_path = end($this->paths[$option]);
 
-                foreach($this->path[$max] as $value)
+                if($last_path['l-dst'] == $l_dst && $last_path['c-dst'] == $c_dst)
                 {
-                    $pieces_captured[] =
-                    [
-                        'piece-captured' => $value['p-enemy'],
-                        'line-midway' => $value['l-mdw'],
-                        'column-midway' => $value['c-mdw']
-                    ];
-                }
+                    $data->setValue('move-type','capturePiece');
+                    $pieces_captured = [];
 
-                $data->setValue('pieces-captured',$pieces_captured);
-                return true;
+                    foreach($this->paths[$option] as $path)
+                    {
+                        $pieces_captured[] =
+                        [
+                            'piece-captured' => $path['p-enemy'],
+                            'line-midway' => $path['l-mdw'],
+                            'column-midway' => $path['c-mdw']
+                        ];
+                    }
+
+                    $data->setValue('pieces-captured',$pieces_captured);
+                    return true;
+                }
+            }
+            elseif(count($best_options) > 1)
+            {
+                foreach($best_options as $option)
+                {
+                    $last_path = end($this->paths[$option]);
+
+                    if($last_path['l-dst'] == $l_dst && $last_path['c-dst'] == $c_dst)
+                    {
+                        $data->setValue('move-type','capturePiece');
+                        $pieces_captured = [];
+
+                        foreach($this->paths[$option] as $path)
+                        {
+                            $pieces_captured[] =
+                            [
+                                'piece-captured' => $path['p-enemy'],
+                                'line-midway' => $path['l-mdw'],
+                                'column-midway' => $path['c-mdw']
+                            ];
+                        }
+
+                        $data->setValue('pieces-captured',$pieces_captured);
+                        return true;
+                    }
+                }
             }
         }
     }

@@ -8,9 +8,7 @@
 
 namespace App\Models;
 
-use Core\Data;
-use Core\Board as BoardCore;
-use Core\Piece;
+use Core\{Data, Piece, Board as BoardCore};
 
 class Board
 {

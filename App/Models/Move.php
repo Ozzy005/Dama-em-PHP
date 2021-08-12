@@ -44,9 +44,7 @@ class Move
         $board->unsetPiece($l_src, $c_src);
         $board->setPiece($l_dst, $c_dst, $p_att);
         $mh->setValues($turn ,$p_att, $l_src, $c_src, $l_dst, $c_dst);
-        $data->setValue('board', $board);
         $data->setValue('turn', ++$turn);
-        $data->setValue('movement-history', $mh);
     }
 
     private function capturePiece($data, $board, $turn, $mh, $cemetery, $p_att, $l_src, $c_src, $l_dst, $c_dst, $pieces_captured)
@@ -62,12 +60,10 @@ class Move
             $c_midway = $pieces_captured[$n]['column-midway'];
 
             $board->unsetPiece($l_midway, $c_midway);
-            $cemetery[$turn][$n] = $pieces_captured;
+            $cemetery[$turn][$n] = $piece_captured;
         }
 
         $mh->setValues($turn, $p_att, $l_src, $c_src, $l_dst, $c_dst, $pieces_captured);
-        $data->setValue('board', $board);
         $data->setValue('turn', ++$turn);
-        $data->setValue('movement-history', $mh);
     }
 }

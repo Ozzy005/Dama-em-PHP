@@ -9,8 +9,6 @@
 namespace Core;
 
 use Core\Data;
-use Core\Post;
-use Core\MovementHistory;
 
 class Session
 {
@@ -26,16 +24,16 @@ class Session
     {
         $data = Data::getInstance();
 
-        self::setValue('board',$data->getValue('board'));
-        self::setValue('player-chosen',$data->getValue('player-chosen'));
-        self::setValue('turn',$data->getValue('turn'));
-        self::setValue('movement-history',$data->getValue('movement-history'));
-        self::setValue('cemetery',$data->getValue('cemetery'));
-        self::setValue('player-current-left',$data->getValue('player-current-left'));
-        self::setValue('player-top-right',$data->getValue('player-top-right'));
-        self::setValue('player-lower-right',$data->getValue('player-lower-right'));
-        self::setValue('player-current-top-right',$data->getValue('player-current-top-right'));
-        self::setValue('player-current-lower-right',$data->getValue('player-current-lower-right'));
+        $_SESSION['board'] = $data->getValue('board');
+        $_SESSION['player-chosen'] = $data->getValue('player-chosen');
+        $_SESSION['turn'] = $data->getValue('turn');
+        $_SESSION['movement-history'] = $data->getValue('movement-history');
+        $_SESSION['cemetery'] = $data->getValue('cemetery');
+        $_SESSION['player-current-left'] = $data->getValue('player-current-left');
+        $_SESSION['player-top-right'] = $data->getValue('player-top-right');
+        $_SESSION['player-lower-right'] = $data->getValue('player-lower-right');
+        $_SESSION['player-current-top-right'] = $data->getValue('player-current-top-right');
+        $_SESSION['player-current-lower-right'] = $data->getValue('player-current-lower-right');
     }
 
     public static function empty()

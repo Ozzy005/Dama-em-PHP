@@ -8,14 +8,8 @@
 
 namespace App\Controllers;
 
-use Core\Session;
-use Core\Data;
-use App\Models\DataInput;
-use App\Models\Board as BoardModel;
-use App\Models\PlayerBoardSide;
-use App\Models\PlayerCurrent;
-use App\Models\Rules;
-use App\Models\Move;
+use Core\{Session, Data};
+use App\Models\{DataInput, Board as BoardModel, PlayerBoardSide, PlayerCurrent, Rules, Move};
 use App\Views\Board\Board as BoardView;
 use Exception;
 
@@ -41,7 +35,6 @@ class Board
         }
         catch(Exception $e)
         {
-            //por enquanto é só um improviso, mas juro que vou melhorar essa parte =D
             //não é pra entrar aqui, a não ser que algum usuário malicioso
             //altere alguma informação no lado do cliente que não deveria ser alterada
             Session::destroy();

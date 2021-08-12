@@ -8,8 +8,7 @@
 
 namespace Core;
 
-use Core\Session;
-use Core\Post;
+use Core\{Session, Post};
 
 class Data
 {
@@ -50,10 +49,7 @@ class Data
 
     public function setValue($param, $value)
     {
-        if( array_key_exists($param, $this->data))
-        {
-            $this->data[$param] = $value;
-        }
+        $this->data[$param] = $value;
     }
 
     public function getValue($param)

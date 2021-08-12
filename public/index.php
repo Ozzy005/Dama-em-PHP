@@ -8,8 +8,7 @@
 
 require_once '../vendor/autoload.php';
 
-use Core\Session;
-use Core\Post;
+use Core\{Session, Post};
 
 new Session;
 

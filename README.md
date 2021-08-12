@@ -35,7 +35,6 @@ Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
 - [ ] Opção entrar como visitante com um codinome
 - [ ] Opção entrar com credênciais
 - [ ] Ranking dos melhores jogadores
-- [ ] Opção de jogar contra o criador
 
 ### Regras
 

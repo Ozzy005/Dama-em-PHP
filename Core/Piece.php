@@ -16,9 +16,7 @@ class Piece
     // 4 = dame
     // 1-12 = id
 
-    private $id;
-    private $type;
-    private $color;
+    private $id, $type, $color;
 
     public function __construct($id, $type, $color)
     {
