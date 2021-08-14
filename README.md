@@ -38,8 +38,8 @@ Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
 
 ### Regras
 
-- [ ] O lance inicial cabe sempre a quem estiver com as peças brancas
-- [ ] Cada jogador só pode mover suas peças no seu turno e somente uma vez a cada turno
+- [x] O lance inicial cabe sempre a quem estiver com as peças brancas
+- [x] Cada jogador só pode mover suas peças no seu turno e somente um movimento por turno
 - [x] Proibido a pedra mover-se para trás
 - [x] Proibido a pedra mover-se duas casas de uma vez
 - [x] Proibido mover-se para as casas brancas

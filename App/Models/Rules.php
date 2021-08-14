@@ -23,11 +23,35 @@ class Rules
     public function check()
     {
         $data = Data::getInstance();
-        ['player-chosen' => $p_chosen, 'board' => $board, 'piece-attacking' => $p_att, 'line-source' => $l_src, 'column-source' => $c_src, 'line-destiny' => $l_dst, 'column-destiny' => $c_dst] = $data->getData();
+        ['movement-history' => $mh, 'player-chosen' => $p_chosen, 'board' => $board, 'piece-attacking' => $p_att, 'line-source' => $l_src, 'column-source' => $c_src, 'line-destiny' => $l_dst, 'column-destiny' => $c_dst] = $data->getData();
 
-        if($this->movement($data ,$p_chosen, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst)){return true;}
-        if($this->capture($data, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst)){return true;}
-        else{throw new Exception('Movimento Inválido');}
+        try
+        {
+            $this->whoseTurn($mh, $p_att);
+            if($this->movement($data ,$p_chosen, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst)){return true;}
+            if($this->capture($data, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst)){return true;}
+            else{throw new Exception('Movimento Inválido');}
+        }
+        catch(Exception $e)
+        {
+            throw new Exception($e->getMessage());
+        }
+
+
+    }
+
+    public function whoseTurn($mh,$p_att)
+    {
+        $p_last_move = $mh->getLastMove();
+
+        if($p_last_move !== null && $p_last_move['piece-attacking']->getColor() == $p_att->getColor())
+        {
+            throw new Exception('Não é sua vez de jogar');
+        }
+        elseif($p_last_move === null && $p_att->isBlack())
+        {
+            throw new Exception('Não é sua vez de jogar');
+        }
     }
 
     private function movement($data, $p_chosen, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst)
