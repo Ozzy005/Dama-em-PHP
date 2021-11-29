@@ -8,22 +8,19 @@
 
 namespace App\Views\Board;
 
-use Core\Data;
+use App\Core\Father;
 use DOMDocument;
 
-class Board
-{
-    private $board;
-    private $data;
+class Board extends Father{
 
-    public function __construct()
-    {
+    private $board;
+
+    public function __construct(){
+        parent::__construct();
         $this->board= file_get_contents('../App/Views/Board/template/board.html');
-        $this->data = Data::getInstance();
     }
 
-    public function make()
-    {
+    public function make(){
         $doc = new DOMDocument();
         $doc->loadHTML($this->board);
 
@@ -45,9 +42,10 @@ class Board
         $this->board = $doc->saveHTML();
     }
 
-    private function panelLeft($doc )
-    {
-        ['turn' => $turn, 'player-current-left' => $pcl, 'message-error' => $msg_error] = $this->data->getData();
+    private function panelLeft($doc){
+        $turn =  $this->data->turn;
+        $pcl = $this->data->playerCurrentLeft;
+        $msg_error = $this->data->messageError;
 
         $panel_left = $doc->createElement('div');
         $panel_left->setAttribute('class','panel-left');
@@ -91,15 +89,15 @@ class Board
         $input6->setAttribute('name', 'class');
         $input6->setAttribute('value', 'App\Controllers\Board');
 
-        $button1 = $doc->createElement('button','MOVE');
+        $button1 = $doc->createElement('button','MOVER');
         $button1->setAttribute('type','submit');
         $button1->setAttribute('name','method');
         $button1->setAttribute('value','move');
 
-        $button2 = $doc->createElement('button','RESET');
+        $button2 = $doc->createElement('button','NOVO JOGO');
         $button2->setAttribute('type','submit');
         $button2->setAttribute('name','method');
-        $button2->setAttribute('value','reset');
+        $button2->setAttribute('value','newGame');
 
         $form->appendChild($input1);
         $form->appendChild($input2);
@@ -123,8 +121,7 @@ class Board
         $information->appendChild($turn_current);
         $information->appendChild($player_current_left);
 
-        if($msg_error != null)
-        {
+        if($msg_error != null){
             $message_error = $doc->createElement('div', $msg_error);
             $message_error ->setAttribute('class','message-error ');
             $information->appendChild($message_error);
@@ -136,15 +133,13 @@ class Board
         return $panel_left;
     }
 
-    private function board($doc)
-    {
-        $b = $this->data->getValue('board');
+    private function board($doc){
+        $b = $this->data->board;
 
         $board = $doc->createElement('div');
         $board->setAttribute('class','board');
 
-        for($l = 8 ; $l >= 0 ; $l--)
-        {
+        for($l = 8 ; $l >= 0 ; $l--){
             $line = $doc->createElement('div');
             $line->setAttribute('id', $l);
             $line->setAttribute('class', 'line');
@@ -157,47 +152,39 @@ class Board
 
             $line->appendChild($column_indicative);
 
-            for($c = 97 ; $c <= 104 && $l >= 1 ; $c++)
-            {
+            for($c = 97 ; $c <= 104 && $l >= 1 ; $c++){
                 $column = $doc->createElement('div');
                 $column->setAttribute('id',$c);
 
-                if($b->isBlack($l,$c))
-                {
+                if($b->isBlack($l,$c)){
                     $column->setAttribute('class','column column-black');
 
-                    if($b->notEmpty($l,$c))
-                    {
+                    if($b->notEmpty($l,$c)){
                         $p = $b->getPiece($l,$c);
 
-                        if($p->isBlack())
-                        {
+                        if($p->isBlack()){
                             $piece = $doc->createElement('div');
-                            $piece->setAttribute('id',$p->getId());
+                            $piece->setAttribute('id',$p->id);
                             $piece->setAttribute('class','piece stone-black');
                         }
-                        elseif($p->isWhite())
-                        {
+                        elseif($p->isWhite()){
                             $piece = $doc->createElement('div');
-                            $piece->setAttribute('id',$p->getId());
+                            $piece->setAttribute('id',$p->id);
                             $piece->setAttribute('class','piece stone-white');
                         }
 
                         $column->appendChild($piece);
                     }
                 }
-                else
-                {
+                else{
                     $column->setAttribute('class','column column-white');
                 }
 
                 $line->appendChild($column);
             }
 
-            if($l == 0)
-            {
-                for($c = 97 ; $c <= 104 ; $c++)
-                {
+            if($l == 0){
+                for($c = 97 ; $c <= 104 ; $c++){
                     $letter = strtoupper(chr($c));
                     $span = $doc->createElement('div',$letter);
                     $column_indicative = $doc->createElement('div');
@@ -213,9 +200,11 @@ class Board
         return $board;
     }
 
-    public function panelRight($doc)
-    {
-        ['player-top-right' => $ptr, 'player-current-top-right' => $pctr, 'player-lower-right' => $plr, 'player-current-lower-right' => $pclr] = $this->data->getData();
+    public function panelRight($doc){
+        $ptr = $this->data->playerTopRight;
+        $pctr = $this->data->playerCurrentTopRight;
+        $plr = $this->data->playerLowerRight;
+        $pclr = $this->data->playerCurrentLowerRight;
 
         $panel_right = $doc->createElement('div');
         $panel_right->setAttribute('class','panel-right');
@@ -268,8 +257,7 @@ class Board
         return $panel_right;
     }
 
-    public function show()
-    {
+    public function show(){
         print $this->board;
     }
 }

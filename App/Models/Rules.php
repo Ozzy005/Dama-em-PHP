@@ -8,86 +8,87 @@
 
 namespace App\Models;
 
-use Core\Data;
+use App\Core\Father;
 use Exception;
 
-class Rules
-{
+class Rules extends Father{
+    
     private $paths = [];
-    private $path_base = [];
+    private $pathBase = [];
     private $ignored = [];
     private $option = 1;
-    private $depth_level = 0;
-    private $depth_level_max = 0;
+    private $depthLevel = 0;
+    private $depthLevelMax = 0;
 
-    public function check()
-    {
-        $data = Data::getInstance();
-        ['movement-history' => $mh, 'player-chosen' => $p_chosen, 'board' => $board, 'piece-attacking' => $p_att, 'line-source' => $l_src, 'column-source' => $c_src, 'line-destiny' => $l_dst, 'column-destiny' => $c_dst] = $data->getData();
+    public function check(){
+        $mh = $this->data->movementHistory;
+        $pChosen = $this->data->playerChosen;
+        $board = $this->data->board;
+        $pAtt = $this->data->pieceAttacking;
+        $lSrc = $this->data->lineSource;
+        $cSrc = $this->data->columnSource;
+        $lDst = $this->data->lineDestiny;
+        $cDst = $this->data->columnDestiny;
 
-        try
-        {
-            $this->whoseTurn($mh, $p_att);
-            if($this->movement($data ,$p_chosen, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst)){return true;}
-            if($this->capture($data, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst)){return true;}
+        try{
+            $this->whoseTurn($mh, $pAtt);
+            if($this->movement($pChosen, $board, $pAtt, $lSrc, $cSrc, $lDst, $cDst)){return true;}
+            if($this->capture($board, $pAtt, $lSrc, $cSrc, $lDst, $cDst)){return true;}
             else{throw new Exception('Movimento Inválido');}
         }
-        catch(Exception $e)
-        {
+        catch(Exception $e){
             throw new Exception($e->getMessage());
         }
-
-
     }
 
-    public function whoseTurn($mh,$p_att)
-    {
-        $p_last_move = $mh->getLastMove();
+    public function whoseTurn($mh, $pAtt){
+        $pLastMove = $mh->getLastMove();
 
-        if($p_last_move !== null && $p_last_move['piece-attacking']->getColor() == $p_att->getColor())
-        {
+        if($pLastMove && $pLastMove['piece-attacking']->color == $pAtt->color){
             throw new Exception('Não é sua vez de jogar');
         }
-        elseif($p_last_move === null && $p_att->isBlack())
-        {
-            throw new Exception('Não é sua vez de jogar');
+        elseif(!$pLastMove && $pAtt->isBlack()){
+            throw new Exception('Cor branca deve fazer o lance inicial');
         }
     }
 
-    private function movement($data, $p_chosen, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst)
-    {
-        for($n = 1 ; $n <= 4 ; $n++)
-        {
-            if($n == 1){$l = $l_src + 1; $c = $c_src - 1;}
-            elseif($n == 2){$l = $l_src + 1; $c = $c_src + 1;}
-            elseif($n == 3){$l = $l_src - 1; $c = $c_src - 1;}
-            elseif($n == 4){$l = $l_src - 1; $c = $c_src + 1;}
+    private function movement($pChosen, $board, $pAtt, $lSrc, $cSrc, $lDst, $cDst){
+        for($n = 1 ; $n <= 4 ; $n++){
+            if($n == 1){
+                $l = $lSrc + 1;
+                $c = $cSrc - 1;
+            }
+            elseif($n == 2){
+                $l = $lSrc + 1;
+                $c = $cSrc + 1;
+            }
+            elseif($n == 3){
+                $l = $lSrc - 1;
+                $c = $cSrc - 1;
+            }
+            elseif($n == 4){
+                $l = $lSrc - 1;
+                $c = $cSrc + 1;
+            }
 
-            if($l >= 1 && $l <= 8 && $c >= 97 && $c <= 104 && $board->isEmpty($l,$c) && $l == $l_dst && $c == $c_dst)
-            {
-                if($p_chosen == 1)
-                {
-                    if($p_att->isWhite() && $l_src < $l_dst)
-                    {
-                        $data->setValue('move-type','movePiece');
+            if($this->checkLineColumn($l, $c) && $board->isEmpty($l, $c) && $l == $lDst && $c == $cDst){
+                if($pChosen == 1){
+                    if($pAtt->isWhite() && $lSrc < $lDst){
+                        $this->data->moveType = 'movePiece';
                         return true;
                     }
-                    elseif($p_att->isBlack() && $l_src > $l_dst)
-                    {
-                        $data->setValue('move-type','movePiece');
+                    elseif($pAtt->isBlack() && $lSrc > $lDst){
+                        $this->data->moveType = 'movePiece';
                         return true;
                     }
                 }
-                elseif($p_chosen == 2)
-                {
-                    if($p_att->isBlack() && $l_src < $l_dst)
-                    {
-                        $data->setValue('move-type','movePiece');
+                elseif($pChosen == 2){
+                    if($pAtt->isBlack() && $lSrc < $lDst){
+                        $this->data->moveType = 'movePiece';
                         return true;
                     }
-                    elseif($p_att->isWhite() && $l_src > $l_dst)
-                    {
-                        $data->setValue('move-type','movePiece');
+                    elseif($pAtt->isWhite() && $lSrc > $lDst){
+                        $this->data->moveType = 'movePiece';
                         return true;
                     }
                 }
@@ -95,113 +96,133 @@ class Rules
         }
     }
 
-    private function capture($data, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst)
-    {
-        for($n = 1 ; $n <= 4 ; $n++)
-        {
-            if($n == 1){$side = 'cse'; $l1 = $l_src + 1; $c1 = $c_src - 1; $l2 = $l_src + 2; $c2 = $c_src - 2;}
-            elseif($n == 2){$side = 'csd'; $l1 = $l_src + 1; $c1 = $c_src + 1; $l2 = $l_src + 2; $c2 = $c_src + 2;}
-            elseif($n == 3){$side = 'cie'; $l1 = $l_src - 1; $c1 = $c_src - 1; $l2 = $l_src - 2; $c2 = $c_src - 2;}
-            elseif($n == 4){$side = 'cid'; $l1 = $l_src - 1; $c1 = $c_src + 1; $l2 = $l_src - 2; $c2 = $c_src + 2;}
+    private function capture($board, $pAtt, $lSrc, $cSrc, $lDst, $cDst){
+        for($n = 1 ; $n <= 4 ; $n++){
+            if($n == 1){
+                $direction = 'north-west';
+                $l1 = $lSrc + 1;
+                $c1 = $cSrc - 1;
+                $l2 = $lSrc + 2;
+                $c2 = $cSrc - 2;
+            }
+            elseif($n == 2){
+                $direction = 'north-east';
+                $l1 = $lSrc + 1;
+                $c1 = $cSrc + 1;
+                $l2 = $lSrc + 2;
+                $c2 = $cSrc + 2;
+            }
+            elseif($n == 3){
+                $direction = 'south-west';
+                $l1 = $lSrc - 1;
+                $c1 = $cSrc - 1;
+                $l2 = $lSrc - 2;
+                $c2 = $cSrc - 2;
+            }
+            elseif($n == 4){
+                $direction = 'south-east';
+                $l1 = $lSrc - 1;
+                $c1 = $cSrc + 1;
+                $l2 = $lSrc - 2;
+                $c2 = $cSrc + 2;
+            }
 
-            if($l1 >= 1 && $l1 <= 8 && $c1 >= 97 && $c1 <= 104 && $l2 >= 1 && $l2 <= 8 && $c2 >= 97 && $c2 <= 104)
-            {
-                if($board->notEmpty($l1, $c1) && $board->isEmpty($l2, $c2) && $board->getPiece($l1, $c1)->getColor() != $p_att->getColor())
-                {
-                    $ignored_id = 0;
-                    $p_enemy = $board->getPiece($l1, $c1);
+            if($this->checkLineColumn($l1, $c1) && $this->checkLineColumn($l2, $c2)){
+                if($board->notEmpty($l1, $c1) && $board->isEmpty($l2, $c2) && $board->getPiece($l1, $c1)->color != $pAtt->color){
+                    $ignoredId = 0;
+                    $pEnemy = $board->getPiece($l1, $c1);
 
-                    for ($i = 0; $i < count($this->ignored); $i++)
-                    {
-                        $ignored_id = $this->ignored[$i]->getId();
-
-                        if($p_enemy->getId() == $ignored_id){break;}
+                    for($i = 0; $i < count($this->ignored); $i++){
+                        $ignoredId = $this->ignored[$i]->id;
+                        if($pEnemy->id == $ignoredId){break;}
                     }
 
-                    if($p_enemy->getId() != $ignored_id)
-                    {
-                        if($this->depth_level < $this->depth_level_max)
-                        {
+                    if($pEnemy->id != $ignoredId){
+                        if($this->depthLevel < $this->depthLevelMax){
                             $this->option++;
-                            $this->paths[$this->option] = array_merge($this->path_base);
+                            $this->paths[$this->option] = array_merge($this->pathBase);
                         }
 
-                        $this->depth_level_max = ++$this->depth_level;
-                        $this->ignored[] = $p_enemy;
-                        $this->path_base[] = $this->paths[$this->option][] = ['l-src' => $l_src, 'c-src' => $c_src, 'p-enemy' => $p_enemy, 'l-mdw' => $l1, 'c-mdw' => $c1, 'l-dst' => $l2, 'c-dst' => $c2];
-                        $l_src = $l2; $c_src = $c2;
+                        $this->depthLevelMax = ++$this->depthLevel;
+                        $this->ignored[] = $pEnemy;
+                        $this->pathBase[] = $this->paths[$this->option][] = [
+                            'l-src' => $lSrc,
+                            'c-src' => $cSrc,
+                            'p-enemy' => $pEnemy,
+                            'l-mdw' => $l1,
+                            'c-mdw' => $c1,
+                            'l-dst' => $l2,
+                            'c-dst' => $c2
+                        ];
+                        $lSrc = $l2;
+                        $cSrc = $c2;
 
-                        $this->capture($data, $board, $p_att, $l_src, $c_src, $l_dst, $c_dst);
+                        $this->capture($board, $pAtt, $lSrc, $cSrc, $lDst, $cDst);
 
-                        if($side == 'cse'){$l_src -= 2; $c_src += 2;}
-                        elseif($side == 'csd'){$l_src -= 2; $c_src -= 2;}
-                        elseif($side == 'cie'){$l_src += 2; $c_src += 2;}
-                        elseif($side == 'cid'){$l_src += 2; $c_src -= 2;}
+                        if($direction == 'north-west'){$lSrc -= 2; $cSrc += 2;}
+                        elseif($direction == 'north-east'){$lSrc -= 2; $cSrc -= 2;}
+                        elseif($direction == 'south-west'){$lSrc += 2; $cSrc += 2;}
+                        elseif($direction == 'south-east'){$lSrc += 2; $cSrc -= 2;}
                     }
                 }
             }
         }
 
-        array_pop($this->path_base);
+        array_pop($this->pathBase);
         array_pop($this->ignored);
-        $this->depth_level--;
+        $this->depthLevel--;
 
-        if($this->depth_level == -1 && count($this->paths) > 0)
-        {
-            $options_counted = array_map('count', $this->paths);
-            $best_options = array_keys($options_counted , max($options_counted));
+        if($this->depthLevel == -1 && count($this->paths) > 0){
+            $optionsCounted = array_map('count', $this->paths);
+            $bestOptions = array_keys($optionsCounted , max($optionsCounted));
 
-            if(count($best_options) == 1)
-            {
-                $option = $best_options[0];
-                $last_path = end($this->paths[$option]);
+            if(count($bestOptions) == 1){
+                $option = $bestOptions[0];
+                $lastPath = end($this->paths[$option]);
 
-                if($last_path['l-dst'] == $l_dst && $last_path['c-dst'] == $c_dst)
-                {
-                    $data->setValue('move-type','capturePiece');
-                    $pieces_captured = [];
+                if($lastPath['l-dst'] == $lDst && $lastPath['c-dst'] == $cDst){
+                    $this->data->moveType = 'capturePiece';
+                    $piecesCaptured = [];
 
-                    foreach($this->paths[$option] as $path)
-                    {
-                        $pieces_captured[] =
-                        [
+                    foreach($this->paths[$option] as $path){
+                        $piecesCaptured[] = [
                             'piece-captured' => $path['p-enemy'],
                             'line-midway' => $path['l-mdw'],
                             'column-midway' => $path['c-mdw']
                         ];
                     }
 
-                    $data->setValue('pieces-captured',$pieces_captured);
+                    $this->data->piecesCaptured = $piecesCaptured;
                     return true;
                 }
             }
-            elseif(count($best_options) > 1)
-            {
-                foreach($best_options as $option)
-                {
-                    $last_path = end($this->paths[$option]);
+            elseif(count($bestOptions) > 1){
+                foreach($bestOptions as $option){
+                    $lastPath = end($this->paths[$option]);
 
-                    if($last_path['l-dst'] == $l_dst && $last_path['c-dst'] == $c_dst)
-                    {
-                        $data->setValue('move-type','capturePiece');
-                        $pieces_captured = [];
+                    if($lastPath['l-dst'] == $lDst && $lastPath['c-dst'] == $cDst){
+                        $this->data->moveType = 'capturePiece';
+                        $piecesCaptured = [];
 
-                        foreach($this->paths[$option] as $path)
-                        {
-                            $pieces_captured[] =
-                            [
+                        foreach($this->paths[$option] as $path){
+                            $piecesCaptured[] = [
                                 'piece-captured' => $path['p-enemy'],
                                 'line-midway' => $path['l-mdw'],
                                 'column-midway' => $path['c-mdw']
                             ];
                         }
 
-                        $data->setValue('pieces-captured',$pieces_captured);
+                        $this->data->piecesCaptured = $piecesCaptured;
                         return true;
                     }
                 }
             }
         }
     }
-}
 
+    private function checkLineColumn($l, $c){
+        if($l >= 1 && $l <= 8 && $c >= 97 && $c <= 104){
+            return true;
+        }
+    }
+}

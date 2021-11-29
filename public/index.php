@@ -6,27 +6,25 @@
  *
  **/
 
+require_once '../config/config.php';
 require_once '../vendor/autoload.php';
 
-use Core\{Session, Post};
+use App\Core\{Session, Request};
 
 new Session;
 
-if(Session::empty())
-{
-    $class = Post::getValue('class') ?? 'App\Controllers\Home';
+if(Session::empty('data')){
+    $class = Request::post('class') ?? 'App\Controllers\Home';
 }
-elseif(!Session::empty())
-{
-    $class = Post::getValue('class') ?? 'App\Controllers\Board';
+else{
+    $class = Request::post('class') ?? 'App\Controllers\Board';
 }
 
-$method = Post::getValue('method');
+$method = Request::post('method');
 
 $controller = new $class;
 
-if($method)
-{
+if($method){
     $controller->$method();
 }
 

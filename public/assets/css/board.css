@@ -50,6 +50,7 @@ body,form,.column-indicative,.turn-current,.player-current-left,.message-error,.
     grid-template-rows: 1fr 3fr 1fr;
     border-top: 0.2vw solid black;
     border-left: 0.2vw solid black;
+    cursor: pointer;
 }
 .column-black{
     background-color: rgb(102, 51, 0);
@@ -61,6 +62,7 @@ body,form,.column-indicative,.turn-current,.player-current-left,.message-error,.
     grid-column: 2/3;
     grid-row: 2/3;
     border-radius: 50%;
+    cursor: pointer;
 }
 .stone-black{
     background-image: linear-gradient(rgb(38, 38, 38),rgb(0, 0, 0)) ;
@@ -106,6 +108,7 @@ button{
     margin: 5% 0 0 0;
     padding: 0;
     font-size: 1vw;
+    cursor: pointer;
 }
 
 .information{

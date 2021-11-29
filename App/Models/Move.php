@@ -8,62 +8,52 @@
 
 namespace App\Models;
 
-use Core\Data;
+use App\Core\Father;
 
-class Move
-{
-    public function make()
-    {
-        $data = Data::getInstance();
-        [
-            'board' => $board,
-            'turn' => $turn,
-            'movement-history' => $mh,
-            'cemetery' => $cemetery,
-            'piece-attacking' => $p_att,
-            'line-source' => $l_src,
-            'column-source' => $c_src,
-            'line-destiny' => $l_dst,
-            'column-destiny' => $c_dst,
-            'pieces-captured' => $pieces_captured,
-            'move-type' => $mt
-        ] = $data->getData();
+class Move extends Father{
+    public function make(){
+        $board = $this->data->board;
+        $turn = $this->data->turn;
+        $mh = $this->data->movementHistory;
+        $cemetery = $this->data->cemetery;
+        $pAtt = $this->data->pieceAttacking;
+        $lSrc = $this->data->lineSource;
+        $cSrc = $this->data->columnSource;
+        $lDst = $this->data->lineDestiny;
+        $cDst = $this->data->columnDestiny;
+        $piecesCaptured = $this->data->piecesCaptured;
+        $mt = $this->data->moveType;
 
-        if($mt == 'movePiece')
-        {
-            $this->movePiece($data, $board, $turn, $mh, $p_att, $l_src, $c_src, $l_dst, $c_dst);
+        if($mt == 'movePiece'){
+            $this->movePiece($board, $turn, $mh, $pAtt, $lSrc, $cSrc, $lDst, $cDst);
         }
-        elseif($mt == 'capturePiece')
-        {
-            $this->capturePiece($data, $board, $turn, $mh, $cemetery, $p_att, $l_src, $c_src, $l_dst, $c_dst, $pieces_captured);
+        elseif($mt == 'capturePiece'){
+            $this->capturePiece($board, $turn, $mh, $cemetery, $pAtt, $lSrc, $cSrc, $lDst, $cDst, $piecesCaptured);
         }
     }
 
-    private function movePiece($data, $board, $turn, $mh, $p_att, $l_src, $c_src, $l_dst, $c_dst)
-    {
-        $board->unsetPiece($l_src, $c_src);
-        $board->setPiece($l_dst, $c_dst, $p_att);
-        $mh->setValues($turn ,$p_att, $l_src, $c_src, $l_dst, $c_dst);
-        $data->setValue('turn', ++$turn);
+    private function movePiece($board, $turn, $mh, $pAtt, $lSrc, $cSrc, $lDst, $cDst){
+        $board->unsetPiece($lSrc, $cSrc);
+        $board->setPiece($lDst, $cDst, $pAtt);
+        $mh->save($turn ,$pAtt, $lSrc, $cSrc, $lDst, $cDst);
+        $this->turn = ++$turn;
     }
 
-    private function capturePiece($data, $board, $turn, $mh, $cemetery, $p_att, $l_src, $c_src, $l_dst, $c_dst, $pieces_captured)
-    {
-        $board->unsetPiece($l_src, $c_src);
-        $board->setPiece($l_dst, $c_dst, $p_att);
+    private function capturePiece($board, $turn, $mh, $cemetery, $pAtt, $lSrc, $cSrc, $lDst, $cDst, $piecesCaptured){
+        $board->unsetPiece($lSrc, $cSrc);
+        $board->setPiece($lDst, $cDst, $pAtt);
         $cemetery[$turn] = [];
 
-        for($n = 0 ; $n < count($pieces_captured) ; $n++)
-        {
-            $piece_captured = $pieces_captured[$n]['piece-captured'];
-            $l_midway = $pieces_captured[$n]['line-midway'];
-            $c_midway = $pieces_captured[$n]['column-midway'];
+        for($n = 0 ; $n < count($piecesCaptured) ; $n++){
+            $pieceCaptured = $piecesCaptured[$n]['piece-captured'];
+            $lMidway = $piecesCaptured[$n]['line-midway'];
+            $cMidway = $piecesCaptured[$n]['column-midway'];
 
-            $board->unsetPiece($l_midway, $c_midway);
-            $cemetery[$turn][$n] = $piece_captured;
+            $board->unsetPiece($lMidway, $cMidway);
+            $cemetery[$turn][$n] = $pieceCaptured;
         }
 
-        $mh->setValues($turn, $p_att, $l_src, $c_src, $l_dst, $c_dst, $pieces_captured);
-        $data->setValue('turn', ++$turn);
+        $mh->save($turn, $pAtt, $lSrc, $cSrc, $lDst, $cDst, $piecesCaptured);
+        $this->data->turn =  ++$turn;
     }
 }

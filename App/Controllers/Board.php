@@ -8,46 +8,39 @@
 
 namespace App\Controllers;
 
-use Core\{Session, Data};
-use App\Models\{DataInput, Board as BoardModel, PlayerBoardSide, PlayerCurrent, Rules, Move};
+use App\Core\{Session, Father};
+use App\Models\{Validation, Board as BoardModel, PlayerBoardSide, PlayerCurrent, Rules, Move};
 use App\Views\Board\Board as BoardView;
 use Exception;
 
-class Board
-{
-    public function mount()
-    {
-        try
-        {
-            $di = new DataInput();
-            $di->playerChosen();
+class Board extends Father{
 
-            $bm = new BoardModel();
-            $bm->make();
+    public function mount(){
+        try{
+            $validation = new Validation();
+            $validation->playerChosen();
 
-            $pbs = new PlayerBoardSide();
-            $pbs->make();
+            $boardModel = new BoardModel();
+            $boardModel->make();
 
-            $pc = new PlayerCurrent();
-            $pc->make();
+            $playerBoardSide = new PlayerBoardSide();
+            $playerBoardSide->make();
 
-            Session::save();
+            $playerCurrent = new PlayerCurrent();
+            $playerCurrent->make();
+
+            Session::setValue('data', $this->data->getData());
         }
-        catch(Exception $e)
-        {
-            //não é pra entrar aqui, a não ser que algum usuário malicioso
-            //altere alguma informação no lado do cliente que não deveria ser alterada
+        catch(Exception $e){
             Session::destroy();
-            header( 'Location: index.php', true, 302 );
+            header('Location: index.php');
         }
     }
 
-    public function move()
-    {
-        try
-        {
-            $di = new DataInput();
-            $di->check();
+    public function move(){
+        try{
+            $validation = new Validation();
+            $validation->check();
 
             $r = new Rules();
             $r->check();
@@ -58,24 +51,21 @@ class Board
             $pc = new PlayerCurrent();
             $pc->make();
 
-            Session::save();
+            Session::setValue('data', $this->data->getData());
         }
-        catch(Exception $e)
-        {
-            Data::getInstance()->setValue('message-error',$e->getMessage());
+        catch(Exception $e){
+            $this->data->messageError = $e->getMessage();
         }
     }
 
-    public function reset()
-    {
+    public function newGame(){
         Session::destroy();
-        header( 'Location: index.php', true, 302 );
+        header('Location: index.php');
     }
 
-    public function show()
-    {
-        $bv = new BoardView();
-        $bv->make();
-        $bv->show();
+    public function show(){
+        $borderView = new BoardView();
+        $borderView->make();
+        $borderView->show();
     }
 }

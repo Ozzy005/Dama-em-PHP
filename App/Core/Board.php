@@ -6,10 +6,10 @@
  *
  **/
 
-namespace Core;
+namespace App\Core;
 
-class Board
-{
+class Board{
+    
     private $board = [
         8 => [97 => null, 98 => null, 99 => null, 100 => null, 101 => null, 102 => null, 103 => null, 104 => null],
         7 => [97 => null, 98 => null, 99 => null, 100 => null, 101 => null, 102 => null, 103 => null, 104 => null],
@@ -21,73 +21,52 @@ class Board
         1 => [97 => null, 98 => null, 99 => null, 100 => null, 101 => null, 102 => null, 103 => null, 104 => null],
     ];
 
-    public function isBlack($l, $c)
-    {
-        if($l % 2 > 0 && $c % 2 > 0)
-        {
+    public function isBlack($l, $c){
+        if($l % 2 > 0 && $c % 2 > 0){
             return true;
         }
-        if($l % 2 == 0 && $c % 2 == 0)
-        {
+        if($l % 2 == 0 && $c % 2 == 0){
             return true;
         }
     }
 
-    public function isWhite($l, $c)
-    {
-        if($l % 2 > 0 && $c % 2 == 0)
-        {
+    public function isWhite($l, $c){
+        if($l % 2 > 0 && $c % 2 == 0){
             return true;
         }
-        if($l % 2 == 0 && $c % 2 > 0)
-        {
+        if($l % 2 == 0 && $c % 2 > 0){
             return true;
         }
     }
 
-    public function isEmpty($l, $c)
-    {
-        if($this->board[$l][$c] == null)
-        {
+    public function isEmpty($l, $c){
+        if(!$this->board[$l][$c]){
             return true;
         }
     }
 
-    public function notEmpty($l, $c)
-    {
-        if($this->board[$l][$c] instanceof Piece)
-        {
+    public function notEmpty($l, $c){
+        if($this->board[$l][$c] instanceof Piece){
             return true;
         }
     }
 
-    public function setPiece($l, $c, Piece $p)
-    {
+    public function setPiece($l, $c, Piece $p){
         $this->board[$l][$c] = $p;
     }
 
-    public function unsetPiece($l, $c)
-    {
+    public function unsetPiece($l, $c){
         $this->board[$l][$c] = null;
     }
 
-    public function getPiece($l, $c, $id = null)
-    {
-        if($id == null)
-        {
-            if($this->notEmpty($l, $c))
-            {
-                return $this->board[$l][$c];
-            }
-        }
-        elseif($this->notEmpty($l, $c))
-        {
-            if($this->board[$l][$c]->getId() == $id)
-            {
-                return $this->board[$l][$c];
-            }
-        }
+    public function getPiece($l, $c){
+        return $this->board[$l][$c];
+    }
 
+    public function pieceExits($l, $c, $id){
+        if($this->notEmpty($l, $c) && $this->board[$l][$c]->id == $id){
+            return true;
+        }
     }
 }
 

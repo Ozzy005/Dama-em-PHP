@@ -8,56 +8,40 @@
 
 namespace App\Models;
 
-use Core\Data;
+use  App\Core\Father;
 
-class PlayerCurrent
-{
-    private $data;
+class PlayerCurrent extends Father{
 
-    public function __construct()
-    {
-        $this->data = Data::getInstance();
-    }
+    public function make(){
+        $lastMove = $this->data->movementHistory->getLastMove();
 
-    public function make()
-    {
-        $mh = $this->data->getValue('movement-history');
-        $last_move = $mh->getLastMove();
-        $player_top_right = $this->data->getValue('player-top-right');
+        if(!empty($lastMove)){
+            $playerCurrentLeft = $lastMove['piece-attacking']->isBlack() ? 1 : 2;
 
-        if(is_array($last_move))
-        {
-            $player_current_left = $last_move['piece-attacking']->isBlack() ? '1' : '2';
-
-            if($player_top_right == 2 && $last_move['piece-attacking']->isBlack())
-            {
-                $player_current_top_right = '';
-                $player_current_lower_right = 'player-current';
+            if($this->data->playerTopRight == 2 && $lastMove['piece-attacking']->isBlack()){
+                $playerCurrentTopRight = '';
+                $playerCurrentLowerRight = 'player-current';
             }
-            else
-            {
-                $player_current_top_right = 'player-current';
-                $player_current_lower_right = '';
+            else{
+                $playerCurrentTopRight = 'player-current';
+                $playerCurrentLowerRight = '';
             }
         }
-        elseif(is_null($last_move))
-        {
-            $player_current_left = 1;
+        else{
+            $playerCurrentLeft = 1;
 
-            if($player_top_right == 2)
-            {
-                $player_current_top_right = '';
-                $player_current_lower_right = 'player-current';
+            if($this->data->playerTopRight == 2){
+                $playerCurrentTopRight = '';
+                $playerCurrentLowerRight = 'player-current';
             }
-            else
-            {
-                $player_current_top_right = 'player-current';
-                $player_current_lower_right = '';
+            else{
+                $playerCurrentTopRight = 'player-current';
+                $playerCurrentLowerRight = '';
             }
         }
 
-        $this->data->setValue('player-current-left',$player_current_left);
-        $this->data->setValue('player-current-top-right',$player_current_top_right);
-        $this->data->setValue('player-current-lower-right',$player_current_lower_right);
+        $this->data->playerCurrentLeft = $playerCurrentLeft;
+        $this->data->playerCurrentTopRight = $playerCurrentTopRight;
+        $this->data->playerCurrentLowerRight = $playerCurrentLowerRight;
     }
 }

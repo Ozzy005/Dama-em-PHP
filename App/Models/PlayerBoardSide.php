@@ -8,34 +8,18 @@
 
 namespace App\Models;
 
-use Core\Data;
+use  App\Core\Father;
 
-class PlayerBoardSide
-{
-    private $data;
+class PlayerBoardSide extends Father{
 
-    public function __construct()
-    {
-        $this->data = Data::getInstance();
-    }
-
-    public function make()
-    {
-        $player_chosen = $this->data->getValue('player-chosen');
-
-        if($player_chosen == 1)
-        {
-            $player_top_right = 2;
-            $player_lower_right = 1;
+    public function make(){
+        if($this->data->playerChosen == 1){
+            $this->data->playerTopRight = 2;
+            $this->data->playerLowerRight = 1;
+        }else{
+            $this->data->playerTopRight = 1;
+            $this->data->playerLowerRight = 2;
         }
-        else
-        {
-            $player_top_right = 1;
-            $player_lower_right = 2;
-        }
-
-        $this->data->setValue('player-top-right',$player_top_right);
-        $this->data->setValue('player-lower-right',$player_lower_right);
     }
 }
 
