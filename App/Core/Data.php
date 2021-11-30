@@ -58,7 +58,6 @@ class Data{
     }
 
     public function prepareToSave(){
-        self::$instance = null;
         $this->pieceAttacking = null;
         $this->pieceAttackingId = null;
         $this->lineSource = null;
