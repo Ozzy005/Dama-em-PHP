@@ -3,7 +3,9 @@
 define('DEBUG', 1);
 define('PHPINFO', 0);
 
-//CONFIGURAÇÕES DA SESSÃO
+define('SESSION_LIFETIME', 1440); //EM SEGUNDOS
+define('SESSION_REGENERATION_ID_LIFETIME', 60); //EM SEGUNDOS
+
 ini_set('session.cache_expire', 24);
 ini_set('session.cache_limiter', 'nocache');
 ini_set('session.cookie_domain', '');
@@ -28,7 +30,6 @@ ini_set('session.use_only_cookies', 1);
 ini_set('session.use_strict_mode', 1);
 ini_set('session.use_trans_sid', 0);
 
-//LIMITES DE RECURSOS
 ini_set('memory_limit', '256M');
 
 if(DEBUG){

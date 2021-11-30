@@ -33,16 +33,16 @@ class Data{
 
     private function __construct(){
         $data = Session::getValue('data');
-        $this->board = $data['board'] ?? null;
-        $this->playerChosen = $data['player-chosen'] ?? Request::post('player-chosen');
-        $this->turn = $data['turn'] ?? 1;
-        $this->movementHistory = $data['movement-history'] ?? new MovementHistory;
-        $this->cemetery = $data['cemetery'] ?? [];
-        $this->playerCurrentLeft = $data['player-current-left'] ?? null;
-        $this->playerTopRight = $data['player-top-right'] ?? null;
-        $this->playerLowerRight = $data['player-lower-right'] ?? null;
-        $this->playerCurrentTopRight = $data['player-current-top-right'] ?? null;
-        $this->playerCurrentLowerRight = $data['player-current-lower-right'] ?? null;
+        $this->board = $data->board ?? null;
+        $this->playerChosen = $data->playerChosen ?? Request::post('player-chosen');
+        $this->turn = $data->turn ?? 1;
+        $this->movementHistory = $data->movementHistory ?? new MovementHistory;
+        $this->cemetery = $data->cemetery ?? [];
+        $this->playerCurrentLeft = $data->playerCurrentLeft ?? null;
+        $this->playerTopRight = $data->playerTopRight ?? null;
+        $this->playerLowerRight = $data->playerLowerRight ?? null;
+        $this->playerCurrentTopRight = $data->playerCurrentTopRight ?? null;
+        $this->playerCurrentLowerRight = $data->playerCurrentLowerRight ?? null;
         $this->pieceAttackingId = Request::post('piece-attacking');
         $this->lineSource =  Request::post('line-source');
         $this->columnSource = Request::post('column-source');
@@ -57,18 +57,16 @@ class Data{
         return self::$instance;
     }
 
-    public function getData(){
-        return [
-            'board' => $this->board,
-            'player-chosen' => $this->playerChosen,
-            'turn' => $this->turn,
-            'movement-history' => $this->movementHistory,
-            'cemetery' => $this->cemetery,
-            'player-current-left' => $this->playerCurrentLeft,
-            'player-top-right' => $this->playerTopRight,
-            'player-lower-right' => $this->playerLowerRight,
-            'player-current-top-right' => $this->playerCurrentTopRight,
-            'player-current-lower-right' => $this->playerCurrentLowerRight
-        ];
+    public function prepareToSave(){
+        self::$instance = null;
+        $this->pieceAttacking = null;
+        $this->pieceAttackingId = null;
+        $this->lineSource = null;
+        $this->columnSource = null;
+        $this->lineDestiny = null;
+        $this->columnDestiny = null;
+        $this->moveType = null;
+        $this->piecesCaptured = null;
+        $this->messageError = null;
     }
 }

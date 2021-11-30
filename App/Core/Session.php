@@ -14,18 +14,20 @@ class Session{
         if(session_status() != 2){
             session_start();
         }
-            
-        if(isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1800)){
-            session_unset();
-            session_destroy();
+        
+        if(isset($_SESSION['SESSION_LAST_ACTIVITY'])){
+            if(time() - $_SESSION['SESSION_LAST_ACTIVITY'] > SESSION_LIFETIME){
+                session_unset();
+                session_destroy();
+            }
         }
 
-        $_SESSION['LAST_ACTIVITY'] = time();
+        $_SESSION['SESSION_LAST_ACTIVITY'] = time();
 
         if(!isset($_SESSION['ID_REGENERATION_TIME'])){
             $_SESSION['ID_REGENERATION_TIME'] = time();
         }
-        elseif(time() - $_SESSION['ID_REGENERATION_TIME'] > 60){
+        elseif(time() - $_SESSION['ID_REGENERATION_TIME'] > SESSION_REGENERATION_ID_LIFETIME){
             session_regenerate_id(true);
             $_SESSION['ID_REGENERATION_TIME'] = time();
         }

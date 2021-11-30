@@ -28,8 +28,6 @@ class Board extends Father{
 
             $playerCurrent = new PlayerCurrent();
             $playerCurrent->make();
-
-            Session::setValue('data', $this->data->getData());
         }
         catch(Exception $e){
             Session::destroy();
@@ -42,16 +40,14 @@ class Board extends Father{
             $validation = new Validation();
             $validation->check();
 
-            $r = new Rules();
-            $r->check();
+            $rules = new Rules();
+            $rules->check();
 
-            $m = new Move();
-            $m->make();
+            $move = new Move();
+            $move->make();
 
-            $pc = new PlayerCurrent();
-            $pc->make();
-
-            Session::setValue('data', $this->data->getData());
+            $playerCurrent = new PlayerCurrent();
+            $playerCurrent->make();
         }
         catch(Exception $e){
             $this->data->messageError = $e->getMessage();
@@ -66,6 +62,12 @@ class Board extends Father{
     public function show(){
         $borderView = new BoardView();
         $borderView->make();
+
+        if(Session::empty('data')){
+            $this->data->prepareToSave();
+            Session::setValue('data', $this->data);
+        };
+
         $borderView->show();
     }
 }
