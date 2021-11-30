@@ -64,7 +64,6 @@ class Board extends Father{
         $borderView->make();
 
         if(Session::empty('data')){
-            $this->data->prepareToSave();
             Session::setValue('data', $this->data);
         };
 

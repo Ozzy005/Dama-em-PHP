@@ -36,7 +36,7 @@ class Move extends Father{
         $board->unsetPiece($lSrc, $cSrc);
         $board->setPiece($lDst, $cDst, $pAtt);
         $mh->save($turn ,$pAtt, $lSrc, $cSrc, $lDst, $cDst);
-        $this->turn = ++$turn;
+        $this->data->turn = ++$turn;
     }
 
     private function capturePiece($board, $turn, $mh, $cemetery, $pAtt, $lSrc, $cSrc, $lDst, $cDst, $piecesCaptured){

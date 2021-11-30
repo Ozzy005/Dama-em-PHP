@@ -8,20 +8,16 @@
 
 namespace App\Views\Home;
 
-use Core\Data;
 use DOMDocument;
 
-class Home
-{
+class Home{
     private $home;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->home = file_get_contents('../App/Views/Home/template/home.html');
     }
 
-    public function make()
-    {
+    public function make(){
         $doc = new DOMDocument();
         $doc->loadHTML($this->home);
 
@@ -78,8 +74,7 @@ class Home
         $this->home = $doc->saveHTML();
     }
 
-    public function show()
-    {
+    public function show(){
         print $this->home;
     }
 }

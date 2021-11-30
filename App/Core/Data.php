@@ -13,9 +13,9 @@ class Data{
     private static $instance;
     public $board;
     public $playerChosen;
-    public $turn;
+    public $turn = 1;
     public $movementHistory;
-    public $cemetery;
+    public $cemetery = [];
     public $playerCurrentLeft;
     public $playerTopRight;
     public $playerLowerRight;
@@ -32,22 +32,34 @@ class Data{
     public $messageError;
 
     private function __construct(){
-        $data = Session::getValue('data');
-        $this->board = $data->board ?? null;
-        $this->playerChosen = $data->playerChosen ?? Request::post('player-chosen');
-        $this->turn = $data->turn ?? 1;
-        $this->movementHistory = $data->movementHistory ?? new MovementHistory;
-        $this->cemetery = $data->cemetery ?? [];
-        $this->playerCurrentLeft = $data->playerCurrentLeft ?? null;
-        $this->playerTopRight = $data->playerTopRight ?? null;
-        $this->playerLowerRight = $data->playerLowerRight ?? null;
-        $this->playerCurrentTopRight = $data->playerCurrentTopRight ?? null;
-        $this->playerCurrentLowerRight = $data->playerCurrentLowerRight ?? null;
+        if(Session::empty('data')){
+            $this->playerChosen = Request::post('player-chosen');
+            $this->movementHistory = new MovementHistory;
+        }
+    }
+
+    public function __wakeup(){
         $this->pieceAttackingId = Request::post('piece-attacking');
         $this->lineSource =  Request::post('line-source');
         $this->columnSource = Request::post('column-source');
         $this->lineDestiny = Request::post('line-destiny');
         $this->columnDestiny = Request::post('column-destiny');
+        self::$instance = $this;
+    }
+
+    public function __sleep(){
+        return [
+           'board',
+           'playerChosen',
+           'turn',
+           'movementHistory',
+           'cemetery',
+           'playerCurrentLeft',
+           'playerTopRight',
+           'playerLowerRight',
+           'playerCurrentTopRight',
+           'playerCurrentLowerRight'
+        ];
     }
 
     public static function getInstance(){
@@ -55,17 +67,5 @@ class Data{
             self::$instance = new self;
         }
         return self::$instance;
-    }
-
-    public function prepareToSave(){
-        $this->pieceAttacking = null;
-        $this->pieceAttackingId = null;
-        $this->lineSource = null;
-        $this->columnSource = null;
-        $this->lineDestiny = null;
-        $this->columnDestiny = null;
-        $this->moveType = null;
-        $this->piecesCaptured = null;
-        $this->messageError = null;
     }
 }
