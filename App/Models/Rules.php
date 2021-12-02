@@ -36,7 +36,6 @@ class Rules extends Father{
             if($this->movement($pChosen, $board, $pAtt, $lSrc, $cSrc, $lDst, $cDst)){return true;}
             if($this->capture($board, $pAtt, $lSrc, $cSrc, $lDst, $cDst)){return true;}
             else{throw new Exception('Movimento Inválido');}
-            $this->data->moveType = 'movePiece';
         }
         catch(Exception $e){
             throw new Exception($e->getMessage());
