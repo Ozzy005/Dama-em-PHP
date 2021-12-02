@@ -32,11 +32,11 @@ class Rules extends Father{
         $cDst = $this->data->columnDestiny;
 
         try{
-            //$this->whoseTurn($mh, $pAtt);
-            //if($this->movement($pChosen, $board, $pAtt, $lSrc, $cSrc, $lDst, $cDst)){return true;}
+            $this->whoseTurn($mh, $pAtt);
+            if($this->movement($pChosen, $board, $pAtt, $lSrc, $cSrc, $lDst, $cDst)){return true;}
             if($this->capture($board, $pAtt, $lSrc, $cSrc, $lDst, $cDst)){return true;}
             else{throw new Exception('Movimento Inválido');}
-            //$this->data->moveType = 'movePiece';
+            $this->data->moveType = 'movePiece';
         }
         catch(Exception $e){
             throw new Exception($e->getMessage());
