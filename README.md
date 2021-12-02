@@ -36,28 +36,31 @@ Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
 - [ ] Opção entrar com credênciais
 - [ ] Ranking dos melhores jogadores
 
-### Regras
 
+### Regras
 - [x] O lance inicial cabe sempre a quem estiver com as peças brancas
-- [x] Cada jogador só pode mover suas peças no seu turno e somente um movimento por turno
-- [x] Proibido a pedra mover-se para trás
-- [x] Proibido a pedra mover-se duas casas de uma vez
-- [x] Proibido mover-se para as casas brancas
-- [x] Proibido mover-se para uma casa ocupada
-- [x] Captura de peça única
-- [x] Captura de peças múltiplas
+- [x] A pedra move-se só para frente, uma casa de cada vez
+- [x] O jogador só pode mover suas peças no seu turno e somente um lance por turno
+- [x] Peças não podem mover-se para casas brancas
+- [x] Peças não podem mover-se para casas ocupadas
+- [x] Captura de única peça
+- [x] Captura de múltiplas peças
 - [x] Permitido a pedra capturar tanto para frente quanto para trás
 - [x] Proibido capturar uma peça da mesma cor
 - [x] Duas ou mais peças juntas, na mesma diagonal, não podem ser capturadas
-- [ ] Se em um lance se apresentar uma possibilidade de captura, é obrigátorio executar a captura
-- [x] Se no mesmo lance se apresentar mais de uma possibilidade de captura, é obrigatório executar o lance que capture o maior número possível de peças
+- [x] Na execução do lance de captura, é permitido passar mais de uma vez pela mesma casa vazia
+
+#### Regras referente a lei da maioria (obrigatório executar o lance que captura a maior quantidade de peças)
+- [x] 1 peça com várias opções de captura com apenas 1 opção benéfica entre todas, é obrigatório executar a opção mais benéfica
+- [x] 1 peça com várias opções de captura igualmente benéficas mas com casa de destino diferente, a escolha da opção entre as opções igualmente benéficas fica por critério do jogador
+- [x] 1 peça com várias opções de captura igualmente benéficas mas com casa de destino igual, a escolha da opção fica por critério do algoritimo
+
 - [ ] Quando a pedra atinge a oitava linha do tabuleiro ela é promovida à dama
 - [ ] A dama move-se para frente e para trás, quantas casas quiser
 - [ ] A dama não pode saltar uma peça da mesma cor
 - [ ] Permitido a dama capturar tanto para frente quanto para trás
 - [ ] A pedra captura a dama e a dama captura a pedra
 - [ ] A pedra que durante o lance de captura de várias peças, apenas passe por qualquer casa de coroação, sem aí parar, não será promovida à dama
-- [x] Na execução do lance de captura, é permitido passar mais de uma vez pela mesma casa vazia
 - [ ] Após 20 lances sucessivos de damas, sem captura ou deslocamento de pedra, a partida é declarada empatada.
 
 ### 📄 Licença

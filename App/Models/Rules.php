@@ -12,13 +12,14 @@ use App\Core\Father;
 use Exception;
 
 class Rules extends Father{
-    
+
+    private $depthLevel = 1;
+    private $deepestLevel = 1;
+    private $startingPoint;
+    private $basePath = [];
+    private $path = 1;
     private $paths = [];
-    private $pathBase = [];
-    private $ignored = [];
-    private $option = 1;
-    private $depthLevel = 0;
-    private $depthLevelMax = 0;
+    private $ignoredTargetPieces = [];
 
     public function check(){
         $mh = $this->data->movementHistory;
@@ -35,6 +36,7 @@ class Rules extends Father{
             if($this->movement($pChosen, $board, $pAtt, $lSrc, $cSrc, $lDst, $cDst)){return true;}
             if($this->capture($board, $pAtt, $lSrc, $cSrc, $lDst, $cDst)){return true;}
             else{throw new Exception('Movimento Inválido');}
+            $this->data->moveType = 'movePiece';
         }
         catch(Exception $e){
             throw new Exception($e->getMessage());
@@ -97,124 +99,129 @@ class Rules extends Father{
     }
 
     private function capture($board, $pAtt, $lSrc, $cSrc, $lDst, $cDst){
-        for($n = 1 ; $n <= 4 ; $n++){
-            if($n == 1){
-                $direction = 'north-west';
-                $l1 = $lSrc + 1;
-                $c1 = $cSrc - 1;
-                $l2 = $lSrc + 2;
-                $c2 = $cSrc - 2;
+        if(!$this->startingPoint){
+            $this->startingPoint = ['line' => $lSrc, 'column' => $cSrc];
+        }
+
+        for($i = 1 ; $i <= 4 ; $i++){
+            if($i == 1){
+                $lMidTmp = $this->startingPoint['line'] + 1;
+                $cMidTmp = $this->startingPoint['column'] - 1;
+                $lDstTmp = $this->startingPoint['line'] + 2;
+                $cDstTmp = $this->startingPoint['column'] - 2;
             }
-            elseif($n == 2){
-                $direction = 'north-east';
-                $l1 = $lSrc + 1;
-                $c1 = $cSrc + 1;
-                $l2 = $lSrc + 2;
-                $c2 = $cSrc + 2;
+            elseif($i == 2){
+                $lMidTmp = $this->startingPoint['line'] + 1;
+                $cMidTmp = $this->startingPoint['column'] + 1;
+                $lDstTmp = $this->startingPoint['line'] + 2;
+                $cDstTmp = $this->startingPoint['column'] + 2;
             }
-            elseif($n == 3){
-                $direction = 'south-west';
-                $l1 = $lSrc - 1;
-                $c1 = $cSrc - 1;
-                $l2 = $lSrc - 2;
-                $c2 = $cSrc - 2;
+            elseif($i == 3){
+                $lMidTmp = $this->startingPoint['line'] - 1;
+                $cMidTmp = $this->startingPoint['column'] - 1;
+                $lDstTmp = $this->startingPoint['line'] - 2;
+                $cDstTmp = $this->startingPoint['column'] - 2;
             }
-            elseif($n == 4){
-                $direction = 'south-east';
-                $l1 = $lSrc - 1;
-                $c1 = $cSrc + 1;
-                $l2 = $lSrc - 2;
-                $c2 = $cSrc + 2;
+            elseif($i == 4){
+                $lMidTmp = $this->startingPoint['line'] - 1;
+                $cMidTmp = $this->startingPoint['column'] + 1;
+                $lDstTmp = $this->startingPoint['line'] - 2;
+                $cDstTmp = $this->startingPoint['column'] + 2;
             }
 
-            if($this->checkLineColumn($l1, $c1) && $this->checkLineColumn($l2, $c2)){
-                if($board->notEmpty($l1, $c1) && $board->isEmpty($l2, $c2) && $board->getPiece($l1, $c1)->color != $pAtt->color){
-                    $ignoredId = 0;
-                    $pEnemy = $board->getPiece($l1, $c1);
+            if($this->checkLineColumn($lMidTmp, $cMidTmp) && $this->checkLineColumn($lDstTmp, $cDstTmp)){
+                if($board->notEmpty($lMidTmp, $cMidTmp)){
+                    $targetPiece = $board->getPiece($lMidTmp, $cMidTmp);
 
-                    for($i = 0; $i < count($this->ignored); $i++){
-                        $ignoredId = $this->ignored[$i]->id;
-                        if($pEnemy->id == $ignoredId){break;}
+                    $ignoredTargetPieceId = 0;
+                    for($n = 0 ; $n < count($this->ignoredTargetPieces) ; $n++){
+                        $ignoredTargetPieceId = $this->ignoredTargetPieces[$n]->id;
+                        if($targetPiece->id == $ignoredTargetPieceId){
+                            break;
+                        }
                     }
 
-                    if($pEnemy->id != $ignoredId){
-                        if($this->depthLevel < $this->depthLevelMax){
-                            $this->option++;
-                            $this->paths[$this->option] = array_merge($this->pathBase);
+                    if($targetPiece->id != $ignoredTargetPieceId){
+                        if($pAtt->color != $targetPiece->color && $board->isEmpty($lDstTmp, $cDstTmp)){
+
+                            if($this->depthLevel < $this->deepestLevel){
+                                $this->path++;
+                                $this->paths[$this->path] = $this->basePath;
+                            }
+
+                            $this->basePath[] = $this->paths[$this->path][] = [
+                                'source-line' => $this->startingPoint['line'],
+                                'source-column' => $this->startingPoint['column'],
+                                'middle-line' => $lMidTmp,
+                                'middle-column' => $cMidTmp,
+                                'destiny-line' => $lDstTmp,
+                                'destiny-column' => $cDstTmp,
+                                'target-piece' => $targetPiece
+                            ];
+
+                            $this->startingPoint = ['line' => $lDstTmp, 'column' => $cDstTmp];
+                            $this->ignoredTargetPieces[] = $targetPiece;
+                            $this->deepestLevel = ++$this->depthLevel;
+                            $this->capture($board, $pAtt, $lSrc, $cSrc, $lDst, $cDst);
+        
+                            if($i == 1){
+                                $this->startingPoint['line'] -= 2;
+                                $this->startingPoint['column'] += 2;
+                            }
+                            elseif($i == 2){
+                                $this->startingPoint['line'] -= 2;
+                                $this->startingPoint['column'] -= 2;
+                            }
+                            elseif($i == 3){
+                                $this->startingPoint['line'] += 2;
+                                $this->startingPoint['column'] += 2;
+                            }
+                            elseif($i == 4){
+                                $this->startingPoint['line'] += 2;
+                                $this->startingPoint['column'] -= 2;
+                            }
+                            
                         }
-
-                        $this->depthLevelMax = ++$this->depthLevel;
-                        $this->ignored[] = $pEnemy;
-                        $this->pathBase[] = $this->paths[$this->option][] = [
-                            'l-src' => $lSrc,
-                            'c-src' => $cSrc,
-                            'p-enemy' => $pEnemy,
-                            'l-mdw' => $l1,
-                            'c-mdw' => $c1,
-                            'l-dst' => $l2,
-                            'c-dst' => $c2
-                        ];
-                        $lSrc = $l2;
-                        $cSrc = $c2;
-
-                        $this->capture($board, $pAtt, $lSrc, $cSrc, $lDst, $cDst);
-
-                        if($direction == 'north-west'){$lSrc -= 2; $cSrc += 2;}
-                        elseif($direction == 'north-east'){$lSrc -= 2; $cSrc -= 2;}
-                        elseif($direction == 'south-west'){$lSrc += 2; $cSrc += 2;}
-                        elseif($direction == 'south-east'){$lSrc += 2; $cSrc -= 2;}
                     }
                 }
             }
         }
 
-        array_pop($this->pathBase);
-        array_pop($this->ignored);
+        array_pop($this->basePath);
+        array_pop($this->ignoredTargetPieces);
         $this->depthLevel--;
 
-        if($this->depthLevel == -1 && count($this->paths) > 0){
-            $optionsCounted = array_map('count', $this->paths);
-            $bestOptions = array_keys($optionsCounted , max($optionsCounted));
-
-            if(count($bestOptions) == 1){
-                $option = $bestOptions[0];
-                $lastPath = end($this->paths[$option]);
-
-                if($lastPath['l-dst'] == $lDst && $lastPath['c-dst'] == $cDst){
-                    $this->data->moveType = 'capturePiece';
-                    $piecesCaptured = [];
-
-                    foreach($this->paths[$option] as $path){
-                        $piecesCaptured[] = [
-                            'piece-captured' => $path['p-enemy'],
-                            'line-midway' => $path['l-mdw'],
-                            'column-midway' => $path['c-mdw']
-                        ];
-                    }
-
-                    $this->data->piecesCaptured = $piecesCaptured;
-                    return true;
-                }
+        if(!$this->depthLevel && count($this->paths) > 0){
+            if($this->checkPaths($lDst, $cDst)){
+                return true;
             }
-            elseif(count($bestOptions) > 1){
-                foreach($bestOptions as $option){
-                    $lastPath = end($this->paths[$option]);
+        }
+    }
 
-                    if($lastPath['l-dst'] == $lDst && $lastPath['c-dst'] == $cDst){
-                        $this->data->moveType = 'capturePiece';
-                        $piecesCaptured = [];
+    private function checkPaths($lDst, $cDst){
+        $pathsChecked = array_map('count', $this->paths);
+        $bestPathKey = array_keys($pathsChecked , max($pathsChecked));
 
-                        foreach($this->paths[$option] as $path){
-                            $piecesCaptured[] = [
-                                'piece-captured' => $path['p-enemy'],
-                                'line-midway' => $path['l-mdw'],
-                                'column-midway' => $path['c-mdw']
-                            ];
-                        }
+        if(count($bestPathKey) == 1){
+            $bestPathKey = $bestPathKey[0];
+            $targetPieces = $this->paths[$bestPathKey];
+            $lastTargetPiece = end($targetPieces);
 
-                        $this->data->piecesCaptured = $piecesCaptured;
-                        return true;
-                    }
+            if($lastTargetPiece['destiny-line'] == $lDst && $lastTargetPiece['destiny-column'] == $cDst){
+                $this->data->moveType = 'capturePiece';
+                $this->data->targetPieces = $targetPieces;
+                return true;
+            }
+        }
+        elseif(count($bestPathKey) > 1){
+            for($i = 1; $i <= count($this->paths); $i++){
+                $targetPieces = $this->paths[$i];
+                $lastTargetPiece = end($targetPieces);
+
+                if($lastTargetPiece['destiny-line'] == $lDst && $lastTargetPiece['destiny-column'] == $cDst){
+                    $this->data->moveType = 'capturePiece';
+                    $this->data->targetPieces = $targetPieces;
+                    return true;
                 }
             }
         }

@@ -21,14 +21,14 @@ class Move extends Father{
         $cSrc = $this->data->columnSource;
         $lDst = $this->data->lineDestiny;
         $cDst = $this->data->columnDestiny;
-        $piecesCaptured = $this->data->piecesCaptured;
+        $targetPieces = $this->data->targetPieces;
         $mt = $this->data->moveType;
 
         if($mt == 'movePiece'){
             $this->movePiece($board, $turn, $mh, $pAtt, $lSrc, $cSrc, $lDst, $cDst);
         }
         elseif($mt == 'capturePiece'){
-            $this->capturePiece($board, $turn, $mh, $cemetery, $pAtt, $lSrc, $cSrc, $lDst, $cDst, $piecesCaptured);
+            $this->capturePiece($board, $turn, $mh, $cemetery, $pAtt, $lSrc, $cSrc, $lDst, $cDst, $targetPieces);
         }
     }
 
@@ -39,21 +39,21 @@ class Move extends Father{
         $this->data->turn = ++$turn;
     }
 
-    private function capturePiece($board, $turn, $mh, $cemetery, $pAtt, $lSrc, $cSrc, $lDst, $cDst, $piecesCaptured){
+    private function capturePiece($board, $turn, $mh, $cemetery, $pAtt, $lSrc, $cSrc, $lDst, $cDst, $targetPieces){
         $board->unsetPiece($lSrc, $cSrc);
         $board->setPiece($lDst, $cDst, $pAtt);
         $cemetery[$turn] = [];
 
-        for($n = 0 ; $n < count($piecesCaptured) ; $n++){
-            $pieceCaptured = $piecesCaptured[$n]['piece-captured'];
-            $lMidway = $piecesCaptured[$n]['line-midway'];
-            $cMidway = $piecesCaptured[$n]['column-midway'];
+        for($n = 0 ; $n < count($targetPieces) ; $n++){
+            $pieceCaptured = $targetPieces[$n]['target-piece'];
+            $lMid = $targetPieces[$n]['middle-line'];
+            $cMid = $targetPieces[$n]['middle-column'];
 
-            $board->unsetPiece($lMidway, $cMidway);
+            $board->unsetPiece($lMid, $cMid);
             $cemetery[$turn][$n] = $pieceCaptured;
         }
 
-        $mh->save($turn, $pAtt, $lSrc, $cSrc, $lDst, $cDst, $piecesCaptured);
+        $mh->save($turn, $pAtt, $lSrc, $cSrc, $lDst, $cDst, $targetPieces);
         $this->data->turn =  ++$turn;
     }
 }

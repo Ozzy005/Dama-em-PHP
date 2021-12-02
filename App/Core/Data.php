@@ -28,7 +28,7 @@ class Data{
     public $lineDestiny;
     public $columnDestiny;
     public $moveType;
-    public $piecesCaptured;
+    public $targetPieces;
     public $messageError;
 
     private function __construct(){
