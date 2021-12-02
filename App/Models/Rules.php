@@ -32,11 +32,11 @@ class Rules extends Father{
         $cDst = $this->data->columnDestiny;
 
         try{
-            $this->whoseTurn($mh, $pAtt);
-            if($this->movement($pChosen, $board, $pAtt, $lSrc, $cSrc, $lDst, $cDst)){return true;}
+            //$this->whoseTurn($mh, $pAtt);
+            //if($this->movement($pChosen, $board, $pAtt, $lSrc, $cSrc, $lDst, $cDst)){return true;}
             if($this->capture($board, $pAtt, $lSrc, $cSrc, $lDst, $cDst)){return true;}
             else{throw new Exception('Movimento Inválido');}
-            $this->data->moveType = 'movePiece';
+            //$this->data->moveType = 'movePiece';
         }
         catch(Exception $e){
             throw new Exception($e->getMessage());
@@ -159,26 +159,36 @@ class Rules extends Father{
                                 'target-piece' => $targetPiece
                             ];
 
+                            $board->unsetPiece($this->startingPoint['line'], $this->startingPoint['column']);
+                            $board->setPiece($lDstTmp, $cDstTmp, $pAtt);
                             $this->startingPoint = ['line' => $lDstTmp, 'column' => $cDstTmp];
                             $this->ignoredTargetPieces[] = $targetPiece;
                             $this->deepestLevel = ++$this->depthLevel;
                             $this->capture($board, $pAtt, $lSrc, $cSrc, $lDst, $cDst);
         
                             if($i == 1){
+                                $board->unsetPiece($this->startingPoint['line'], $this->startingPoint['column']);
                                 $this->startingPoint['line'] -= 2;
                                 $this->startingPoint['column'] += 2;
+                                $board->setPiece($this->startingPoint['line'], $this->startingPoint['column'], $pAtt);
                             }
                             elseif($i == 2){
+                                $board->unsetPiece($this->startingPoint['line'], $this->startingPoint['column']);
                                 $this->startingPoint['line'] -= 2;
                                 $this->startingPoint['column'] -= 2;
+                                $board->setPiece($this->startingPoint['line'], $this->startingPoint['column'], $pAtt);
                             }
                             elseif($i == 3){
+                                $board->unsetPiece($this->startingPoint['line'], $this->startingPoint['column']);
                                 $this->startingPoint['line'] += 2;
                                 $this->startingPoint['column'] += 2;
+                                $board->setPiece($this->startingPoint['line'], $this->startingPoint['column'], $pAtt);
                             }
                             elseif($i == 4){
+                                $board->unsetPiece($this->startingPoint['line'], $this->startingPoint['column']);
                                 $this->startingPoint['line'] += 2;
                                 $this->startingPoint['column'] -= 2;
+                                $board->setPiece($this->startingPoint['line'], $this->startingPoint['column'], $pAtt);
                             }
                             
                         }
@@ -214,8 +224,9 @@ class Rules extends Father{
             }
         }
         elseif(count($bestPathKey) > 1){
-            for($i = 1; $i <= count($this->paths); $i++){
-                $targetPieces = $this->paths[$i];
+            for($i = 0; $i < count($bestPathKey); $i++){
+                $pathKey = $bestPathKey[$i];
+                $targetPieces = $this->paths[$pathKey];
                 $lastTargetPiece = end($targetPieces);
 
                 if($lastTargetPiece['destiny-line'] == $lDst && $lastTargetPiece['destiny-column'] == $cDst){

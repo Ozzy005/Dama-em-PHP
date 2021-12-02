@@ -3,10 +3,10 @@
 define('DEBUG', 1);
 define('PHPINFO', 0);
 
-define('SESSION_LIFETIME', 1440); //EM SEGUNDOS
+define('SESSION_LIFETIME', 14400); //EM SEGUNDOS
 define('SESSION_REGENERATION_ID_LIFETIME', 60); //EM SEGUNDOS
 
-ini_set('session.cache_expire', 24);
+ini_set('session.cache_expire', 240);
 ini_set('session.cache_limiter', 'nocache');
 ini_set('session.cookie_domain', '');
 ini_set('session.cookie_httponly', 1);
@@ -15,7 +15,7 @@ ini_set('session.cookie_path', '/');
 ini_set('session.cookie_samesite', '');
 ini_set('session.cookie_secure', 0);
 ini_set('session.gc_divisor', 1000);
-ini_set('session.gc_maxlifetime', 1440);
+ini_set('session.gc_maxlifetime', 14400);
 ini_set('session.gc_probability', 0);
 ini_set('session.lazy_write', 1);
 ini_set('session.name', 'DAMAEMPHPSID');
