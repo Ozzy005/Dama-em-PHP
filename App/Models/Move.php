@@ -24,10 +24,10 @@ class Move extends Father{
         $targetPieces = $this->data->targetPieces;
         $mt = $this->data->moveType;
 
-        if($mt == 'movePiece'){
+        if($mt == 'mover'){
             $this->movePiece($board, $turn, $mh, $pAtt, $lSrc, $cSrc, $lDst, $cDst);
         }
-        elseif($mt == 'capturePiece'){
+        elseif($mt == 'capturar'){
             $this->capturePiece($board, $turn, $mh, $cemetery, $pAtt, $lSrc, $cSrc, $lDst, $cDst, $targetPieces);
         }
     }
@@ -45,9 +45,9 @@ class Move extends Father{
         $cemetery[$turn] = [];
 
         for($n = 0 ; $n < count($targetPieces) ; $n++){
-            $pieceCaptured = $targetPieces[$n]['target-piece'];
-            $lMid = $targetPieces[$n]['middle-line'];
-            $cMid = $targetPieces[$n]['middle-column'];
+            $pieceCaptured = $targetPieces[$n]['pecaAlvo'];
+            $lMid = $targetPieces[$n]['linhaDoMeio'];
+            $cMid = $targetPieces[$n]['colunaDoMeio'];
 
             $board->unsetPiece($lMid, $cMid);
             $cemetery[$turn][$n] = $pieceCaptured;

@@ -68,5 +68,9 @@ class Board{
             return true;
         }
     }
+
+    public function getBoard(){
+        return $this->board;
+    }
 }
 

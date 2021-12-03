@@ -13,28 +13,19 @@ use Exception;
 
 class Rules extends Father{
 
-    private $depthLevel = 1;
-    private $deepestLevel = 1;
-    private $startingPoint;
-    private $basePath = [];
-    private $path = 1;
-    private $paths = [];
-    private $ignoredTargetPieces = [];
+    private $nivelDeProfundidade = 1;
+    private $nivelMaximoDeProfundidade = 1;
+    private $pontoDePartida;
+    private $trajetoBase = [];
+    private $opcao = 1;
+    private $opcoesInternasMapeadas = [];
+    private $pecasAlvosIgnoradas = [];
 
     public function check(){
-        $mh = $this->data->movementHistory;
-        $pChosen = $this->data->playerChosen;
-        $board = $this->data->board;
-        $pAtt = $this->data->pieceAttacking;
-        $lSrc = $this->data->lineSource;
-        $cSrc = $this->data->columnSource;
-        $lDst = $this->data->lineDestiny;
-        $cDst = $this->data->columnDestiny;
-
         try{
-            $this->whoseTurn($mh, $pAtt);
-            if($this->movement($pChosen, $board, $pAtt, $lSrc, $cSrc, $lDst, $cDst)){return true;}
-            if($this->capture($board, $pAtt, $lSrc, $cSrc, $lDst, $cDst)){return true;}
+            $this->turnoDeQuem();
+            if($this->movimento()){return true;}
+            if($this->mapearOpcoesDeCapturasExternas()){return true;}
             else{throw new Exception('Movimento Inválido');}
         }
         catch(Exception $e){
@@ -42,54 +33,64 @@ class Rules extends Father{
         }
     }
 
-    public function whoseTurn($mh, $pAtt){
-        $pLastMove = $mh->getLastMove();
+    public function turnoDeQuem(){
+        $historicoDeMovimento = $this->data->movementHistory;
+        $pAtacante = $this->data->pieceAttacking;
+        $ultimoMovimento = $historicoDeMovimento->getLastMove();
 
-        if($pLastMove && $pLastMove['piece-attacking']->color == $pAtt->color){
+        if($ultimoMovimento && $ultimoMovimento['piece-attacking']->color == $pAtacante->color){
             throw new Exception('Não é sua vez de jogar');
         }
-        elseif(!$pLastMove && $pAtt->isBlack()){
-            throw new Exception('Cor branca deve fazer o lance inicial');
+        elseif(!$ultimoMovimento && $pAtacante->isBlack()){
+            throw new Exception('O lance inicial cabe ao jogador que estiver com as peças brancas');
         }
     }
 
-    private function movement($pChosen, $board, $pAtt, $lSrc, $cSrc, $lDst, $cDst){
+    private function movimento(){
+        $corEscolhida = $this->data->playerChosen;
+        $tabuleiro = $this->data->board;
+        $pAtacante = $this->data->pieceAttacking;
+        $lOrigem = $this->data->lineSource;
+        $cOrigem = $this->data->columnSource;
+        $lDestino = $this->data->lineDestiny;
+        $cDestino = $this->data->columnDestiny;
+
         for($n = 1 ; $n <= 4 ; $n++){
             if($n == 1){
-                $l = $lSrc + 1;
-                $c = $cSrc - 1;
+                $l = $lOrigem + 1;
+                $c = $cOrigem - 1;
             }
             elseif($n == 2){
-                $l = $lSrc + 1;
-                $c = $cSrc + 1;
+                $l = $lOrigem + 1;
+                $c = $cOrigem + 1;
             }
             elseif($n == 3){
-                $l = $lSrc - 1;
-                $c = $cSrc - 1;
+                $l = $lOrigem - 1;
+                $c = $cOrigem - 1;
             }
             elseif($n == 4){
-                $l = $lSrc - 1;
-                $c = $cSrc + 1;
+                $l = $lOrigem - 1;
+                $c = $cOrigem + 1;
             }
 
-            if($this->checkLineColumn($l, $c) && $board->isEmpty($l, $c) && $l == $lDst && $c == $cDst){
-                if($pChosen == 1){
-                    if($pAtt->isWhite() && $lSrc < $lDst){
-                        $this->data->moveType = 'movePiece';
+            if($this->checarLimitesDaMargemDoTabuleiro($l, $c) && $tabuleiro->isEmpty($l, $c) && $l == $lDestino && $c == $cDestino){
+                if($corEscolhida == 1){
+                    if($pAtacante->isWhite() && $lOrigem < $lDestino){
+                        $this->data->moveType = 'mover';
                         return true;
                     }
-                    elseif($pAtt->isBlack() && $lSrc > $lDst){
-                        $this->data->moveType = 'movePiece';
+                    elseif($pAtacante->isBlack() && $lOrigem > $lDestino){
+                        $this->data->moveType = 'mover';
                         return true;
                     }
                 }
-                elseif($pChosen == 2){
-                    if($pAtt->isBlack() && $lSrc < $lDst){
-                        $this->data->moveType = 'movePiece';
+                elseif($corEscolhida == 2){
+                    if($pAtacante->isBlack() && $lOrigem < $lDestino){
+                        $this->data->moveType = 'mover';
                         return true;
                     }
-                    elseif($pAtt->isWhite() && $lSrc > $lDst){
-                        $this->data->moveType = 'movePiece';
+                    elseif($pAtacante->isWhite() && $lOrigem > $lDestino){
+                        $this->data->moveType = 'mover';
                         return true;
                     }
                 }
@@ -97,147 +98,187 @@ class Rules extends Father{
         }
     }
 
-    private function capture($board, $pAtt, $lSrc, $cSrc, $lDst, $cDst){
-        if(!$this->startingPoint){
-            $this->startingPoint = ['line' => $lSrc, 'column' => $cSrc];
+    private function mapearOpcoesDeCapturasInternas($pAtacante, $lOrigem = null, $cOrigem = null){
+        $tabuleiro = $this->data->board;
+
+        if(!$this->pontoDePartida && $lOrigem && $cOrigem){
+            $this->pontoDePartida = ['linha' => $lOrigem, 'coluna' => $cOrigem];
         }
 
         for($i = 1 ; $i <= 4 ; $i++){
             if($i == 1){
-                $lMidTmp = $this->startingPoint['line'] + 1;
-                $cMidTmp = $this->startingPoint['column'] - 1;
-                $lDstTmp = $this->startingPoint['line'] + 2;
-                $cDstTmp = $this->startingPoint['column'] - 2;
+                $lMeioTmp = $this->pontoDePartida['linha'] + 1;
+                $cMeioTmp = $this->pontoDePartida['coluna'] - 1;
+                $lDestinoTmp = $this->pontoDePartida['linha'] + 2;
+                $cDestinoTmp = $this->pontoDePartida['coluna'] - 2;
             }
             elseif($i == 2){
-                $lMidTmp = $this->startingPoint['line'] + 1;
-                $cMidTmp = $this->startingPoint['column'] + 1;
-                $lDstTmp = $this->startingPoint['line'] + 2;
-                $cDstTmp = $this->startingPoint['column'] + 2;
+                $lMeioTmp = $this->pontoDePartida['linha'] + 1;
+                $cMeioTmp = $this->pontoDePartida['coluna'] + 1;
+                $lDestinoTmp = $this->pontoDePartida['linha'] + 2;
+                $cDestinoTmp = $this->pontoDePartida['coluna'] + 2;
             }
             elseif($i == 3){
-                $lMidTmp = $this->startingPoint['line'] - 1;
-                $cMidTmp = $this->startingPoint['column'] - 1;
-                $lDstTmp = $this->startingPoint['line'] - 2;
-                $cDstTmp = $this->startingPoint['column'] - 2;
+                $lMeioTmp = $this->pontoDePartida['linha'] - 1;
+                $cMeioTmp = $this->pontoDePartida['coluna'] - 1;
+                $lDestinoTmp = $this->pontoDePartida['linha'] - 2;
+                $cDestinoTmp = $this->pontoDePartida['coluna'] - 2;
             }
             elseif($i == 4){
-                $lMidTmp = $this->startingPoint['line'] - 1;
-                $cMidTmp = $this->startingPoint['column'] + 1;
-                $lDstTmp = $this->startingPoint['line'] - 2;
-                $cDstTmp = $this->startingPoint['column'] + 2;
+                $lMeioTmp = $this->pontoDePartida['linha'] - 1;
+                $cMeioTmp = $this->pontoDePartida['coluna'] + 1;
+                $lDestinoTmp = $this->pontoDePartida['linha'] - 2;
+                $cDestinoTmp = $this->pontoDePartida['coluna'] + 2;
             }
 
-            if($this->checkLineColumn($lMidTmp, $cMidTmp) && $this->checkLineColumn($lDstTmp, $cDstTmp)){
-                if($board->notEmpty($lMidTmp, $cMidTmp)){
-                    $targetPiece = $board->getPiece($lMidTmp, $cMidTmp);
+            if($this->checarLimitesDaMargemDoTabuleiro($lMeioTmp, $cMeioTmp) &&
+               $this->checarLimitesDaMargemDoTabuleiro($lDestinoTmp, $cDestinoTmp)){
+                if($tabuleiro->notEmpty($lMeioTmp, $cMeioTmp)){
+                    $pecaAlvo = $tabuleiro->getPiece($lMeioTmp, $cMeioTmp);
 
-                    $ignoredTargetPieceId = 0;
-                    for($n = 0 ; $n < count($this->ignoredTargetPieces) ; $n++){
-                        $ignoredTargetPieceId = $this->ignoredTargetPieces[$n]->id;
-                        if($targetPiece->id == $ignoredTargetPieceId){
+                    $pecaAlvoIgnoradaId = 0;
+                    for($n = 0 ; $n < count($this->pecasAlvosIgnoradas) ; $n++){
+                        $pecaAlvoIgnoradaId = $this->pecasAlvosIgnoradas[$n]->id;
+                        if($pecaAlvo->id == $pecaAlvoIgnoradaId){
                             break;
                         }
                     }
 
-                    if($targetPiece->id != $ignoredTargetPieceId){
-                        if($pAtt->color != $targetPiece->color && $board->isEmpty($lDstTmp, $cDstTmp)){
+                    if($pecaAlvo->id != $pecaAlvoIgnoradaId){
+                        if($pAtacante->color != $pecaAlvo->color && $tabuleiro->isEmpty($lDestinoTmp, $cDestinoTmp)){
 
-                            if($this->depthLevel < $this->deepestLevel){
-                                $this->path++;
-                                $this->paths[$this->path] = $this->basePath;
+                            if($this->nivelDeProfundidade < $this->nivelMaximoDeProfundidade){
+                                $this->opcao++;
+                                $this->opcoesInternasMapeadas[$this->opcao] = $this->trajetoBase;
                             }
 
-                            $this->basePath[] = $this->paths[$this->path][] = [
-                                'source-line' => $this->startingPoint['line'],
-                                'source-column' => $this->startingPoint['column'],
-                                'middle-line' => $lMidTmp,
-                                'middle-column' => $cMidTmp,
-                                'destiny-line' => $lDstTmp,
-                                'destiny-column' => $cDstTmp,
-                                'target-piece' => $targetPiece
+                            $this->trajetoBase[] = $this->opcoesInternasMapeadas[$this->opcao][] = [
+                                'linhaOrigem' => $this->pontoDePartida['linha'],
+                                'ColunaOrigem' => $this->pontoDePartida['coluna'],
+                                'linhaDoMeio' => $lMeioTmp,
+                                'colunaDoMeio' => $cMeioTmp,
+                                'linhaDestino' => $lDestinoTmp,
+                                'colunaDestino' => $cDestinoTmp,
+                                'pecaAlvo' => $pecaAlvo,
+                                'pecaAtacante' => $pAtacante
                             ];
 
-                            $board->unsetPiece($this->startingPoint['line'], $this->startingPoint['column']);
-                            $board->setPiece($lDstTmp, $cDstTmp, $pAtt);
-                            $this->startingPoint = ['line' => $lDstTmp, 'column' => $cDstTmp];
-                            $this->ignoredTargetPieces[] = $targetPiece;
-                            $this->deepestLevel = ++$this->depthLevel;
-                            $this->capture($board, $pAtt, $lSrc, $cSrc, $lDst, $cDst);
+                            $tabuleiro->unsetPiece($this->pontoDePartida['linha'], $this->pontoDePartida['coluna']);
+                            $tabuleiro->setPiece($lDestinoTmp, $cDestinoTmp, $pAtacante);
+                            $this->pontoDePartida = ['linha' => $lDestinoTmp, 'coluna' => $cDestinoTmp];
+                            $this->pecasAlvosIgnoradas[] = $pecaAlvo;
+                            $this->nivelMaximoDeProfundidade = ++$this->nivelDeProfundidade;
+                            $this->mapearOpcoesDeCapturasInternas($pAtacante);
         
                             if($i == 1){
-                                $board->unsetPiece($this->startingPoint['line'], $this->startingPoint['column']);
-                                $this->startingPoint['line'] -= 2;
-                                $this->startingPoint['column'] += 2;
-                                $board->setPiece($this->startingPoint['line'], $this->startingPoint['column'], $pAtt);
+                                $tabuleiro->unsetPiece($this->pontoDePartida['linha'], $this->pontoDePartida['coluna']);
+                                $this->pontoDePartida['linha'] -= 2;
+                                $this->pontoDePartida['coluna'] += 2;
+                                $tabuleiro->setPiece($this->pontoDePartida['linha'], $this->pontoDePartida['coluna'], $pAtacante);
                             }
                             elseif($i == 2){
-                                $board->unsetPiece($this->startingPoint['line'], $this->startingPoint['column']);
-                                $this->startingPoint['line'] -= 2;
-                                $this->startingPoint['column'] -= 2;
-                                $board->setPiece($this->startingPoint['line'], $this->startingPoint['column'], $pAtt);
+                                $tabuleiro->unsetPiece($this->pontoDePartida['linha'], $this->pontoDePartida['coluna']);
+                                $this->pontoDePartida['linha'] -= 2;
+                                $this->pontoDePartida['coluna'] -= 2;
+                                $tabuleiro->setPiece($this->pontoDePartida['linha'], $this->pontoDePartida['coluna'], $pAtacante);
                             }
                             elseif($i == 3){
-                                $board->unsetPiece($this->startingPoint['line'], $this->startingPoint['column']);
-                                $this->startingPoint['line'] += 2;
-                                $this->startingPoint['column'] += 2;
-                                $board->setPiece($this->startingPoint['line'], $this->startingPoint['column'], $pAtt);
+                                $tabuleiro->unsetPiece($this->pontoDePartida['linha'], $this->pontoDePartida['coluna']);
+                                $this->pontoDePartida['linha'] += 2;
+                                $this->pontoDePartida['coluna'] += 2;
+                                $tabuleiro->setPiece($this->pontoDePartida['linha'], $this->pontoDePartida['coluna'], $pAtacante);
                             }
                             elseif($i == 4){
-                                $board->unsetPiece($this->startingPoint['line'], $this->startingPoint['column']);
-                                $this->startingPoint['line'] += 2;
-                                $this->startingPoint['column'] -= 2;
-                                $board->setPiece($this->startingPoint['line'], $this->startingPoint['column'], $pAtt);
+                                $tabuleiro->unsetPiece($this->pontoDePartida['linha'], $this->pontoDePartida['coluna']);
+                                $this->pontoDePartida['linha'] += 2;
+                                $this->pontoDePartida['coluna'] -= 2;
+                                $tabuleiro->setPiece($this->pontoDePartida['linha'], $this->pontoDePartida['coluna'], $pAtacante);
                             }
-                            
                         }
                     }
                 }
             }
         }
 
-        array_pop($this->basePath);
-        array_pop($this->ignoredTargetPieces);
-        $this->depthLevel--;
+        array_pop($this->trajetoBase);
+        array_pop($this->pecasAlvosIgnoradas);
+        $this->nivelDeProfundidade--;
 
-        if(!$this->depthLevel && count($this->paths) > 0){
-            if($this->checkPaths($lDst, $cDst)){
-                return true;
+        if(!$this->nivelDeProfundidade && count($this->opcoesInternasMapeadas)){
+            $opcoesContadas = array_map('count', $this->opcoesInternasMapeadas);
+            $melhorOpcao = array_keys($opcoesContadas , max($opcoesContadas));
+
+            $retorno = [];
+            foreach($melhorOpcao as $value){
+                $retorno[$value] = $this->opcoesInternasMapeadas[$value];
             }
+
+            return $retorno;
         }
     }
 
-    private function checkPaths($lDst, $cDst){
-        $pathsChecked = array_map('count', $this->paths);
-        $bestPathKey = array_keys($pathsChecked , max($pathsChecked));
+    private function aplicarLeiDaMaioria($opcoesMapeadas){
+        $pAtacante = $this->data->pieceAttacking;
+        $lDestino = $this->data->lineDestiny;
+        $cDestino = $this->data->columnDestiny;
 
-        if(count($bestPathKey) == 1){
-            $bestPathKey = $bestPathKey[0];
-            $targetPieces = $this->paths[$bestPathKey];
-            $lastTargetPiece = end($targetPieces);
+        $opcoesContadas = array_map('count', $opcoesMapeadas);
+        $chaveDasMelhoresOpcoes = array_keys($opcoesContadas , max($opcoesContadas));
 
-            if($lastTargetPiece['destiny-line'] == $lDst && $lastTargetPiece['destiny-column'] == $cDst){
-                $this->data->moveType = 'capturePiece';
-                $this->data->targetPieces = $targetPieces;
+        if(count($chaveDasMelhoresOpcoes) == 1){
+            $chaveDaMelhorOpcao = $chaveDasMelhoresOpcoes[0];
+            $pecasAlvos = $opcoesMapeadas[$chaveDaMelhorOpcao];
+            $ultimaPecaAlvo = end($pecasAlvos);
+
+            if($ultimaPecaAlvo['linhaDestino'] == $lDestino && $ultimaPecaAlvo['colunaDestino'] == $cDestino){
+                $this->data->moveType = 'capturar';
+                $this->data->targetPieces = $pecasAlvos;
                 return true;
             }
         }
-        elseif(count($bestPathKey) > 1){
-            for($i = 0; $i < count($bestPathKey); $i++){
-                $pathKey = $bestPathKey[$i];
-                $targetPieces = $this->paths[$pathKey];
-                $lastTargetPiece = end($targetPieces);
+        elseif(count($chaveDasMelhoresOpcoes) > 1){
+            for($i = 0; $i < count($chaveDasMelhoresOpcoes); $i++){
+                $chaveDaMelhorOpcao = $chaveDasMelhoresOpcoes[$i];
+                $pecasAlvos = $opcoesMapeadas[$chaveDaMelhorOpcao];
+                $ultimaPecaAlvo = end($pecasAlvos);
 
-                if($lastTargetPiece['destiny-line'] == $lDst && $lastTargetPiece['destiny-column'] == $cDst){
-                    $this->data->moveType = 'capturePiece';
-                    $this->data->targetPieces = $targetPieces;
+                if($ultimaPecaAlvo['pecaAtacante']->id == $pAtacante->id &&
+                   $ultimaPecaAlvo['linhaDestino'] == $lDestino && $ultimaPecaAlvo['colunaDestino'] == $cDestino){
+                    $this->data->moveType = 'capturar';
+                    $this->data->targetPieces = $pecasAlvos;
                     return true;
                 }
             }
         }
     }
 
-    private function checkLineColumn($l, $c){
+    private function mapearOpcoesDeCapturasExternas(){
+        $tabuleiro = $this->data->board;
+        $pAtacante = $this->data->pieceAttacking;
+        $opcoesExternasMapeadas = [];
+
+        foreach($tabuleiro->getBoard() as $chaveDaLinha => $linha){
+            foreach($linha as $coluna => $peca){
+                if($tabuleiro->isBlack($chaveDaLinha, $coluna) && $peca && $peca->color == $pAtacante->color){
+                    $melhorOpcaoInterna = $this->mapearOpcoesDeCapturasInternas($peca, $chaveDaLinha, $coluna);
+
+                    if($melhorOpcaoInterna){
+                        $opcoesExternasMapeadas = array_merge($opcoesExternasMapeadas, $melhorOpcaoInterna);
+                    }
+                    $this->nivelDeProfundidade = $this->nivelMaximoDeProfundidade = $this->opcao = 1;
+                    $this->pontoDePartida = $this->pecasAlvosIgnoradas = $this->trajetoBase = $this->opcoesInternasMapeadas = [];
+                }
+            }
+        }
+
+        if(count($opcoesExternasMapeadas)){
+            if($this->aplicarLeiDaMaioria($opcoesExternasMapeadas)){
+                return true;
+            }
+        }
+    }
+
+    private function checarLimitesDaMargemDoTabuleiro($l, $c){
         if($l >= 1 && $l <= 8 && $c >= 97 && $c <= 104){
             return true;
         }
