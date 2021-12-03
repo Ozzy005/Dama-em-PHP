@@ -24,8 +24,14 @@ class Rules extends Father{
     public function check(){
         try{
             $this->turnoDeQuem();
+            $opcoesExternasMapeadas = $this->mapearOpcoesDeCapturasExternas();
+            if($opcoesExternasMapeadas){
+                if($this->aplicarLeiDaMaioria($opcoesExternasMapeadas)){
+                    return true;
+                }
+                throw new Exception('Movimento Inválido');
+            }
             if($this->movimento()){return true;}
-            if($this->mapearOpcoesDeCapturasExternas()){return true;}
             else{throw new Exception('Movimento Inválido');}
         }
         catch(Exception $e){
@@ -272,9 +278,7 @@ class Rules extends Father{
         }
 
         if(count($opcoesExternasMapeadas)){
-            if($this->aplicarLeiDaMaioria($opcoesExternasMapeadas)){
-                return true;
-            }
+            return $opcoesExternasMapeadas;
         }
     }
 
