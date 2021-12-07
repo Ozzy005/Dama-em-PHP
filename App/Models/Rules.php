@@ -13,21 +13,13 @@ use Exception;
 
 class Rules extends Father
 {
-    private $nivelDeProfundidade = 1;
-    private $nivelMaximoDeProfundidade = 1;
-    private $pontoDePartida;
-    private $trajetoBase = [];
-    private $opcao = 1;
-    private $opcoesInternasMapeadas = [];
-    private $pecasAlvosIgnoradas = [];
-
     public function check()
     {
         try {
             $this->turnoDeQuem();
-            $opcoesExternasMapeadas = $this->mapearOpcoesDeCapturasExternas();
-            if ($opcoesExternasMapeadas) {
-                if ($this->aplicarLeiDaMaioria($opcoesExternasMapeadas)) {
+            $opcoesMapeadas = $this->mapearOpcoesDeCapturasExternas();
+            if ($opcoesMapeadas) {
+                if ($this->aplicarLeiDaMaioria($opcoesMapeadas)) {
                     return true;
                 }
                 throw new Exception('Movimento Inválido');
@@ -75,50 +67,55 @@ class Rules extends Father
                 if ($direcao[$corEscolhida][$pAtacante->color]) {
                     $this->data->moveType = 'mover';
                 }
-
                 return $direcao[$corEscolhida][$pAtacante->color];
             }
         }
     }
 
-    private function mapearOpcoesDeCapturasInternas($pAtacante, $lOrigem = null, $cOrigem = null)
+    private function mapearOpcoesDeCapturasInternas($pAtacante, $lOrigem, $cOrigem)
     {
-        $tabuleiro = $this->data->board;
         $subirCasa = [[1, -1, 2, -2], [1, 1, 2, 2], [-1, -1, -2, -2], [-1, 1, -2, 2]];
         $descerCasa = [[-2, 2], [-2, -2], [2, 2], [2, -2]];
+        $pontoDePartida = ['linha' => $lOrigem, 'coluna' => $cOrigem];
+        $tabuleiro = $this->data->board;
+        $nivelDeProfundidade = $nivelMaximoDeProfundidade = $opcao = 1;
+        $trajetoBase = $opcoesMapeadas = $pecasAlvosIgnoradas = [];
 
-        if (!$this->pontoDePartida && $lOrigem && $cOrigem) {
-            $this->pontoDePartida = ['linha' => $lOrigem, 'coluna' => $cOrigem];
-        }
+        $mapear = function () use (
+            &$mapear,
+            &$subirCasa,
+            &$descerCasa,
+            &$pontoDePartida,
+            &$tabuleiro,
+            &$pAtacante,
+            &$nivelDeProfundidade,
+            &$nivelMaximoDeProfundidade,
+            &$opcao,
+            &$trajetoBase,
+            &$opcoesMapeadas,
+            &$pecasAlvosIgnoradas
+        ) {
+            for ($i = 0; $i <= 3; ++$i) {
+                $lMeioTmp = $pontoDePartida['linha'] + $subirCasa[$i][0];
+                $cMeioTmp = $pontoDePartida['coluna'] + $subirCasa[$i][1];
+                $lDstTmp = $pontoDePartida['linha'] + $subirCasa[$i][2];
+                $cDstTmp = $pontoDePartida['coluna'] + $subirCasa[$i][3];
 
-        for ($i = 0; $i <= 3; ++$i) {
-            $lMeioTmp = $this->pontoDePartida['linha'] + $subirCasa[$i][0];
-            $cMeioTmp = $this->pontoDePartida['coluna'] + $subirCasa[$i][1];
-            $lDstTmp = $this->pontoDePartida['linha'] + $subirCasa[$i][2];
-            $cDstTmp = $this->pontoDePartida['coluna'] + $subirCasa[$i][3];
-
-            if ($this->checarLimitesDaMargemDoTabuleiro($lMeioTmp, $cMeioTmp, $lDstTmp, $cDstTmp)) {
-                if ($tabuleiro->notEmpty($lMeioTmp, $cMeioTmp) && $tabuleiro->isEmpty($lDstTmp, $cDstTmp)) {
+                if (
+                    $this->checarLimitesDaMargemDoTabuleiro($lMeioTmp, $cMeioTmp, $lDstTmp, $cDstTmp)
+                    && $tabuleiro->notEmpty($lMeioTmp, $cMeioTmp) && $tabuleiro->isEmpty($lDstTmp, $cDstTmp)
+                ) {
                     $pecaAlvo = $tabuleiro->getPiece($lMeioTmp, $cMeioTmp);
 
-                    $pecaAlvoIgnoradaId = 0;
-                    $pecasAlvosIgnoradasQuantidade = count($this->pecasAlvosIgnoradas);
-                    for ($n = 0; $n < $pecasAlvosIgnoradasQuantidade; ++$n) {
-                        $pecaAlvoIgnoradaId = $this->pecasAlvosIgnoradas[$n]->id;
-                        if ($pecaAlvo->id == $pecaAlvoIgnoradaId) {
-                            break;
-                        }
-                    }
-
-                    if ($pecaAlvo->id != $pecaAlvoIgnoradaId && $pAtacante->color != $pecaAlvo->color) {
-                        if ($this->nivelDeProfundidade < $this->nivelMaximoDeProfundidade) {
-                            ++$this->opcao;
-                            $this->opcoesInternasMapeadas[$this->opcao] = $this->trajetoBase;
+                    if (!in_array($pecaAlvo, $pecasAlvosIgnoradas, true) && $pAtacante->color != $pecaAlvo->color) {
+                        if ($nivelDeProfundidade < $nivelMaximoDeProfundidade) {
+                            ++$opcao;
+                            $opcoesMapeadas[$opcao] = $trajetoBase;
                         }
 
-                        $this->trajetoBase[] = $this->opcoesInternasMapeadas[$this->opcao][] = [
-                            'linhaOrigem' => $this->pontoDePartida['linha'],
-                            'ColunaOrigem' => $this->pontoDePartida['coluna'],
+                        $trajetoBase[] = $opcoesMapeadas[$opcao][] = [
+                            'linhaOrigem' => $pontoDePartida['linha'],
+                            'ColunaOrigem' => $pontoDePartida['coluna'],
                             'linhaDoMeio' => $lMeioTmp,
                             'colunaDoMeio' => $cMeioTmp,
                             'linhaDestino' => $lDstTmp,
@@ -127,37 +124,29 @@ class Rules extends Father
                             'pecaAtacante' => $pAtacante
                         ];
 
-                        $tabuleiro->unsetPiece($this->pontoDePartida['linha'], $this->pontoDePartida['coluna']);
+                        $tabuleiro->unsetPiece($pontoDePartida['linha'], $pontoDePartida['coluna']);
                         $tabuleiro->setPiece($lDstTmp, $cDstTmp, $pAtacante);
-                        $this->pontoDePartida = ['linha' => $lDstTmp, 'coluna' => $cDstTmp];
-                        $this->pecasAlvosIgnoradas[] = $pecaAlvo;
-                        $this->nivelMaximoDeProfundidade = ++$this->nivelDeProfundidade;
-                        $this->mapearOpcoesDeCapturasInternas($pAtacante);
+                        $pontoDePartida = ['linha' => $lDstTmp, 'coluna' => $cDstTmp];
+                        $pecasAlvosIgnoradas[] = $pecaAlvo;
+                        $nivelMaximoDeProfundidade = ++$nivelDeProfundidade;
 
-                        $tabuleiro->unsetPiece($this->pontoDePartida['linha'], $this->pontoDePartida['coluna']);
-                        $this->pontoDePartida['linha'] += $descerCasa[$i][0];
-                        $this->pontoDePartida['coluna'] += $descerCasa[$i][1];
-                        $tabuleiro->setPiece($this->pontoDePartida['linha'], $this->pontoDePartida['coluna'], $pAtacante);
+                        $mapear();
+
+                        $tabuleiro->unsetPiece($pontoDePartida['linha'], $pontoDePartida['coluna']);
+                        $pontoDePartida['linha'] += $descerCasa[$i][0];
+                        $pontoDePartida['coluna'] += $descerCasa[$i][1];
+                        $tabuleiro->setPiece($pontoDePartida['linha'], $pontoDePartida['coluna'], $pAtacante);
                     }
                 }
             }
-        }
 
-        array_pop($this->trajetoBase);
-        array_pop($this->pecasAlvosIgnoradas);
-        --$this->nivelDeProfundidade;
+            array_pop($trajetoBase);
+            array_pop($pecasAlvosIgnoradas);
+            --$nivelDeProfundidade;
+        };
 
-        if (!$this->nivelDeProfundidade && count($this->opcoesInternasMapeadas)) {
-            $opcoesContadas = array_map('count', $this->opcoesInternasMapeadas);
-            $melhorOpcao = array_keys($opcoesContadas, max($opcoesContadas));
-
-            $retorno = [];
-            foreach ($melhorOpcao as $value) {
-                $retorno[$value] = $this->opcoesInternasMapeadas[$value];
-            }
-
-            return $retorno;
-        }
+        $mapear();
+        return $opcoesMapeadas;
     }
 
     private function aplicarLeiDaMaioria($opcoesMapeadas)
@@ -165,78 +154,63 @@ class Rules extends Father
         $pAtacante = $this->data->pieceAttacking;
         $lDst = $this->data->lineDestiny;
         $cDst = $this->data->columnDestiny;
+        $sucesso = false;
 
-        $opcoesContadas = array_map('count', $opcoesMapeadas);
-        $chaveDasMelhoresOpcoes = array_keys($opcoesContadas, max($opcoesContadas));
+        $count = array_map('count', $opcoesMapeadas);
+        $max = max($count);
 
-        if (count($chaveDasMelhoresOpcoes) == 1) {
-            $chaveDaMelhorOpcao = $chaveDasMelhoresOpcoes[0];
-            $pecasAlvos = $opcoesMapeadas[$chaveDaMelhorOpcao];
-            $ultimaPecaAlvo = end($pecasAlvos);
+        $chaveDasMelhoresOpcoes = array_keys(array_filter($count, function ($value) use ($max) {
+            return $value === $max;
+        }));
 
-            if ($ultimaPecaAlvo['linhaDestino'] == $lDst && $ultimaPecaAlvo['colunaDestino'] == $cDst) {
+        $opcoesFiltradas = array_map(function ($key) use ($opcoesMapeadas) {
+            return $opcoesMapeadas[$key];
+        }, $chaveDasMelhoresOpcoes);
+
+        array_walk($opcoesFiltradas, function ($value) use (&$sucesso, $pAtacante, $lDst, $cDst) {
+            $last = end($value);
+            if (
+                !$sucesso && $last['pecaAtacante'] === $pAtacante &&
+                $last['linhaDestino'] + $last['colunaDestino'] == $lDst + $cDst
+            ) {
+                $this->data->targetPieces = $value;
                 $this->data->moveType = 'capturar';
-                $this->data->targetPieces = $pecasAlvos;
-                return true;
+                $sucesso = true;
             }
-        } elseif (count($chaveDasMelhoresOpcoes) > 1) {
-            for ($i = 0; $i < count($chaveDasMelhoresOpcoes); ++$i) {
-                $chaveDaMelhorOpcao = $chaveDasMelhoresOpcoes[$i];
-                $pecasAlvos = $opcoesMapeadas[$chaveDaMelhorOpcao];
-                $ultimaPecaAlvo = end($pecasAlvos);
+        });
 
-                if (
-                    $ultimaPecaAlvo['pecaAtacante']->id == $pAtacante->id &&
-                    $ultimaPecaAlvo['linhaDestino'] == $lDst && $ultimaPecaAlvo['colunaDestino'] == $cDst
-                ) {
-                    $this->data->moveType = 'capturar';
-                    $this->data->targetPieces = $pecasAlvos;
-                    return true;
-                }
-            }
-        }
+        return $sucesso;
     }
 
     private function mapearOpcoesDeCapturasExternas()
     {
-        $tabuleiro = $this->data->board;
+        $tabuleiro = $this->data->board->getBoard();
         $pAtacante = $this->data->pieceAttacking;
-        $opcoesExternasMapeadas = [];
+        $opcoesMapeadas = [];
+        $linha = 8;
 
-        foreach ($tabuleiro->getBoard() as $chaveDaLinha => $linha) {
-            foreach ($linha as $coluna => $peca) {
-                if ($tabuleiro->isBlack($chaveDaLinha, $coluna) && $peca && $peca->color == $pAtacante->color) {
-                    $melhorOpcaoInterna = $this->mapearOpcoesDeCapturasInternas($peca, $chaveDaLinha, $coluna);
-
-                    if ($melhorOpcaoInterna) {
-                        $opcoesExternasMapeadas = array_merge($opcoesExternasMapeadas, $melhorOpcaoInterna);
-                    }
-                    $this->nivelDeProfundidade = $this->nivelMaximoDeProfundidade = $this->opcao = 1;
-                    $this->pontoDePartida = $this->pecasAlvosIgnoradas = $this->trajetoBase = $this->opcoesInternasMapeadas = [];
-                }
+        array_walk_recursive($tabuleiro, function ($peca, $coluna) use ($pAtacante, &$linha, &$opcoesMapeadas) {
+            if ($peca && $peca->color == $pAtacante->color) {
+                $opcoesMapeadas = array_merge($opcoesMapeadas, $this->mapearOpcoesDeCapturasInternas($peca, $linha, $coluna));
             }
-        }
+            if (($coluna == 104)) {
+                --$linha;
+            }
+        });
 
-        if (count($opcoesExternasMapeadas)) {
-            return $opcoesExternasMapeadas;
-        }
+        return $opcoesMapeadas;
     }
 
-    private function checarLimitesDaMargemDoTabuleiro($lMeio, $cMeio, $lDst = null, $cDst = null)
+    private function checarLimitesDaMargemDoTabuleiro($l1, $c1, $l2 = null, $c2 = null)
     {
-        $checar = function ($l, $c) {
-            if ($l >= 1 && $l <= 8 && $c >= 97 && $c <= 104) {
+        $checar = function ($l1, $c1, $l2 = null, $c2 = null) use (&$checar) {
+            if ($l1 >= 1 && $l1 <= 8 && $c1 >= 97 && $c1 <= 104) {
+                if ($l2 !== null && $c2 !== null) {
+                    return $checar($l2, $c2);
+                }
                 return true;
             }
         };
-
-        if (!$lDst && !$cDst) {
-            if ($checar($lMeio, $cMeio)) {
-                return true;
-            }
-        }
-        if ($checar($lMeio, $cMeio) && $checar($lDst, $cDst)) {
-            return true;
-        }
+        return $checar($l1, $c1, $l2, $c2);
     }
 }
