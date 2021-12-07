@@ -63,7 +63,7 @@ class Rules extends Father
             $l = $lOrigem + $subirCasa[$n][0];
             $c = $cOrigem + $subirCasa[$n][1];
 
-            if ($this->checarLimitesDaMargemDoTabuleiro($l, $c) && $tabuleiro->isEmpty($l, $c) && $l + $c == $lDst + $cDst) {
+            if ($this->checarLimitesDaMargemDoTabuleiro($l, $c) && $tabuleiro->isEmpty($l, $c) && $l == $lDst && $c == $cDst) {
                 if ($direcao[$corEscolhida][$pAtacante->color]) {
                     $this->data->moveType = 'mover';
                 }
@@ -171,7 +171,7 @@ class Rules extends Father
             $last = end($value);
             if (
                 !$sucesso && $last['pecaAtacante'] === $pAtacante &&
-                $last['linhaDestino'] + $last['colunaDestino'] == $lDst + $cDst
+                $last['linhaDestino'] == $lDst && $last['colunaDestino'] == $cDst
             ) {
                 $this->data->targetPieces = $value;
                 $this->data->moveType = 'capturar';
