@@ -14,6 +14,14 @@ Para o desenvolvimento desse jogo de dama, foi optado por utilizar as regras de 
 
 Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
 
+### Instalação
+Primeiramene, após clonar o projeto, é necessário instalar as dependências contidas no arquivo solto composer.json
+com o comando "composer update".
+Depois indico rodar o comando "composer dump-autoload -o" para mapear o caminho de todas as classes tornando o jogo mais performático.
+Depois basta entrar no diretório raiz do projeto e rodar um 'php -S localhost:8000 -t public' e pronto, o jogo está rodando.
+Basta acessa-lo através da URL localhost:8000.
+
+
 ### Funcionalidades
 - [x] Definição do tabuleiro.
 - [x] Definição das peças.
