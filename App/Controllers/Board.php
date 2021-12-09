@@ -10,8 +10,9 @@ namespace App\Controllers;
 
 use App\Core\{Session, Father};
 use App\Models\{Validation, Board as BoardModel, PlayerBoardSide, PlayerCurrent, Rules, Move};
-use App\Views\Board\Board as BoardView;
 use Exception;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class Board extends Father{
 
@@ -60,13 +61,12 @@ class Board extends Father{
     }
 
     public function show(){
-        $borderView = new BoardView();
-        $borderView->make();
-
+        $loader = new FilesystemLoader('../App/Views/Tabuleiro/');
+        $twig = new Environment($loader, ['strict_variables' => true]);
+        echo $twig->render('tabuleiro.html', ['data' => $this->data]);
+        
         if(Session::empty('data')){
             Session::setValue('data', $this->data);
         };
-
-        $borderView->show();
     }
 }

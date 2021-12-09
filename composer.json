@@ -5,5 +5,8 @@
         {
             "App\\" : "App"
         }
+    },
+    "require": {
+        "twig/twig": "^3.3"
     }
 }
