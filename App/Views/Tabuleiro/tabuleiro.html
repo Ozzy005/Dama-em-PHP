@@ -27,6 +27,9 @@
             <div class="information">
                 <div class="turn-current">Turno: {{data.turn}}</div>
                 <div class="player-current-left">Jogador: {{data.playerCurrentLeft}}</div>
+                {% if data.messageError %}
+                    <div class="message-error">{{data.messageError}}</div>
+                {% endif %}
             </div>
         </div>
         <div class="board">
