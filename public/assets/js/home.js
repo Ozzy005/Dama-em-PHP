@@ -1,19 +1,15 @@
-
-if(window.history.replaceState)
-{
-    window.history.replaceState(null,null,window.location.href);
+if (window.history.replaceState) {
+  window.history.replaceState(null, null, window.location.href)
 }
 
-let player_black = document.getElementById('2');
-let player_white = document.getElementById('1');
-let player_chosen = document.getElementById('player-chosen');
+let jogadorBranco = document.getElementById("1")
+let jogadorPreto = document.getElementById("2")
+let jogador = document.getElementById("jogadorId")
 
-player_black.addEventListener('click',function()
-{
-    player_chosen.value = player_black.getAttribute('id');
-});
+jogadorPreto.addEventListener("click", () => {
+  jogador.value = jogadorPreto.getAttribute("id")
+})
 
-player_white.addEventListener('click',function()
-{
-    player_chosen.value = player_white.getAttribute('id');
-});
+jogadorBranco.addEventListener("click", function () {
+  jogador.value = jogadorBranco.getAttribute("id")
+})

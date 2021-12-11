@@ -3,7 +3,9 @@
     {
         "psr-4":
         {
-            "App\\" : "App"
+            "App\\" : "App",
+            "Components\\" : "Components",
+            "Library\\" : "Library" 
         }
     },
     "require": {

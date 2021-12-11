@@ -32,18 +32,17 @@ ini_set('session.use_trans_sid', 0);
 
 ini_set('memory_limit', '256M');
 
-if(DEBUG){
+if (DEBUG) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
-}
-else{
+} else {
     ini_set('display_errors', 0);
     ini_set('display_startup_errors', 0);
     error_reporting(0);
 }
 
-if(PHPINFO){
-    phpinfo(); die;
+if (PHPINFO) {
+    phpinfo();
+    die;
 }
-

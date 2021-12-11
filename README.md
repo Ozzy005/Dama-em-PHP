@@ -1,46 +1,65 @@
-# Dama em PHP
-
+## Dama em PHP
 > Status do Projeto: 🚧  Dama em PHP 🚀 Em construção...  🚧
 
-Para o desenvolvimento desse jogo de dama, foi optado por utilizar as regras de damas brasileiras.
-
 ### Screenshot da home page
+
 <img src="screenshot/home.png"/>
 
 ### Screenshot da main page
+
 <img src="screenshot/game.png"/>
 
-### 📋 Pré-requisitos
+Para o desenvolvimento deste jogo de dama, foi optado por utilizar as regras oficiais de jogo de damas,
+válido em todo território brasileiro.
+[Regras Disponível em] (https://midiasstoragesec.blob.core.windows.net/001/2019/04/cbjd-regras-damas-010113.pdf)
 
-Versão do PHP utilizada para o desenvolvimento desse jogo = PHP 7.4.3
+### Ambiente necessário
 
-### Instalação
-Primeiramene, após clonar o projeto, é necessário instalar as dependências contidas no arquivo solto composer.json
-com o comando "composer update".
-Depois indico rodar o comando "composer dump-autoload -o" para mapear o caminho de todas as classes tornando o jogo mais performático.
-Depois basta entrar no diretório raiz do projeto e rodar um 'php -S localhost:8000 -t public' e pronto, o jogo está rodando.
-Basta acessa-lo através da URL localhost:8000.
+Para executar este jogo é necessário ter instalado:
+
+- Composer
+- PHP (>= 8.1)
+
+### Instalar dependências e inicializar o jogo
+Primeiramente, após clonar o projeto, é necessário instalar algumas dependências. Para isso, a partir do diretório raiz do projeto, execute:
+
+```
+composer update
+```
+
+Depois para uma execução mais performática, indico rodar o comando:
+
+```
+composer dump-autoload -o
+```
+
+É possível inicializar o jogo através do próprio servidor interno do PHP, bastando apenas, a partir do diretório raiz do projeto, executar:
+
+```
+php -S localhost:8000 -t public
+```
+
+Agora é possível acessa-lo através da URL localhost:8000
 
 
 ### Funcionalidades
 - [x] Definição do tabuleiro.
 - [x] Definição das peças.
 - [x] Definição do controle.
-- [x] Possibilidade de escolher com qual peça jogar (1 = branca, 2 = preta).
-- [x] Botão para recomeçar o jogo (volta para a opção de escolher com qual peça jogar).
-- [x] Selecionar colunas e peças de forma interativa destacando-as clicando com o botão esquerdo do mouse.
+- [x] Possibilidade de escolher com qual cor jogar (jogador 1 -> peças brancas, jogador 2 -> peças pretas).
+- [x] Botão para recomeçar o jogo (volta para a opção de escolher com qual cor jogar).
+- [x] Selecionar colunas e peças clicando com o botão esquerdo do mouse.
 - [x] Confirmar o movimento clicando duas vezes com botão esquerdo na casa de destino.
-- [x] Gerar mensagem de erro se ocorrer um movimento inválido.
+- [x] Exibir mensagem de erro se ocorrer um movimento inválido.
 - [x] Exibir na tela turno e jogador atual.
-- [ ] Função para um jogador (CONTRA O COMPUTADOR).
-- [x] Função para dois jogadores (FISICAMENTE).
-- [ ] Função para dois jogadores (ONLINE).
-- [ ] Função desistir.
-- [ ] Função sugerir empate.
+- [ ] Opção para um jogador (CONTRA O COMPUTADOR).
+- [x] Opção para dois jogadores OFFLINE (DUAS PESSOAS LADO A LADO FISICAMENTE).
+- [ ] Opção para dois jogadores (ONLINE).
+- [ ] Opção desistir.
+- [ ] Opção sugerir empate.
 - [ ] Histórico de movimentos.
-- [ ] Função entrar como visitante com um codinome.
-- [ ] Função para se cadastrar e entrar com uma conta.
-- [ ] Ranking dos melhores jogadores.
+- [ ] Exibir peças capturadas
+- [ ] Opção escolher um nome para jogador 1 e jogador 2.
 
 
 ### RESUMO DAS REGRAS

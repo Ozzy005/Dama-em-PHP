@@ -1,85 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dama em PHP</title>
-    <link rel="stylesheet" type="text/css" href="assets/css/reset-style.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/board.css">
-    <link rel="shortcut icon" href="assets/img/favicon.ico">
-</head>
-<body>
-    <div class="main">
-        <div class="panel-left">
-            <div class="control">
-                <form action="index.php" method="post" id="form" enctype="application/x-www-form-urlencoded">
-                    <input type="text" name="piece-attacking" id="piece-attacking">
-                    <input type="text" name="line-source" id="line-source">
-                    <input type="text" name="column-source" id="column-source">
-                    <input type="text" name="line-destiny" id="line-destiny">
-                    <input type="text" name="column-destiny" id="column-destiny">
-                    <input type="text" name="class" value="App\Controllers\Board">
-                    <button type="submit" name="method" value="move">MOVER</button>
-                    <button type="submit" name="method" value="newGame">NOVO JOGO</button>
-                </form>
-            </div>
-            <div class="information">
-                <div class="turn-current">Turno: {{data.turn}}</div>
-                <div class="player-current-left">Jogador: {{data.playerCurrentLeft}}</div>
-                {% if data.messageError %}
-                    <div class="message-error">{{data.messageError}}</div>
-                {% endif %}
-            </div>
+    <link rel="stylesheet" type="text/css" href="assets/css/reset-style.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/tabuleiro.css" />
+    <link rel="shortcut icon" href="assets/img/favicon.ico" />
+  </head>
+
+  <body>
+    <div class="principal">
+      <div class="painel-esquerdo">
+        <div class="controle">
+          <form action="index.php" method="POST" id="form" enctype="application/x-www-form-urlencoded">
+            <input type="text" name="pecaAtacanteId" id="pecaAtacanteId" />
+            <input type="text" name="linhaOrigem" id="linhaOrigem" />
+            <input type="text" name="colunaOrigem" id="colunaOrigem" />
+            <input type="text" name="linhaDestino" id="linhaDestino" />
+            <input type="text" name="colunaDestino" id="colunaDestino" />
+            <input type="text" name="class" value="App\Controllers\Tabuleiro" />
+            <button type="submit" name="metodo" value="mover">MOVER</button>
+            <button type="submit" name="metodo" value="reiniciar">NOVO JOGO</button>
+          </form>
         </div>
-        <div class="board">
-            {% for chave, linha in data.board.getBoard %}
-                <div class="line" id="{{chave}}">
-                    <div class="column-indicative">
-                        <div>{{chave}}</div>
-                    </div>
-                    {% for coluna, peca in linha %}
-                        <div class="column{% if data.board.isWhite(chave, coluna) %} column-white{% else %} column-black{% endif %}" id="{{coluna}}">{% if peca %}<div class="piece{% if peca.isWhite() %} stone-white{% else %} stone-black{% endif %}" id="{{peca.id}}"></div>{% endif %}</div>
-                    {% endfor %}
-                </div>
-            {% endfor %}
-            <div class="line" id="0" >
-                <div class="column-indicative"><div>0</div></div>
-                <div class="column-indicative"><div>1</div></div>
-                <div class="column-indicative"><div>2</div></div>
-                <div class="column-indicative"><div>3</div></div>
-                <div class="column-indicative"><div>4</div></div>
-                <div class="column-indicative"><div>5</div></div>
-                <div class="column-indicative"><div>6</div></div>
-                <div class="column-indicative"><div>7</div></div>
-                <div class="column-indicative"><div>8</div></div>
-            </div>
+        <div class="informacoes">
+          <div class="turno">Turno: {{dados.turno.getTurno}}</div>
+          <div class="jogador-atual-esquerdo">Jogador: {{dados.jogadorAtualEsquerdo}}</div>
+          {% if dados.alerta %}
+          <div class="alerta">{{dados.alerta}}</div>
+          {% endif %}
         </div>
-        <div class="panel-right">
-            <div class="player-top-right {{data.playerCurrentTopRight}}">
-                <span>J</span>
-                <span>O</span>
-                <span>G</span>
-                <span>A</span>
-                <span>D</span>
-                <span>O</span>
-                <span>R</span>
-                <span>{{data.playerTopRight}}</span>
-            </div>
-            <div class="player-lower-right {{data.playerCurrentLowerRight}}">
-                <span>J</span>
-                <span>O</span>
-                <span>G</span>
-                <span>A</span>
-                <span>D</span>
-                <span>O</span>
-                <span>R</span>
-                <span>{{data.playerLowerRight}}</span>
-            </div>
+      </div>
+      <div class="tabuleiro">
+        {% for chave, linha in dados.tabuleiro.getTabuleiro %}
+        <div class="linha" id="{{chave}}">
+          <div class="coluna-indicativa">
+            <div>{{chave}}</div>
+          </div>
+          {% for coluna, peca in linha %}
+          <div class="coluna{% if dados.tabuleiro.colunaIsBranca(chave, coluna) %} coluna-branca{% else %} coluna-preta{% endif %}" id="{{coluna}}">
+            {%- if peca -%}
+            <div class="peca{% if peca.isBranca() %} pedra-branca{% else %} pedra-preta{% endif %}" id="{{peca.id}}"></div>
+            {%- endif -%}
+          </div>
+          {% endfor %}
         </div>
-    </div>    
-    <script type="text/javascript" src="assets/js/board.js"></script>
-</body>
+        {% endfor %}
+        <div class="linha" id="0">
+          <div class="coluna-indicativa">
+            <div>0</div>
+          </div>
+          <div class="coluna-indicativa">
+            <div>1</div>
+          </div>
+          <div class="coluna-indicativa">
+            <div>2</div>
+          </div>
+          <div class="coluna-indicativa">
+            <div>3</div>
+          </div>
+          <div class="coluna-indicativa">
+            <div>4</div>
+          </div>
+          <div class="coluna-indicativa">
+            <div>5</div>
+          </div>
+          <div class="coluna-indicativa">
+            <div>6</div>
+          </div>
+          <div class="coluna-indicativa">
+            <div>7</div>
+          </div>
+          <div class="coluna-indicativa">
+            <div>8</div>
+          </div>
+        </div>
+      </div>
+      <div class="painel-direito">
+        <div class="jogador-superior-direito {{dados.jogadorAtualSuperiorDireito}}">
+          <span>J</span>
+          <span>O</span>
+          <span>G</span>
+          <span>A</span>
+          <span>D</span>
+          <span>O</span>
+          <span>R</span>
+          <span>{{dados.jogadorSuperiorDireito}}</span>
+        </div>
+        <div class="jogador-inferior-direito {{dados.jogadorAtualInferiorDireito}}">
+          <span>J</span>
+          <span>O</span>
+          <span>G</span>
+          <span>A</span>
+          <span>D</span>
+          <span>O</span>
+          <span>R</span>
+          <span>{{dados.jogadorInferiorDireito}}</span>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="assets/js/tabuleiro.js"></script>
+  </body>
 </html>
-
-

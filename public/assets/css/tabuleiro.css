@@ -1,33 +1,36 @@
 /*Definições genéricas*/
-body{
+body {
     min-height: 100vh;
     min-width: 100vw;
     max-height: 100vh;
     max-width: 100vw;
 }
-body,form,.column-indicative,.turn-current,.player-current-left,.message-error,.player-top-right,.player-lower-right
-{
+
+body, form, .coluna-indicativa, .turno, .jogador-atual-esquerdo, .alerta, .jogador-superior-direito, .jogador-inferior-direito {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 /*-----------------------------------------------------*/
 
 /*Definições do conteiner principal*/
-.main{
+.principal {
     display: grid;
     grid-template-columns: 25vw 45vw 25vw;
     grid-template-rows: 92vh;
     column-gap: 0.8%;
 }
-*{
+
+* {
     user-select: none;
 }
+
 /*-----------------------------------------------------*/
 
 
 /*Definições do tabuleiro*/
-.board{
+.tabuleiro {
     display: grid;
     grid-template-rows: repeat(9, 1fr);
     grid-column: 2/3;
@@ -35,16 +38,19 @@ body,form,.column-indicative,.turn-current,.player-current-left,.message-error,.
     border-bottom: 0.2vw solid black;
     font-size: 1.25vw;
 }
-.column-indicative{
+
+.coluna-indicativa {
     background-color: rgb(0, 77, 77);
     border-top: 0.2vw solid black;
     border-left: 0.2vw solid black;
 }
-.line{
+
+.linha {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
 }
-.column{
+
+.coluna {
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
     grid-template-rows: 1fr 3fr 1fr;
@@ -52,48 +58,57 @@ body,form,.column-indicative,.turn-current,.player-current-left,.message-error,.
     border-left: 0.2vw solid black;
     cursor: pointer;
 }
-.column-black{
+
+.coluna-preta {
     background-color: rgb(102, 51, 0);
 }
-.column-white{
+
+.coluna-branca {
     background-color: rgb(230, 204, 179);
 }
-.piece{
+
+.peca {
     grid-column: 2/3;
     grid-row: 2/3;
     border-radius: 50%;
     cursor: pointer;
 }
-.stone-black{
-    background-image: linear-gradient(rgb(38, 38, 38),rgb(0, 0, 0)) ;
+
+.pedra-preta {
+    background-image: linear-gradient(rgb(38, 38, 38), rgb(0, 0, 0));
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-.stone-white{
-    background-image: linear-gradient(rgb(255, 255, 255),rgb(153, 153, 153));
+
+.pedra-branca {
+    background-image: linear-gradient(rgb(255, 255, 255), rgb(153, 153, 153));
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
 }
+
 /*-----------------------------------------------------*/
 
 
 /*Definições do painel esquerdo*/
-.panel-left{
+.painel-esquerdo {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     grid-column: 1/2;
 }
-.control{
+
+.controle {
     grid-column: 2/3;
     grid-row: 1/2;
     background-color: rgb(0, 77, 77);
     border: 0.2vw solid black;
 }
-form{
+
+form {
     flex-direction: column;
     height: 100%;
 }
-input{
+
+input {
     width: 0;
     height: 0;
     margin: 0;
@@ -102,7 +117,8 @@ input{
     outline: 0;
     visibility: hidden;
 }
-button{
+
+button {
     width: 50%;
     height: 5vh;
     margin: 5% 0 0 0;
@@ -111,7 +127,7 @@ button{
     cursor: pointer;
 }
 
-.information{
+.informacoes {
     color: white;
     grid-column: 2/3;
     grid-row: 2/3;
@@ -119,21 +135,25 @@ button{
     border: 0.2vw black solid;
     border-top: 0;
 }
-.turn-current,.player-current-left{
+
+.turno, .jogador-atual-esquerdo {
     width: 70%;
     height: 15%;
     font-size: 1.25vw;
     margin: 10% auto 0 auto;
 }
-.turn-current{
+
+.turno {
     background-color: rgb(3, 3, 70);
     box-shadow: 0 0 0.25vw 0.25vw rgb(0, 0, 255);
 }
-.player-current-left{
+
+.jogador-atual-esquerdo {
     background-color: rgb(2, 56, 2);
     box-shadow: 0 0 0.25vw 0.25vw rgb(0, 255, 0);
 }
-.message-error{
+
+.alerta {
     width: 60%;
     height: 40%;
     margin: 10% auto 0 auto;
@@ -143,39 +163,47 @@ button{
     background-color: #330000;
     box-shadow: 0 0 0.25vw 0.25vw #ff0000;
 }
+
 /*-----------------------------------------------------*/
 
 
 /*Definições do painel direito*/
-.panel-right{
+.painel-direito {
     display: grid;
     grid-template-columns: 1fr 5fr;
     grid-template-rows: 1fr 1fr 1fr;
     grid-column: 3/4;
 }
-.player-top-right,.player-lower-right{
+
+.jogador-superior-direito, .jogador-inferior-direito {
     flex-direction: column;
     border: 0.2vw solid black;
     background-color: rgb(128, 128, 128);
     font-size: 1.25vw;
 }
-.player-top-right{
-    grid-column:1/2;
+
+.jogador-superior-direito {
+    grid-column: 1/2;
     grid-row: 1/2;
 }
-.player-lower-right{
+
+.jogador-inferior-direito {
     grid-column: 1/2;
     grid-row: 3/4;
 }
-.player-top-right > span,.player-lower-right > span{
+
+.jogador-superior-direito>span, .jogador-inferior-direito>span {
     padding: 0.25vw;
 }
-.player-top-right > span:last-child,.player-lower-right > span:last-child{
+
+.jogador-superior-direito>span:last-child, .jogador-inferior-direito>span:last-child {
     font-weight: 1000;
     font-size: 1.563vw;
 }
-.player-current{
+
+.jogadorAtual {
     box-shadow: 0 0 0.391vw 0.391vw rgb(0, 255, 0);
     border-color: rgb(0, 255, 0);
 }
+
 /*-----------------------------------------------------*/

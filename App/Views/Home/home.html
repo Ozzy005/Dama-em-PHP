@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
-    <link rel="stylesheet" type="text/css" href="assets/css/reset-style.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/home.css">
-    <link rel="shortcut icon" href="assets/img/favicon.ico">
-</head>
-<body>
-    <div class="start">
-        <p>Bem Vindo</p>
-        <p>Jogo de Dama feito em PHP!</p>
-        <p>Escolha sua cor</p>
-        <form action="index.php" method="post" enctype="application/x-www-form-urlencoded">
-            <input type="text" name="player-chosen" id="player-chosen">
-            <input type="text" name="class" value="App\Controllers\Board">
-            <button type="submit" class="player-white" id="1" name="method" value="mount"></button>
-            <button type="submit" class="player-black" id="2" name="method" value="mount"></button>   
-        </form>
+    <link rel="stylesheet" type="text/css" href="assets/css/reset-style.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/home.css" />
+    <link rel="shortcut icon" href="assets/img/favicon.ico" />
+  </head>
+  <body>
+    <div class="principal">
+      <p>Bem Vindo</p>
+      <p>Jogo de Dama feito em PHP!</p>
+      <p>Escolha sua cor</p>
+      <form action="index.php" method="post" enctype="application/x-www-form-urlencoded">
+        <input type="text" name="jogadorId" id="jogadorId" />
+        <input type="text" name="classe" value="App\Controllers\Tabuleiro" />
+        <button type="submit" class="jogador-branco" id="1" name="metodo" value="montar"></button>
+        <button type="submit" class="jogador-preto" id="2" name="metodo" value="montar"></button>
+      </form>
     </div>
     <script type="text/javascript" src="assets/js/home.js"></script>
-</body>
+  </body>
 </html>

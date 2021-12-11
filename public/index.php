@@ -6,26 +6,26 @@
  *
  **/
 
-require_once '../config/config.php';
+require_once '../Core/config.php';
 require_once '../vendor/autoload.php';
 
-use App\Core\{Session, Request};
+use Library\{Session, Post};
 
 new Session;
 
-if(Session::empty('data')){
-    $class = Request::post('class') ?? 'App\Controllers\Home';
+if (Session::notHas('dados')) {
+    $classe = Post::get('classe') ?? 'App\Controllers\Home';
 }
-else{
-    $class = Request::post('class') ?? 'App\Controllers\Board';
-}
-
-$method = Request::post('method');
-
-$controller = new $class;
-
-if($method){
-    $controller->$method();
+if (Session::has('dados')) {
+    $classe = Post::get('classe') ?? 'App\Controllers\Tabuleiro';
 }
 
-$controller->show();
+$metodo = Post::get('metodo');
+
+$controlador = new $classe;
+
+if ($metodo) {
+    $controlador->$metodo();
+}
+
+$controlador->exibir();
