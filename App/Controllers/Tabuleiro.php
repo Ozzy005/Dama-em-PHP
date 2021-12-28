@@ -17,7 +17,7 @@ use Twig\Loader\FilesystemLoader;
 
 class Tabuleiro extends Base
 {
-    public function montar()
+    public function montar(): void
     {
         try {
             if (Session::notHas('dados')) {
@@ -36,54 +36,62 @@ class Tabuleiro extends Base
                 $qualLadoDoJogador->fazer();
                 $jogadorAtual = new JogadorAtual;
                 $jogadorAtual->fazer();
+
+                return;
             }
+            throw new Exception("Algo Deu Errado");
         } catch (Exception $e) {
             Session::destroy();
             header('Location: index.php');
         }
     }
 
-    public function mover()
+    public function mover(): void
     {
         try {
-            $pecaAtacanteId = (int) Post::get('pecaAtacanteId');
-            Validar::peca($pecaAtacanteId);
+            if (Session::has('dados')) {
+                $pecaAtacanteId = (int) Post::get('pecaAtacanteId');
+                Validar::peca($pecaAtacanteId);
 
-            $lOrigem = (int) Post::get('linhaOrigem');
-            $cOrigem = (int) Post::get('colunaOrigem');
-            Validar::casa($lOrigem, $cOrigem);
+                $lOrigem = (int) Post::get('linhaOrigem');
+                $cOrigem = (int) Post::get('colunaOrigem');
+                Validar::casa($lOrigem, $cOrigem);
 
-            $lDestino = (int) Post::get('linhaDestino');
-            $cDestino = (int) Post::get('colunaDestino');
-            Validar::casa($lDestino, $cDestino);
+                $lDestino = (int) Post::get('linhaDestino');
+                $cDestino = (int) Post::get('colunaDestino');
+                Validar::casa($lDestino, $cDestino);
 
-            $pecaAtacante = $this->dados->tabuleiro->getPeca($lOrigem, $cOrigem);
-            $this->dados->pecaAtacante = $pecaAtacante;
-            $this->dados->linhaOrigem = $lOrigem;
-            $this->dados->colunaOrigem = $cOrigem;
-            $this->dados->linhaDestino = $lDestino;
-            $this->dados->colunaDestino = $cDestino;
+                $pecaAtacante = $this->dados->tabuleiro->getPeca($lOrigem, $cOrigem);
+                $this->dados->pecaAtacante = $pecaAtacante;
+                $this->dados->linhaOrigem = $lOrigem;
+                $this->dados->colunaOrigem = $cOrigem;
+                $this->dados->linhaDestino = $lDestino;
+                $this->dados->colunaDestino = $cDestino;
 
-            $regras = new Regras();
-            $regras->aplicar();
-            
-            $movimento = new Movimento();
-            $movimento->fazer();
-            
-            $jogadorAtual = new JogadorAtual();
-            $jogadorAtual->fazer();
+                $regras = new Regras;
+                $regras->aplicar();
+
+                $movimento = new Movimento;
+                $movimento->fazer();
+
+                $jogadorAtual = new JogadorAtual;
+                $jogadorAtual->fazer();
+
+                return;
+            }
+            throw new Exception("Algo Deu Errado");
         } catch (Exception $e) {
             $this->dados->alerta = $e->getMessage();
         }
     }
 
-    public function reiniciar()
+    public function reiniciar(): void
     {
         Session::destroy();
         header('Location: index.php');
     }
 
-    public function exibir()
+    public function exibir(): void
     {
         if (Session::notHas('dados')) {
             Session::put('dados', $this->dados);

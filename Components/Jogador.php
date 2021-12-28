@@ -21,19 +21,11 @@ class Jogador
 
     public function isBranco(): bool
     {
-        if ($this->id === 1) {
-            return true;
-        }
-
-        return false;
+        return $this->id === 1;
     }
 
     public function isPreto(): bool
     {
-        if ($this->id === 2) {
-            return true;
-        }
-
-        return false;
+        return $this->id === 2;
     }
 }

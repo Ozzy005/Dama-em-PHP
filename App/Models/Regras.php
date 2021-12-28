@@ -14,7 +14,7 @@ use Exception;
 
 class Regras extends Base
 {
-    public function aplicar()
+    public function aplicar(): bool
     {
         try {
             $this->turnoDeQuem();
@@ -27,9 +27,8 @@ class Regras extends Base
             }
             if ($this->movimento()) {
                 return true;
-            } else {
-                throw new Exception('Movimento Inválido');
             }
+            throw new Exception('Movimento Inválido');
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -105,7 +104,7 @@ class Regras extends Base
             [-1, 1, -2, 2]
         ];
 
-        $mapear = function (int $lOrigem, int $cOrigem) use (
+        $mapear = function ($lOrigem, $cOrigem) use (
             &$mapear,
             &$subirCasa,
             &$jogador,
@@ -117,7 +116,7 @@ class Regras extends Base
             &$trajetoBase,
             &$opcoesMapeadas,
             &$pecasAlvosIgnoradas
-        ): void {
+        ) {
             for ($i = 0; $i <= 3; ++$i) {
                 $lMeio = $lOrigem + $subirCasa[$i][0];
                 $cMeio = $cOrigem + $subirCasa[$i][1];
@@ -178,15 +177,15 @@ class Regras extends Base
         $count = array_map('count', $opcoesMapeadas);
         $max = max($count);
 
-        $chaveDasMelhoresOpcoes = array_keys(array_filter($count, function (int $value) use ($max): int {
+        $chaveDasMelhoresOpcoes = array_keys(array_filter($count, function ($value) use ($max) {
             return $value === $max;
         }));
 
-        $opcoesFiltradas = array_map(function (int $key) use ($opcoesMapeadas): array {
+        $opcoesFiltradas = array_map(function ($key) use ($opcoesMapeadas) {
             return $opcoesMapeadas[$key];
         }, $chaveDasMelhoresOpcoes);
 
-        array_walk($opcoesFiltradas, function (array $value) use (&$retorno, $pAtc, $lDst, $cDst): void {
+        array_walk($opcoesFiltradas, function ($value) use (&$retorno, $pAtc, $lDst, $cDst) {
             $last = end($value);
             if (
                 !$retorno && $last['pecaAtacante'] === $pAtc &&
@@ -208,7 +207,7 @@ class Regras extends Base
         $opcoesMapeadas = [];
         $linha = 8;
 
-        array_walk_recursive($tabuleiro, function (Peca|null $peca, int $coluna) use ($pAtc, &$linha, &$opcoesMapeadas): void {
+        array_walk_recursive($tabuleiro, function ($peca, $coluna) use ($pAtc, &$linha, &$opcoesMapeadas) {
             if ($peca instanceof Peca && $peca->cor === $pAtc->cor) {
                 $opcoesMapeadas = array_merge($opcoesMapeadas, $this->mapearOpcoesDeCapturasInternas($peca, $linha, $coluna));
             }
@@ -220,9 +219,9 @@ class Regras extends Base
         return $opcoesMapeadas;
     }
 
-    private function checarLimitesDaMargemDoTabuleiro(int $l1, int $c1, int|null $l2 = null, int|null $c2 = null): bool
+    private function checarLimitesDaMargemDoTabuleiro(int $l1, int $c1, ?int $l2 = null, ?int $c2 = null): bool
     {
-        $checar = function (int $l1, int $c1, int|null $l2 = null, int|null $c2 = null) use (&$checar): bool {
+        $checar = function ($l1, $c1, $l2 = null, $c2 = null) use (&$checar) {
             if ($l1 >= 1 && $l1 <= 8 && $c1 >= 97 && $c1 <= 104) {
                 if ($l2 !== null && $c2 !== null) {
                     return $checar($l2, $c2);

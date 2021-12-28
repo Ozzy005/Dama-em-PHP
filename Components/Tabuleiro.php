@@ -49,26 +49,18 @@ class Tabuleiro
 
     public function colunaEmpty(int $l, int $c): bool
     {
-        if (!$this->tabuleiro[$l][$c]) {
-            return true;
-        }
-
-        return false;
+        return !$this->tabuleiro[$l][$c];
     }
 
     public function colunaNotEmpty(int $l, int $c): bool
     {
-        if ($this->tabuleiro[$l][$c] instanceof Peca) {
-            return true;
-        }
-
-        return false;
+        return $this->tabuleiro[$l][$c] instanceof Peca;
     }
 
     public function putPeca(int $l, int $c, Peca $p): void
     {
         if ($this->colunaIsBranca($l, $c) || $this->colunaNotEmpty($l, $c)) {
-            throw new Error('Disposição de peca no tabuleiro inválida');
+            throw new Error('Disposicao de peca no tabuleiro invalida');
         }
 
         $this->tabuleiro[$l][$c] = $p;
@@ -77,7 +69,7 @@ class Tabuleiro
     public function forgetPeca(int $l, int $c): void
     {
         if ($this->colunaEmpty($l, $c)) {
-            throw new Error('Tentando remover peça de uma casa vazia');
+            throw new Error('Tentando remover peca de uma casa vazia');
         }
 
         $this->tabuleiro[$l][$c] = null;
@@ -86,7 +78,7 @@ class Tabuleiro
     public function getPeca(int $l, int $c): Peca
     {
         if ($this->colunaEmpty($l, $c)) {
-            throw new Error('Tentando pegar peça de uma casa vazia');
+            throw new Error('Tentando pegar peca de uma casa vazia');
         }
 
         return $this->tabuleiro[$l][$c];
@@ -94,11 +86,7 @@ class Tabuleiro
 
     public function pecaExits(int $l, int $c, Peca $peca): bool
     {
-        if ($this->tabuleiro[$l][$c] === $peca) {
-            return true;
-        }
-
-        return false;
+        return $this->tabuleiro[$l][$c] === $peca;
     }
 
     public function deslocarPeca(int $lOrigem, int $cOrigem, int $lDst, int $cDst): void
@@ -107,7 +95,7 @@ class Tabuleiro
             $this->colunaEmpty($lOrigem, $cOrigem) || $this->colunaIsBranca($lDst, $cDst) ||
             $this->colunaNotEmpty($lDst, $cDst)
         ) {
-            throw new Error('Deslocamento de peca inválido');
+            throw new Error('Deslocamento de peca invalida');
         }
 
         $peca = $this->getPeca($lOrigem, $cOrigem);

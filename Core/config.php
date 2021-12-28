@@ -4,7 +4,7 @@ define('DEBUG', 1);
 define('PHPINFO', 0);
 
 define('SESSION_LIFETIME', 1440); //EM SEGUNDOS
-define('SESSION_REGENERATION_ID_LIFETIME', 60); //EM SEGUNDOS
+define('REGENERATE_SESSION', 60); //EM SEGUNDOS
 
 ini_set('session.cache_expire', 60);
 ini_set('session.cache_limiter', 'nocache');

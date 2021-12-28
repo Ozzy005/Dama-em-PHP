@@ -32,10 +32,6 @@ class Post
 
     public static function get(string $key): mixed
     {
-        if (self::has($key)) {
-            return $_POST[$key];
-        }
-
-        return null;
+        return self::has($key) ? $_POST[$key] : false;
     }
 }

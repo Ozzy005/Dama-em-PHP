@@ -12,23 +12,24 @@ class Session
 {
     public function __construct()
     {
-        if (session_status() != 2) {
+        if (session_status() !== 2) {
             session_start();
         }
-        if (isset($_SESSION['SESSION_LAST_ACTIVITY'])) {
-            if (time() - $_SESSION['SESSION_LAST_ACTIVITY'] > SESSION_LIFETIME) {
+
+        if ($this->has('SESSION_LIFETIME')) {
+            if ((time() - $this->get('SESSION_LIFETIME')) > SESSION_LIFETIME) {
                 session_unset();
                 session_destroy();
             }
         }
 
-        $_SESSION['SESSION_LAST_ACTIVITY'] = time();
+        $this->put('SESSION_LIFETIME', time());
 
-        if (!isset($_SESSION['ID_REGENERATION_TIME'])) {
-            $_SESSION['ID_REGENERATION_TIME'] = time();
-        } elseif (time() - $_SESSION['ID_REGENERATION_TIME'] > SESSION_REGENERATION_ID_LIFETIME) {
+        if ($this->notHas('REGENERATE_SESSION')) {
+            $this->put('REGENERATE_SESSION', time());
+        } elseif ((time() - $this->get('REGENERATE_SESSION')) > REGENERATE_SESSION) {
             session_regenerate_id(true);
-            $_SESSION['ID_REGENERATION_TIME'] = time();
+            $this->put('REGENERATE_SESSION', time());
         }
     }
 
@@ -64,11 +65,7 @@ class Session
 
     public static function get(string $key): mixed
     {
-        if (self::has($key)) {
-            return $_SESSION[$key];
-        }
-
-        return null;
+        return self::has($key) ? $_SESSION[$key] : false;
     }
 
     public static function destroy(): void

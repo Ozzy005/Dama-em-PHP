@@ -13,7 +13,7 @@ use Twig\Loader\FilesystemLoader;
 
 class Home
 {
-    public function exibir()
+    public function exibir(): void
     {
         $loader = new FilesystemLoader('../App/Views/Home/');
         $twig = new Environment($loader);

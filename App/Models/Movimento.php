@@ -18,7 +18,7 @@ class Movimento extends Base
 
         if ($tipoMovimento === 'mover') {
             $this->mover();
-        } elseif ($tipoMovimento == 'capturar') {
+        } elseif ($tipoMovimento === 'capturar') {
             $this->capturar();
         }
     }
@@ -50,7 +50,7 @@ class Movimento extends Base
         $turno->proximo();
     }
 
-    private function capturar():void
+    private function capturar(): void
     {
         $tabuleiro = $this->dados->tabuleiro;
         $jogador = $this->dados->jogador;
@@ -68,7 +68,7 @@ class Movimento extends Base
         if ($lOrigem !== $lDst && $cOrigem !== $cDst) {
             $tabuleiro->deslocarPeca($lOrigem, $cOrigem, $lDst, $cDst);
         }
-        array_map(function($pecaAlvo) use($tabuleiro, $jogador, $cemiterio){
+        array_map(function ($pecaAlvo) use ($tabuleiro, $jogador, $cemiterio) {
             $tabuleiro->forgetPeca($pecaAlvo['linhaMeio'], $pecaAlvo['colunaMeio']);
             $cemiterio->push($jogador, $pecaAlvo['pecaAlvo']);
         }, $pecasAlvos);
@@ -84,6 +84,6 @@ class Movimento extends Base
             'tipoMovimento' => $tipoMovimento
         ];
         $historico->push($turno, $movimento);
-        $turno->proximo();        
+        $turno->proximo();
     }
 }
