@@ -4,9 +4,9 @@
  *
  * @author Rafael Arend
  *
- **/
+**/
 
-namespace App\Models;
+namespace Library;
 
 use Exception;
 

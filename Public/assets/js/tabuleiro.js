@@ -65,13 +65,9 @@ for (let i = 0; i < colunas.length; i++) {
 
 for (let i = 0; i < colunas.length; i++) {
   window.addEventListener("DOMContentLoaded", function () {
-    var form = document.querySelector("#form")
+    var form = document.querySelector("#form-mover")
 
     colunas[i].addEventListener("dblclick", function () {
-      input = document.createElement("input")
-      input.setAttribute("name", "metodo")
-      input.setAttribute("value", "mover")
-      form.appendChild(input)
       form.submit()
     })
   })

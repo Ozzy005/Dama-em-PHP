@@ -4,7 +4,7 @@
  *
  * @author Rafael Arend
  *
- **/
+**/
 
 namespace App\Controllers;
 
@@ -13,10 +13,10 @@ use Twig\Loader\FilesystemLoader;
 
 class Home
 {
-    public function exibir(): void
+    public function exibir()
     {
         $loader = new FilesystemLoader('../App/Views/Home/');
         $twig = new Environment($loader);
-        echo $twig->render('home.html');
+        echo $twig->render('Home.html');
     }
 }

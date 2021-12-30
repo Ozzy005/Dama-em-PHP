@@ -4,7 +4,7 @@
  *
  * @author Rafael Arend
  *
- **/
+**/
 
 namespace Library;
 
@@ -65,7 +65,7 @@ class Session
 
     public static function get(string $key): mixed
     {
-        return self::has($key) ? $_SESSION[$key] : false;
+        return self::has($key) ? $_SESSION[$key] : null;
     }
 
     public static function destroy(): void

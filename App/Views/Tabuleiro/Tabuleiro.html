@@ -5,24 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dama em PHP</title>
-    <link rel="stylesheet" type="text/css" href="assets/css/reset-style.css" />
-    <link rel="stylesheet" type="text/css" href="assets/css/tabuleiro.css" />
-    <link rel="shortcut icon" href="assets/img/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/reset-style.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/tabuleiro.css" />
+    <link rel="shortcut icon" href="/assets/img/favicon.ico" />
   </head>
 
   <body>
     <div class="principal">
       <div class="painel-esquerdo">
         <div class="controle">
-          <form action="index.php" method="POST" id="form" enctype="application/x-www-form-urlencoded">
+          <form action="/dama-em-php/mover" method="POST" id="form-mover" enctype="application/x-www-form-urlencoded">
             <input type="text" name="pecaAtacanteId" id="pecaAtacanteId" />
             <input type="text" name="linhaOrigem" id="linhaOrigem" />
             <input type="text" name="colunaOrigem" id="colunaOrigem" />
             <input type="text" name="linhaDestino" id="linhaDestino" />
             <input type="text" name="colunaDestino" id="colunaDestino" />
-            <input type="text" name="class" value="App\Controllers\Tabuleiro" />
-            <button type="submit" name="metodo" value="mover">MOVER</button>
-            <button type="submit" name="metodo" value="reiniciar">NOVO JOGO</button>
+            <button type="submit">MOVER</button>
+          </form>
+          <form action="/dama-em-php/reiniciar" method="GET">
+            <button type="submit">REINICIAR</button>
           </form>
         </div>
         <div class="informacoes">
@@ -101,6 +102,6 @@
         </div>
       </div>
     </div>
-    <script type="text/javascript" src="assets/js/tabuleiro.js"></script>
+    <script type="text/javascript" src="/assets/js/tabuleiro.js"></script>
   </body>
 </html>

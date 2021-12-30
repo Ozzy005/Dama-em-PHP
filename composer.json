@@ -5,7 +5,7 @@
         {
             "App\\" : "App",
             "Components\\" : "Components",
-            "Library\\" : "Library" 
+            "Library\\" : "Library"
         }
     },
     "require": {
