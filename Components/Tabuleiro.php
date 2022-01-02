@@ -4,7 +4,7 @@
  *
  * @author Rafael Arend
  *
-**/
+ **/
 
 namespace Components;
 

@@ -4,9 +4,9 @@
  *
  * @author Rafael Arend
  *
-**/
+ **/
 
-namespace app\controllers;
+namespace App\Http\Controllers;
 
 use Library\{Session, Request, Base, Validar};
 use App\Models\{Tabuleiro as TabuleiroModelo, QualLadoDoJogador, JogadorAtual, Regras, Movimento};
@@ -38,12 +38,14 @@ class Tabuleiro extends Base
 
             if (Session::notHas('dados')) {
                 Session::put('dados', $this->dados);
+                Session::put('jogoIniciado', true);
             };
 
             $this->exibir();
         } catch (Exception $e) {
             Session::destroy();
             header('Location: /home');
+            die;
         }
     }
 
@@ -84,16 +86,10 @@ class Tabuleiro extends Base
         }
     }
 
-    public function reiniciar(): void
-    {
-        Session::destroy();
-        header('Location: /home');
-    }
-
     public function exibir(): void
     {
-        $loader = new FilesystemLoader('../App/Views/Tabuleiro/');
+        $loader = new FilesystemLoader('../App/views/tabuleiro/');
         $twig = new Environment($loader);
-        echo $twig->render('Tabuleiro.html', ['dados' => $this->dados]);
+        echo $twig->render('tabuleiro.html', ['dados' => $this->dados]);
     }
 }

@@ -4,7 +4,7 @@
  *
  * @author Rafael Arend
  *
-**/
+ **/
 
 namespace Library;
 
@@ -18,8 +18,7 @@ class Session
 
         if ($this->has('SESSION_LIFETIME')) {
             if ((time() - $this->get('SESSION_LIFETIME')) > SESSION_LIFETIME) {
-                session_unset();
-                session_destroy();
+                $this->destroy();
             }
         }
 
@@ -55,7 +54,7 @@ class Session
 
     public static function exists(string $key): bool
     {
-        return array_key_exists($key, $_SESSION);
+        return key_exists($key, $_SESSION);
     }
 
     public static function put(string $key, mixed $value): void
@@ -70,7 +69,9 @@ class Session
 
     public static function destroy(): void
     {
-        session_unset();
-        session_destroy();
+        if (session_status() === 2) {
+            session_unset();
+            session_destroy();
+        }
     }
 }

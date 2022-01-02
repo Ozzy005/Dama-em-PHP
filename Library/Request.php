@@ -4,22 +4,53 @@
  *
  * @author Rafael Arend
  *
-**/
+ **/
 
 namespace Library;
 
 class Request
 {
-    public readonly string $verb;
+    private array $headers = [];
+    private array $data;
     public readonly string $uri;
-    public readonly array $data;
 
     public function __construct()
     {
-        $this->verb = $_SERVER['REQUEST_METHOD'];
-        $this->uri = $_SERVER['REQUEST_URI'];
+        $this->setHeaders();
+        $this->setUri();
+        $this->setData();
+    }
 
-        if ($this->verb === 'POST') {
+    private function setHeaders(): void
+    {
+        foreach ($_SERVER as $key => $value) {
+            $explode = explode('_', $key);
+            $keyFormated = '';
+
+            foreach ($explode as $key => $chunk) {
+                if (!$key) {
+                    $keyFormated = strtolower($explode[$key]);
+                } else {
+                    $keyFormated .= ucfirst(strtolower($explode[$key]));
+                }
+            }
+
+            $this->headers[$keyFormated] = $value;
+        }
+    }
+
+    private function setUri(): void
+    {
+        $uri = $this->requestUri;
+        if (false !== $pos = strpos($uri, '?')) {
+            $uri = substr($uri, 0, $pos);
+        }
+        $this->uri = rawurldecode($uri);
+    }
+
+    private function setData(): void
+    {
+        if ($this->requestMethod === 'POST') {
             $this->data = $_POST;
         } else {
             $this->data = $_GET;
@@ -43,15 +74,16 @@ class Request
 
     public function exists(string $key): bool
     {
-        return array_key_exists($key, $this->data);
+        return key_exists($key, $this->data);
     }
 
-    public function get(string $key): mixed
+    public function get(string $key): string|bool
     {
-        return $this->has($key) ? $this->data[$key] : null;
+        return $this->exists($key) ? $this->data[$key] : false;
     }
 
-    public function send()
+    public function __get(string $name): string|bool
     {
+        return key_exists($name, $this->headers) ? $this->headers[$name] : false;
     }
 }

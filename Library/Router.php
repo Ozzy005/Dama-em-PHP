@@ -4,7 +4,7 @@
  *
  * @author Rafael Arend
  *
-**/
+ **/
 
 namespace Library;
 
@@ -12,47 +12,92 @@ use Exception;
 
 class Router
 {
-    private array $enabledVerbs = ['POST', 'GET'];
-    private array $routes = [];
-    private Request $request;
-    private array $action = [];
+    private static array $enabledVerbs = ['POST', 'GET', 'PUT', 'PATCH', 'DELETE'];
+    private static array $routes = [];
+    private static array $action = [];
+    private static string $middleware;
+    private static Request $request;
 
     public function __construct(Request $request)
     {
-        $this->request = $request;
+        self::$request = $request;
     }
 
-    public function addRoute(string $verb, string $route, string $controller, string $method = null): void
+    private static function addRoute(string $verb, array $args): void
     {
-        if (!in_array($verb, $this->enabledVerbs, true)) {
-            throw new Exception('Verbo '.$verb.' nao suportado');
+        $route = $args[0];
+        $action = $args[1];
+
+        $addRoute = function ($route) use ($verb, $action) {
+            self::$routes[$verb][$route] = [
+                'controller' => $action[0],
+                'method' => $action[1],
+                'middleware' => self::$middleware
+            ];
+        };
+
+        $addRoute($route);
+
+        if ($route[-1] !== '/') {
+            $addRoute($route . '/');
         }
-
-        $this->routes[$verb][$route] = [
-            'controller' => $controller,
-            'method' => $method
-        ];
     }
 
-    public function parseRoutes(): void
+    private static function get(array $args): void
     {
-        $verb = $this->request->verb;
-        $uri = $this->request->uri;
+        self::addRoute('GET', $args);
+    }
 
-        array_walk($this->routes[$verb], function ($value, $key) use ($uri) {
+    private static function post(array $args): void
+    {
+        self::addRoute('POST', $args);
+    }
+
+    private static function parseRoutes(): void
+    {
+        $verb = strtoupper(self::$request->requestMethod);
+        $uri = self::$request->uri;
+
+        foreach (self::$routes[$verb] as $key => $value) {
             if ($uri === $key) {
-                $this->action = $value;
-            }
-        });
+                self::$action = $value;
 
-        if (!$this->action) {
-            throw new Exception('Rota '.$verb.' '.$uri.' nao existe');
+                if ($value['middleware']) {
+                    $value['middleware']::handle();
+                }
+
+                break;
+            }
+        }
+
+        if (!self::$action) {
+            throw new Exception("$verb route $uri not exist");
         }
     }
 
-    public function dispatch(): void
+    public static function dispatch(): void
     {
-        $controller = new $this->action['controller'];
-        $controller->{$this->action['method']}($this->request);
+        self::parseRoutes();
+        $controller = new self::$action['controller'];
+        $controller->{self::$action['method']}(self::$request);
+    }
+
+    public static function __callStatic(string $name, array $args): void
+    {
+        $verb = strtoupper($name);
+        $method = strtolower($name);
+
+        if (!in_array($verb, self::$enabledVerbs, true)) {
+            throw new Exception("Unsupported $verb Verb");
+        }
+
+        self::$method($args);
+    }
+
+    public static function middleware(string $middleware, callable $callable): void
+    {
+        self::$middleware = $middleware;
+        call_user_func($callable);
+        self::$middleware = '';
     }
 }
