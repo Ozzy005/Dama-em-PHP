@@ -8,68 +8,89 @@
 
 namespace Library;
 
+use Library\Tree\Tree;
+
 class Session
 {
+    private static Tree $tree;
+
     public function __construct()
     {
-        if (session_status() !== 2) {
+        self::start();
+        self::$tree = new Tree($_SESSION);
+        self::lifetime();
+        self::regenerate();
+    }
+
+    private static function start(): void
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
+    }
 
-        if ($this->has('SESSION_LIFETIME')) {
-            if ((time() - $this->get('SESSION_LIFETIME')) > SESSION_LIFETIME) {
-                $this->destroy();
-            }
+    private static function lifetime(): void
+    {
+        if (self::missing('sessionLifetime')) {
+            self::put('sessionLifetime', time());
         }
+        if ((time() - self::get('sessionLifetime')) > SESSION_LIFETIME) {
+            self::destroy();
+        }
+    }
 
-        $this->put('SESSION_LIFETIME', time());
-
-        if ($this->notHas('REGENERATE_SESSION')) {
-            $this->put('REGENERATE_SESSION', time());
-        } elseif ((time() - $this->get('REGENERATE_SESSION')) > REGENERATE_SESSION) {
+    private static function regenerate(): void
+    {
+        if (self::missing('regenerateSession')) {
+            self::put('regenerateSession', time());
+        }
+        if ((time() - self::get('regenerateSession')) > REGENERATE_SESSION) {
             session_regenerate_id(true);
-            $this->put('REGENERATE_SESSION', time());
+            self::put('regenerateSession', time());
         }
-    }
-
-    public static function empty(): bool
-    {
-        return empty($_SESSION);
-    }
-
-    public static function notEmpty(): bool
-    {
-        return !empty($_SESSION);
     }
 
     public static function has(string $key): bool
     {
-        return !empty($_SESSION[$key]);
+        return self::$tree->has($key);
     }
 
-    public static function notHas(string $key): bool
+    public static function missing(string $key): bool
     {
-        return empty($_SESSION[$key]);
+        return self::$tree->has($key) ? false : true;
     }
 
     public static function exists(string $key): bool
     {
-        return key_exists($key, $_SESSION);
-    }
-
-    public static function put(string $key, mixed $value): void
-    {
-        $_SESSION[$key] = $value;
+        return self::$tree->exists($key);
     }
 
     public static function get(string $key): mixed
     {
-        return self::has($key) ? $_SESSION[$key] : null;
+        return self::$tree->get($key);
+    }
+
+    public static function put(string $key, mixed $value): void
+    {
+        self::$tree->set($key, $value);
+        $_SESSION = self::$tree->getTree();
+    }
+
+    public static function push(string $key, mixed $value): void
+    {
+        self::$tree->add($key, $value);
+        $_SESSION = self::$tree->getTree();
+    }
+
+    public static function forget(string $key): void
+    {
+        self::$tree->remove($key);
+        $_SESSION = self::$tree->getTree();
     }
 
     public static function destroy(): void
     {
-        if (session_status() === 2) {
+        if (session_status() === PHP_SESSION_ACTIVE) {
             session_unset();
             session_destroy();
         }

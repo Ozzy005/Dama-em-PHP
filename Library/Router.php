@@ -27,7 +27,6 @@ class Router
     {
         $route = $args[0];
         $action = $args[1];
-
         $addRoute = function ($route) use ($verb, $action) {
             self::$routes[$verb][$route] = [
                 'controller' => $action[0],
@@ -53,25 +52,38 @@ class Router
         self::addRoute('POST', $args);
     }
 
+    private static function put(array $args): void
+    {
+        self::addRoute('PUT', $args);
+    }
+
+    private static function patch(array $args): void
+    {
+        self::addRoute('PATCH', $args);
+    }
+
+    private static function delete(array $args): void
+    {
+        self::addRoute('DELETE', $args);
+    }
+
     private static function parseRoutes(): void
     {
         $verb = strtoupper(self::$request->requestMethod);
-        $uri = self::$request->uri;
-
+        $rewritenUri = self::$request->rewritenUri;
+        
         foreach (self::$routes[$verb] as $key => $value) {
-            if ($uri === $key) {
-                self::$action = $value;
-
+            if ($rewritenUri === $key) {
                 if ($value['middleware']) {
                     $value['middleware']::handle();
                 }
-
+                self::$action = $value;
                 break;
             }
         }
 
         if (!self::$action) {
-            throw new Exception("$verb route $uri not exist");
+            throw new Exception("$verb route $rewritenUri not exist");
         }
     }
 
@@ -84,11 +96,10 @@ class Router
 
     public static function __callStatic(string $name, array $args): void
     {
-        $verb = strtoupper($name);
-        $method = strtolower($name);
+        $method = strtoupper($name);
 
-        if (!in_array($verb, self::$enabledVerbs, true)) {
-            throw new Exception("Unsupported $verb Verb");
+        if (!in_array($method, self::$enabledVerbs, true)) {
+            throw new Exception("Unsupported $method Verb");
         }
 
         self::$method($args);

@@ -10,80 +10,77 @@ namespace Library;
 
 class Request
 {
-    private array $headers = [];
-    private array $data;
-    public readonly string $uri;
+    public readonly array $headers;
+    public readonly array $data;
+    public readonly string $rewritenUri;
 
     public function __construct()
     {
         $this->setHeaders();
-        $this->setUri();
+        $this->rewriteUri();
         $this->setData();
     }
 
     private function setHeaders(): void
     {
+        $headers = [];
+
         foreach ($_SERVER as $key => $value) {
             $explode = explode('_', $key);
             $keyFormated = '';
 
             foreach ($explode as $key => $chunk) {
                 if (!$key) {
-                    $keyFormated = strtolower($explode[$key]);
+                    $keyFormated = strtolower($chunk);
                 } else {
-                    $keyFormated .= ucfirst(strtolower($explode[$key]));
+                    $keyFormated .= ucfirst(strtolower($chunk));
                 }
             }
 
-            $this->headers[$keyFormated] = $value;
+            $headers[$keyFormated] = $value;
         }
+        
+        $this->headers = $headers;
     }
 
-    private function setUri(): void
+    private function rewriteUri(): void
     {
         $uri = $this->requestUri;
+
         if (false !== $pos = strpos($uri, '?')) {
             $uri = substr($uri, 0, $pos);
         }
-        $this->uri = rawurldecode($uri);
+
+        $this->rewritenUri = rawurldecode($uri);
     }
 
     private function setData(): void
     {
-        if ($this->requestMethod === 'POST') {
-            $this->data = $_POST;
-        } else {
-            $this->data = $_GET;
-        }
-    }
-
-    public function empty(): bool
-    {
-        return empty($this->data);
+        $this->data = strtoupper($this->requestMethod) === 'POST' ? $_POST : $_GET;
     }
 
     public function has(string $key): bool
     {
-        return !empty($this->data[$key]);
+        return isset($this->data[$key]);
     }
 
-    public function notHas(string $key): bool
+    public function missing(string $key): bool
     {
-        return empty($this->data[$key]);
+        return !isset($this->data[$key]);
     }
 
     public function exists(string $key): bool
     {
-        return key_exists($key, $this->data);
+        return array_key_exists($key, $this->data);
     }
 
-    public function get(string $key): string|bool
+    public function get(string $key): mixed
     {
-        return $this->exists($key) ? $this->data[$key] : false;
+        return $this->data[$key] ?? null;
     }
 
-    public function __get(string $name): string|bool
+    public function __get(string $name): mixed
     {
-        return key_exists($name, $this->headers) ? $this->headers[$name] : false;
+        return $this->headers[$name] ?? null;
     }
 }

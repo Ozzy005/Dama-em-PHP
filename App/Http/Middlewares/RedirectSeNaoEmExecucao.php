@@ -13,7 +13,7 @@ class RedirectSeNaoEmExecucao
 {
     public static function handle(): void
     {
-        if (Session::notHas('jogoIniciado')) {
+        if (Session::missing('jogoIniciado')) {
             header('Location: /home');
             die;
         }

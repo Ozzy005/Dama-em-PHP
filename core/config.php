@@ -32,6 +32,10 @@ ini_set('session.use_trans_sid', 0);
 
 ini_set('memory_limit', '256M');
 
+ini_set('xdebug.var_display_max_depth', 10);
+ini_set('xdebug.var_display_max_children', 256);
+ini_set('xdebug.var_display_max_data', 1024);
+
 if (DEBUG) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);

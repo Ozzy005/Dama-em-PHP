@@ -36,7 +36,7 @@ class Tabuleiro extends Base
             $jogadorAtual = new JogadorAtual;
             $jogadorAtual->fazer();
 
-            if (Session::notHas('dados')) {
+            if (Session::missing('dados')) {
                 Session::put('dados', $this->dados);
                 Session::put('jogoIniciado', true);
             };
