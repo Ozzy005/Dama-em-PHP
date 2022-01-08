@@ -14,24 +14,11 @@ use Exception;
 
 class Regras extends Base
 {
-    public function aplicar(): bool
+    public function aplicar(): void
     {
-        try {
-            $this->turnoDeQuem();
-            $opcoesMapeadas = $this->mapearOpcoesDeCapturasExternas();
-            if ($opcoesMapeadas) {
-                if ($this->aplicarLeiDaMaioria($opcoesMapeadas)) {
-                    return true;
-                }
-                throw new Exception('Movimento Inválido');
-            }
-            if ($this->movimento()) {
-                return true;
-            }
-            throw new Exception('Movimento Inválido');
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+        $this->turnoDeQuem();
+        if ($this->aplicarLeiDaMaioria()) {return;}
+        $this->movimento();
     }
 
     public function turnoDeQuem(): void
@@ -56,27 +43,12 @@ class Regras extends Base
         $cOrigem = $this->dados->colunaOrigem;
         $lDst = $this->dados->linhaDestino;
         $cDst = $this->dados->colunaDestino;
-        $subirCasa = [
-            [1, -1],
-            [1, 1],
-            [-1, -1],
-            [-1, +1]
-        ];
-        $direcao = [
-            1 => [
-                1 => $lOrigem < $lDst,
-                2 => $lOrigem > $lDst
-            ],
-            2 => [
-                1 => $lOrigem > $lDst,
-                2 => $lOrigem < $lDst
-            ]
-        ];
+        $subirCasa = [[1, -1], [1, 1], [-1, -1], [-1, +1]];
+        $direcao = [1 => [1 => $lOrigem < $lDst, 2 => $lOrigem > $lDst], 2 => [1 => $lOrigem > $lDst, 2 => $lOrigem < $lDst]];
 
         for ($n = 0; $n <= 3; ++$n) {
             $l = $lOrigem + $subirCasa[$n][0];
             $c = $cOrigem + $subirCasa[$n][1];
-
             if (
                 $this->checarLimitesDaMargemDoTabuleiro($l, $c) &&
                 $tabuleiro->colunaEmpty($l, $c) && $l === $lDst && $c === $cDst
@@ -84,11 +56,10 @@ class Regras extends Base
                 if ($direcao[$jogador->id][$pAtc->cor]) {
                     $this->dados->tipoMovimento = 'mover';
                 }
-                return $direcao[$jogador->id][$pAtc->cor];
+                return true;
             }
         }
-
-        return false;
+        throw new Exception('Movimento Inválido');
     }
 
     private function mapearOpcoesDeCapturasInternas(Peca $pAtc, int $lOrigem, int $cOrigem): array
@@ -97,13 +68,7 @@ class Regras extends Base
         $jogador = $this->dados->jogador;
         $nivelDeProfundidade = $nivelMaximoDeProfundidade = $opcao = 1;
         $trajetoBase = $opcoesMapeadas = $pecasAlvosIgnoradas = [];
-        $subirCasa = [
-            [1, -1, 2, -2],
-            [1, 1, 2, 2],
-            [-1, -1, -2, -2],
-            [-1, 1, -2, 2]
-        ];
-
+        $subirCasa = [[1, -1, 2, -2], [1, 1, 2, 2], [-1, -1, -2, -2], [-1, 1, -2, 2]];
         $mapear = function ($lOrigem, $cOrigem) use (
             &$mapear,
             &$subirCasa,
@@ -128,7 +93,7 @@ class Regras extends Base
                     $tabuleiro->colunaNotEmpty($lMeio, $cMeio) && $tabuleiro->colunaEmpty($lDst, $cDst)
                 ) {
                     $pecaAlvo = $tabuleiro->getPeca($lMeio, $cMeio);
-
+                    
                     if (!in_array($pecaAlvo, $pecasAlvosIgnoradas, true) && $pAtc->cor !== $pecaAlvo->cor) {
                         if ($nivelDeProfundidade < $nivelMaximoDeProfundidade) {
                             ++$opcao;
@@ -150,9 +115,7 @@ class Regras extends Base
                         $tabuleiro->deslocarPeca($lOrigem, $cOrigem, $lDst, $cDst);
                         $pecasAlvosIgnoradas[] = $pecaAlvo;
                         $nivelMaximoDeProfundidade = ++$nivelDeProfundidade;
-
                         $mapear($lDst, $cDst);
-
                         $tabuleiro->deslocarPeca($lDst, $cDst, $lOrigem, $cOrigem);
                     }
                 }
@@ -167,12 +130,16 @@ class Regras extends Base
         return $opcoesMapeadas;
     }
 
-    private function aplicarLeiDaMaioria(array $opcoesMapeadas): bool
+    private function aplicarLeiDaMaioria(): bool
     {
+        $opcoesMapeadas = $this->mapearOpcoesDeCapturasExternas();
+        if (!$opcoesMapeadas) {
+            return false;
+        }
+
         $pAtc = $this->dados->pecaAtacante;
         $lDst = $this->dados->linhaDestino;
         $cDst = $this->dados->colunaDestino;
-        $retorno = false;
 
         $count = array_map('count', $opcoesMapeadas);
         $max = max($count);
@@ -181,23 +148,23 @@ class Regras extends Base
             return $value === $max;
         }));
 
-        $opcoesFiltradas = array_map(function ($key) use ($opcoesMapeadas) {
+        $opcoesFiltradas = (array) array_map(function ($key) use ($opcoesMapeadas) {
             return $opcoesMapeadas[$key];
         }, $chaveDasMelhoresOpcoes);
 
-        array_walk($opcoesFiltradas, function ($value) use (&$retorno, $pAtc, $lDst, $cDst) {
+        foreach ($opcoesFiltradas as $value) {
             $last = end($value);
             if (
-                !$retorno && $last['pecaAtacante'] === $pAtc &&
-                $last['linhaDestino'] === $lDst && $last['colunaDestino'] === $cDst
+                $last['pecaAtacante'] === $pAtc && $last['linhaDestino'] === $lDst
+                && $last['colunaDestino'] === $cDst
             ) {
                 $this->dados->pecasAlvos = $value;
                 $this->dados->tipoMovimento = 'capturar';
-                $retorno = true;
+                return true;
             }
-        });
+        }
 
-        return $retorno;
+        throw new Exception("Movimento Inválido");
     }
 
     private function mapearOpcoesDeCapturasExternas(): array
@@ -205,21 +172,19 @@ class Regras extends Base
         $tabuleiro = $this->dados->tabuleiro->getTabuleiro();
         $pAtc = $this->dados->pecaAtacante;
         $opcoesMapeadas = [];
-        $linha = 8;
 
-        array_walk_recursive($tabuleiro, function ($peca, $coluna) use ($pAtc, &$linha, &$opcoesMapeadas) {
-            if ($peca instanceof Peca && $peca->cor === $pAtc->cor) {
-                $opcoesMapeadas = array_merge($opcoesMapeadas, $this->mapearOpcoesDeCapturasInternas($peca, $linha, $coluna));
+        foreach ($tabuleiro as $linha => $value) {
+            foreach ($value as $coluna => $peca) {
+                if ($peca instanceof Peca && $peca->cor === $pAtc->cor) {
+                    $opcoesMapeadas = array_merge($opcoesMapeadas, $this->mapearOpcoesDeCapturasInternas($peca, $linha, $coluna));
+                }
             }
-            if (($coluna === 104)) {
-                --$linha;
-            }
-        });
+        }
 
         return $opcoesMapeadas;
     }
 
-    private function checarLimitesDaMargemDoTabuleiro(int $l1, int $c1, ?int $l2 = null, ?int $c2 = null): bool
+    private function checarLimitesDaMargemDoTabuleiro(int $l1, int $c1, int|null $l2 = null, int|null $c2 = null): bool
     {
         $checar = function ($l1, $c1, $l2 = null, $c2 = null) use (&$checar) {
             if ($l1 >= 1 && $l1 <= 8 && $c1 >= 97 && $c1 <= 104) {
