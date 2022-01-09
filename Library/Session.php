@@ -31,22 +31,26 @@ class Session
 
     private static function lifetime(): void
     {
-        if (self::missing('sessionLifetime')) {
-            self::put('sessionLifetime', time());
-        }
-        if ((time() - self::get('sessionLifetime')) > SESSION_LIFETIME) {
-            self::destroy();
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            if (self::missing('sessionLifetime')) {
+                self::put('sessionLifetime', time());
+            }
+            if ((time() - self::get('sessionLifetime')) > SESSION_LIFETIME) {
+                self::destroy();
+            }
         }
     }
 
     private static function regenerate(): void
     {
-        if (self::missing('regenerateSession')) {
-            self::put('regenerateSession', time());
-        }
-        if ((time() - self::get('regenerateSession')) > REGENERATE_SESSION) {
-            session_regenerate_id(true);
-            self::put('regenerateSession', time());
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            if (self::missing('regenerateSession')) {
+                self::put('regenerateSession', time());
+            }
+            if ((time() - self::get('regenerateSession')) > REGENERATE_SESSION) {
+                session_regenerate_id(true);
+                self::put('regenerateSession', time());
+            }
         }
     }
 
@@ -93,6 +97,7 @@ class Session
         if (session_status() === PHP_SESSION_ACTIVE) {
             session_unset();
             session_destroy();
+            self::$tree->setTree();
         }
     }
 }

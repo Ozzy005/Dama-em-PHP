@@ -14,14 +14,14 @@ use Exception;
 
 class Regras extends Base
 {
-    public function aplicar(): void
+    public function validar(): void
     {
         $this->turnoDeQuem();
-        if ($this->aplicarLeiDaMaioria()) {return;}
+        if ($this->leiDaMaioria()) {return;}
         $this->movimento();
     }
 
-    public function turnoDeQuem(): void
+    private function turnoDeQuem(): void
     {
         $historico = $this->dados->historico;
         $ultimoMovimento = $historico->getUltimoMovimento();
@@ -50,7 +50,7 @@ class Regras extends Base
             $l = $lOrigem + $subirCasa[$n][0];
             $c = $cOrigem + $subirCasa[$n][1];
             if (
-                $this->checarLimitesDaMargemDoTabuleiro($l, $c) &&
+                $this->limitesDaMargemDoTabuleiro($l, $c) &&
                 $tabuleiro->colunaEmpty($l, $c) && $l === $lDst && $c === $cDst
             ) {
                 if ($direcao[$jogador->id][$pAtc->cor]) {
@@ -62,7 +62,7 @@ class Regras extends Base
         throw new Exception('Movimento Inválido');
     }
 
-    private function mapearOpcoesDeCapturasInternas(Peca $pAtc, int $lOrigem, int $cOrigem): array
+    private function opcoesDeCapturasInternas(Peca $pAtc, int $lOrigem, int $cOrigem): array
     {
         $tabuleiro = $this->dados->tabuleiro;
         $jogador = $this->dados->jogador;
@@ -89,7 +89,7 @@ class Regras extends Base
                 $cDst = $cOrigem + $subirCasa[$i][3];
 
                 if (
-                    $this->checarLimitesDaMargemDoTabuleiro($lMeio, $cMeio, $lDst, $cDst) &&
+                    $this->limitesDaMargemDoTabuleiro($lMeio, $cMeio, $lDst, $cDst) &&
                     $tabuleiro->colunaNotEmpty($lMeio, $cMeio) && $tabuleiro->colunaEmpty($lDst, $cDst)
                 ) {
                     $pecaAlvo = $tabuleiro->getPeca($lMeio, $cMeio);
@@ -130,9 +130,9 @@ class Regras extends Base
         return $opcoesMapeadas;
     }
 
-    private function aplicarLeiDaMaioria(): bool
+    private function leiDaMaioria(): bool
     {
-        $opcoesMapeadas = $this->mapearOpcoesDeCapturasExternas();
+        $opcoesMapeadas = $this->opcoesDeCapturasExternas();
         if (!$opcoesMapeadas) {
             return false;
         }
@@ -167,7 +167,7 @@ class Regras extends Base
         throw new Exception("Movimento Inválido");
     }
 
-    private function mapearOpcoesDeCapturasExternas(): array
+    private function opcoesDeCapturasExternas(): array
     {
         $tabuleiro = $this->dados->tabuleiro->getTabuleiro();
         $pAtc = $this->dados->pecaAtacante;
@@ -176,7 +176,7 @@ class Regras extends Base
         foreach ($tabuleiro as $linha => $value) {
             foreach ($value as $coluna => $peca) {
                 if ($peca instanceof Peca && $peca->cor === $pAtc->cor) {
-                    $opcoesMapeadas = array_merge($opcoesMapeadas, $this->mapearOpcoesDeCapturasInternas($peca, $linha, $coluna));
+                    $opcoesMapeadas = array_merge($opcoesMapeadas, $this->opcoesDeCapturasInternas($peca, $linha, $coluna));
                 }
             }
         }
@@ -184,7 +184,7 @@ class Regras extends Base
         return $opcoesMapeadas;
     }
 
-    private function checarLimitesDaMargemDoTabuleiro(int $l1, int $c1, int|null $l2 = null, int|null $c2 = null): bool
+    private function limitesDaMargemDoTabuleiro(int $l1, int $c1, int|null $l2 = null, int|null $c2 = null): bool
     {
         $checar = function ($l1, $c1, $l2 = null, $c2 = null) use (&$checar) {
             if ($l1 >= 1 && $l1 <= 8 && $c1 >= 97 && $c1 <= 104) {

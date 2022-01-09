@@ -37,6 +37,11 @@ class Tree
         return $this->array;
     }
 
+    public function setTree($arr = [])
+    {
+        $this->array = $arr;
+    }
+
     /**
      * Get tree item
      * @param   address  address of tree item. It can be written:

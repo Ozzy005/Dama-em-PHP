@@ -71,7 +71,7 @@ class Tabuleiro extends Base
             $this->dados->colunaDestino = $cDestino;
 
             $regras = new Regras;
-            $regras->aplicar();
+            $regras->validar();
 
             $movimento = new Movimento;
             $movimento->fazer();
