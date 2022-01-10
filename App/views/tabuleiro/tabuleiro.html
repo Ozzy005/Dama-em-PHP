@@ -1,107 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dama em PHP</title>
-    <link rel="stylesheet" type="text/css" href="/assets/css/reset-style.css" />
-    <link rel="stylesheet" type="text/css" href="/assets/css/tabuleiro.css" />
-    <link rel="shortcut icon" href="/assets/img/favicon.ico" />
-  </head>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Dama em PHP</title>
+		<link rel="stylesheet" type="text/css" href="/assets/css/reset-style.css" />
+		<link rel="stylesheet" type="text/css" href="/assets/css/tabuleiro.css" />
+		<link rel="shortcut icon" href="/assets/img/favicon.ico" />
+	</head>
 
-  <body>
-    <div class="principal">
-      <div class="painel-esquerdo">
-        <div class="controle">
-          <form action="/dama-em-php/mover" method="POST" id="form-mover" enctype="application/x-www-form-urlencoded">
-            <input type="text" name="pecaAtacanteId" id="pecaAtacanteId" />
-            <input type="text" name="linhaOrigem" id="linhaOrigem" />
-            <input type="text" name="colunaOrigem" id="colunaOrigem" />
-            <input type="text" name="linhaDestino" id="linhaDestino" />
-            <input type="text" name="colunaDestino" id="colunaDestino" />
-            <button type="submit">MOVER</button>
-          </form>
-          <form action="/home/reiniciar">
-            <button type="submit">REINICIAR</button>
-          </form>
-        </div>
-        <div class="informacoes">
-          <div class="turno">Turno: {{dados.turno.getTurno}}</div>
-          <div class="jogador-atual-esquerdo">Jogador: {{dados.jogadorAtualEsquerdo}}</div>
-          {% if dados.alerta %}
-          <div class="alerta">{{dados.alerta}}</div>
-          {% endif %}
-        </div>
-      </div>
-      <div class="tabuleiro">
-        {% for chave, linha in dados.tabuleiro.getTabuleiro %}
-        <div class="linha" id="{{chave}}">
-          <div class="coluna-indicativa">
-            <div>{{chave}}</div>
-          </div>
-          {% for coluna, peca in linha %}
-          <div class="coluna{% if dados.tabuleiro.colunaIsBranca(chave, coluna) %} coluna-branca{% else %} coluna-preta{% endif %}" id="{{coluna}}">
-            {%- if peca -%}
-            <div class="peca{% if peca.isBranca() %} pedra-branca{% else %} pedra-preta{% endif %}" id="{{peca.id}}"></div>
-            {%- endif -%}
-          </div>
-          {% endfor %}
-        </div>
-        {% endfor %}
-        <div class="linha" id="0">
-          <div class="coluna-indicativa">
-            <div>0</div>
-          </div>
-          <div class="coluna-indicativa">
-            <div>1</div>
-          </div>
-          <div class="coluna-indicativa">
-            <div>2</div>
-          </div>
-          <div class="coluna-indicativa">
-            <div>3</div>
-          </div>
-          <div class="coluna-indicativa">
-            <div>4</div>
-          </div>
-          <div class="coluna-indicativa">
-            <div>5</div>
-          </div>
-          <div class="coluna-indicativa">
-            <div>6</div>
-          </div>
-          <div class="coluna-indicativa">
-            <div>7</div>
-          </div>
-          <div class="coluna-indicativa">
-            <div>8</div>
-          </div>
-        </div>
-      </div>
-      <div class="painel-direito">
-        <div class="jogador-superior-direito {{dados.jogadorAtualSuperiorDireito}}">
-          <span>J</span>
-          <span>O</span>
-          <span>G</span>
-          <span>A</span>
-          <span>D</span>
-          <span>O</span>
-          <span>R</span>
-          <span>{{dados.jogadorSuperiorDireito}}</span>
-        </div>
-        <div class="jogador-inferior-direito {{dados.jogadorAtualInferiorDireito}}">
-          <span>J</span>
-          <span>O</span>
-          <span>G</span>
-          <span>A</span>
-          <span>D</span>
-          <span>O</span>
-          <span>R</span>
-          <span>{{dados.jogadorInferiorDireito}}</span>
-        </div>
-      </div>
-    </div>
-    <script type="text/javascript" src="/assets/js/tabuleiro.js"></script>
-  </body>
+	<body>
+		<div class="principal">
+			<div class="painel-esquerdo">
+				<div class="controle">
+					<form action="/dama-em-php/mover" method="POST" id="form-mover" enctype="application/x-www-form-urlencoded">
+						<input type="text" name="pecaAtacanteId" id="pecaAtacanteId" />
+						<input type="text" name="linhaOrigem" id="linhaOrigem" />
+						<input type="text" name="colunaOrigem" id="colunaOrigem" />
+						<input type="text" name="linhaDestino" id="linhaDestino" />
+						<input type="text" name="colunaDestino" id="colunaDestino" />
+						<button type="submit">MOVER</button>
+					</form>
+					<form action="/home/reiniciar">
+						<button type="submit">REINICIAR</button>
+					</form>
+				</div>
+				<div class="informacoes">
+					<div class="turno">Turno: {{dados.turno.getTurno}}</div>
+					<div class="jogador-atual-esquerdo">Jogador: {{dados.jogadorAtualEsquerdo}}</div>
+					{% if dados.alerta %}
+					    <div class="alerta">{{dados.alerta}}</div>
+					{% endif %}
+				</div>
+			</div>
+			<div class="tabuleiro">
+				{% for chave, linha in dados.tabuleiro.getTabuleiro %}
+				    <div class="linha" id="{{chave}}">
+				    	<div class="coluna-indicativa">
+				    		<div>{{chave}}</div>
+				    	</div>
+				    	{% for coluna, peca in linha %}
+				    	    <div class="coluna{% if dados.tabuleiro.colunaIsBranca(chave, coluna) %} coluna-branca{% else %} coluna-preta{% endif %}" id="{{coluna}}">
+				    	    	{%- if peca -%}
+                                        <div class="peca{% if peca.isBranca() %} peca-branca{% else %} peca-preta{% endif %}" id="{{peca.id}}">
+                                        {%- if peca.isDama() -%}
+                                            <div class="dama"></div>
+				    	    	        {%- endif -%}
+                                        </div>
+                                {%- endif -%}
+				    	    </div>
+				    	{% endfor %}
+				    </div>
+				{% endfor %}
+				<div class="linha" id="0">
+					<div class="coluna-indicativa">
+						<div>0</div>
+					</div>
+					<div class="coluna-indicativa">
+						<div>1</div>
+					</div>
+					<div class="coluna-indicativa">
+						<div>2</div>
+					</div>
+					<div class="coluna-indicativa">
+						<div>3</div>
+					</div>
+					<div class="coluna-indicativa">
+						<div>4</div>
+					</div>
+					<div class="coluna-indicativa">
+						<div>5</div>
+					</div>
+					<div class="coluna-indicativa">
+						<div>6</div>
+					</div>
+					<div class="coluna-indicativa">
+						<div>7</div>
+					</div>
+					<div class="coluna-indicativa">
+						<div>8</div>
+					</div>
+				</div>
+			</div>
+			<div class="painel-direito">
+				<div class="jogador-superior-direito {{dados.jogadorAtualSuperiorDireito}}">
+					<span>J</span>
+					<span>O</span>
+					<span>G</span>
+					<span>A</span>
+					<span>D</span>
+					<span>O</span>
+					<span>R</span>
+					<span>{{dados.jogadorSuperiorDireito}}</span>
+				</div>
+				<div class="jogador-inferior-direito {{dados.jogadorAtualInferiorDireito}}">
+					<span>J</span>
+					<span>O</span>
+					<span>G</span>
+					<span>A</span>
+					<span>D</span>
+					<span>O</span>
+					<span>R</span>
+					<span>{{dados.jogadorInferiorDireito}}</span>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="/assets/js/tabuleiro.js"></script>
+	</body>
 </html>

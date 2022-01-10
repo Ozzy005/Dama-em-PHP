@@ -17,8 +17,36 @@ class Regras extends Base
     public function validar(): void
     {
         $this->turnoDeQuem();
-        if ($this->leiDaMaioria()) {return;}
+        $this->virarDama();
+        if ($this->leiDaMaioria()) {
+            return;
+        }
         $this->movimento();
+    }
+
+    private function virarDama(): void
+    {
+        $pAtc = $this->dados->pecaAtacante;
+        $jogador = $this->dados->jogador;
+        $lDst = $this->dados->linhaDestino;
+
+        if ($jogador->isBranco() && $pAtc->isBranca()) {
+            if ($lDst === 8) {
+                $this->dados->virarDama = true;
+            }
+        } elseif ($jogador->isBranco() && $pAtc->isPreta()) {
+            if ($lDst === 1) {
+                $this->dados->virarDama = true;
+            }
+        } elseif ($jogador->isPreto() && $pAtc->isPreta()) {
+            if ($lDst === 8) {
+                $this->dados->virarDama = true;
+            }
+        } elseif ($jogador->isPreto() && $pAtc->isBranca()) {
+            if ($lDst === 1) {
+                $this->dados->virarDama = true;
+            }
+        }
     }
 
     private function turnoDeQuem(): void
@@ -93,7 +121,7 @@ class Regras extends Base
                     $tabuleiro->colunaNotEmpty($lMeio, $cMeio) && $tabuleiro->colunaEmpty($lDst, $cDst)
                 ) {
                     $pecaAlvo = $tabuleiro->getPeca($lMeio, $cMeio);
-                    
+
                     if (!in_array($pecaAlvo, $pecasAlvosIgnoradas, true) && $pAtc->cor !== $pecaAlvo->cor) {
                         if ($nivelDeProfundidade < $nivelMaximoDeProfundidade) {
                             ++$opcao;

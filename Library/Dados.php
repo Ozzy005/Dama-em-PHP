@@ -31,6 +31,7 @@ class Dados
     public string $tipoMovimento;
     public array $pecasAlvos;
     public string $alerta;
+    public bool $virarDama = false;
 
     private function __construct()
     {

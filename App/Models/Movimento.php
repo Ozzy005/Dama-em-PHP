@@ -9,6 +9,7 @@
 namespace App\Models;
 
 use Library\Base;
+use Components\Peca;
 
 class Movimento extends Base
 {
@@ -35,6 +36,11 @@ class Movimento extends Base
         $lDst = $this->dados->linhaDestino;
         $cDst = $this->dados->colunaDestino;
         $tipoMovimento = $this->dados->tipoMovimento;
+
+        if ($this->dados->virarDama) {
+            $tabuleiro->forgetPeca($lOrigem, $cOrigem);
+            $tabuleiro->putPeca($lOrigem, $cOrigem, new Peca($pAtc->id, 4, $pAtc->cor));            
+        }
 
         $tabuleiro->deslocarPeca($lOrigem, $cOrigem, $lDst, $cDst);
         $movimento = [
@@ -65,6 +71,10 @@ class Movimento extends Base
         $pecasAlvos = $this->dados->pecasAlvos;
         $tipoMovimento = $this->dados->tipoMovimento;
 
+        if ($this->dados->virarDama) {
+            $tabuleiro->forgetPeca($lOrigem, $cOrigem);
+            $tabuleiro->putPeca($lOrigem, $cOrigem, new Peca($pAtc->id, 4, $pAtc->cor));            
+        }
         if ($lOrigem !== $lDst && $cOrigem !== $cDst) {
             $tabuleiro->deslocarPeca($lOrigem, $cOrigem, $lDst, $cDst);
         }

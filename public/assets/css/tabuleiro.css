@@ -61,6 +61,7 @@ body, form, .coluna-indicativa, .turno, .jogador-atual-esquerdo, .alerta, .jogad
 
 .coluna-preta {
     background-color: rgb(102, 51, 0);
+    position: relative;
 }
 
 .coluna-branca {
@@ -72,17 +73,26 @@ body, form, .coluna-indicativa, .turno, .jogador-atual-esquerdo, .alerta, .jogad
     grid-row: 2/3;
     border-radius: 50%;
     cursor: pointer;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    position: relative;
 }
 
-.pedra-preta {
+.peca-preta {
     background-image: linear-gradient(rgb(38, 38, 38), rgb(0, 0, 0));
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.pedra-branca {
+.peca-branca {
     background-image: linear-gradient(rgb(255, 255, 255), rgb(153, 153, 153));
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
+}
+
+.dama {
+    background-image: url(/assets/img/coroa.png);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 /*-----------------------------------------------------*/

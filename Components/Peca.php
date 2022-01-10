@@ -29,21 +29,21 @@ class Peca
 
     public function isPreta(): bool
     {
-        return $this->cor === 2;
+        return $this->cor === 2 ? true : false;
     }
 
     public function isBranca(): bool
     {
-        return $this->cor === 1;
+        return $this->cor === 1 ? true : false;
     }
 
     public function isPedra(): bool
     {
-        return $this->tipo === 3;
+        return $this->tipo === 3 ? true : false;
     }
 
     public function isDama(): bool
     {
-        return $this->tipo === 4;
+        return $this->tipo === 4 ? true : false;
     }
 }
