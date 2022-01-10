@@ -68,7 +68,7 @@ Agora é possível acessa-lo através da URL localhost:8000
 - [x] 3. A grande diagonal (escura), deve ficar sempre à esquerda de cada jogador. 
 - [x] 4. O lance inicial cabe sempre ao jogador que estiver com as peças claras. 
 - [x] 5. A pedra anda só para frente, uma casa de cada vez. 
-- [ ] 6. Quando a pedra atinge a última linha do tabuleiro, concluindo o lance na casas de coroação, ela é promovida à Dama. 
+- [x] 6. Quando a pedra atinge a última linha do tabuleiro, concluindo o lance na casas de coroação, ela é promovida à Dama. 
 - [ ] 7. A Dama é uma peça de movimentos mais amplos. 
 - [ ] 8. A Dama anda para frente e para trás, quantas casas quiser. 
 - [x] 9. A captura é obrigatória. Não existe sopro. Duas ou mais peças juntas, na mesma diagonal não podem ser capturadas. 
