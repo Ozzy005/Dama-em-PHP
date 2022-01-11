@@ -62,20 +62,20 @@ Agora é possível acessa-lo através da URL localhost:8000
 - [ ] Opção escolher um nome para jogador 1 e jogador 2.
 
 
-### RESUMO DAS REGRAS
+### RESUMO DAS REGRAS IMPLEMENTADAS
 - [x] 1. Objetivo: imobilizar ou capturar todas as peças do adversário.
-- [x] 2. O Jogo de Damas é praticado em um tabuleiro de 64 casas ou de 100 casas, claras e escuras. 
+- [x] 2. O Jogo de Damas é praticado em um tabuleiro de 64 casas, claras e escuras. 
 - [x] 3. A grande diagonal (escura), deve ficar sempre à esquerda de cada jogador. 
 - [x] 4. O lance inicial cabe sempre ao jogador que estiver com as peças claras. 
 - [x] 5. A pedra anda só para frente, uma casa de cada vez. 
 - [x] 6. Quando a pedra atinge a última linha do tabuleiro, concluindo o lance na casas de coroação, ela é promovida à Dama. 
-- [ ] 7. A Dama é uma peça de movimentos mais amplos. 
-- [ ] 8. A Dama anda para frente e para trás, quantas casas quiser. 
+- [ ] 7. A Dama é uma peça de movimentos mais amplos.
+- [x] 8. A Dama anda para frente e para trás, quantas casas quiser. 
 - [x] 9. A captura é obrigatória. Não existe sopro. Duas ou mais peças juntas, na mesma diagonal não podem ser capturadas. 
-- [ ] 10. A pedra captura a Dama e a Dama captura a pedra. Pedra e Dama têm o mesmo valor para capturarem ou serem 
+- [x] 10. A pedra captura a Dama e a Dama captura a pedra. Pedra e Dama têm o mesmo valor para capturarem ou serem 
 capturadas. 
-- [x] 11. A pedra pode capturar, tanto para frente, como para trás, uma ou mais peças. 
-- [ ] 12. A Dama pode capturar, tanto para frente, como para trás, uma ou mais peças. 
+- [x] 11. A pedra pode capturar, tanto para frente, como para trás, uma ou mais peças.
+- [x] 12. A Dama pode capturar, tanto para frente, como para trás, uma ou mais peças.
 - [x] 13. Se no mesmo lance se apresentar mais de uma possibilidade de capturar peças, é obrigatório executar o lance que 
 capture o maior número de peças (Lei da Maioria). 
 - [x] 14.  A  pedra  que  durante  o  lance  de  captura  de  várias  peças,  apenas  passe  por  qualquer  casa  de  coroação,  sem  aí 

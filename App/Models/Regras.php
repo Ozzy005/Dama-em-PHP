@@ -29,23 +29,10 @@ class Regras extends Base
         $pAtc = $this->dados->pecaAtacante;
         $jogador = $this->dados->jogador;
         $lDst = $this->dados->linhaDestino;
+        $direcao = [1 => [1 => $lDst === 8, 2 => $lDst === 1], 2 => [1 => $lDst === 1, 2 => $lDst === 8]];
 
-        if ($jogador->isBranco() && $pAtc->isBranca()) {
-            if ($lDst === 8) {
-                $this->dados->virarDama = true;
-            }
-        } elseif ($jogador->isBranco() && $pAtc->isPreta()) {
-            if ($lDst === 1) {
-                $this->dados->virarDama = true;
-            }
-        } elseif ($jogador->isPreto() && $pAtc->isPreta()) {
-            if ($lDst === 8) {
-                $this->dados->virarDama = true;
-            }
-        } elseif ($jogador->isPreto() && $pAtc->isBranca()) {
-            if ($lDst === 1) {
-                $this->dados->virarDama = true;
-            }
+        if ($pAtc->isPedra() && $direcao[$jogador->id][$pAtc->cor]) {
+            $this->dados->virarDama = true;
         }
     }
 
@@ -62,7 +49,52 @@ class Regras extends Base
         }
     }
 
-    private function movimento(): bool
+    private function movimento()
+    {
+        $pAtc = $this->dados->pecaAtacante;
+        if ($pAtc->isPedra()) {
+            $this->movimentoPedra();
+        } else {
+            $this->movimentoDama();
+        }
+    }
+
+    private function movimentoDama(): bool
+    {
+        $tabuleiro = $this->dados->tabuleiro;
+        $lOrigem = $this->dados->linhaOrigem;
+        $cOrigem = $this->dados->colunaOrigem;
+        $lDst = $this->dados->linhaDestino;
+        $cDst = $this->dados->colunaDestino;
+        $subirCasa = [[1, -1], [1, 1], [-1, -1], [-1, +1]];
+
+        $movimento = function ($i, $lBase, $cBase) use ($tabuleiro, $lDst, $cDst, $subirCasa, &$movimento) {
+            $l = $lBase + $subirCasa[$i][0];
+            $c = $cBase + $subirCasa[$i][1];
+
+            if ($this->limitesDaMargemDoTabuleiro($l, $c) && $tabuleiro->colunaEmpty($l, $c)) {
+                if ($l === $lDst && $c === $cDst) {
+                    $this->dados->tipoMovimento = 'mover';
+                    return true;
+                }
+                if ($movimento($i, $l, $c)) {
+                    return true;
+                }
+            }
+            
+            return false;
+        };
+
+        for ($i = 0; $i <= 3; ++$i) {
+            if ($movimento($i, $lOrigem, $cOrigem)) {
+                return true;
+            }
+        }
+
+        throw new Exception("Movimento Inválido");
+    }
+
+    private function movimentoPedra(): bool
     {
         $jogador = $this->dados->jogador;
         $tabuleiro = $this->dados->tabuleiro;
@@ -77,16 +109,18 @@ class Regras extends Base
         for ($n = 0; $n <= 3; ++$n) {
             $l = $lOrigem + $subirCasa[$n][0];
             $c = $cOrigem + $subirCasa[$n][1];
+
             if (
                 $this->limitesDaMargemDoTabuleiro($l, $c) &&
                 $tabuleiro->colunaEmpty($l, $c) && $l === $lDst && $c === $cDst
             ) {
                 if ($direcao[$jogador->id][$pAtc->cor]) {
                     $this->dados->tipoMovimento = 'mover';
+                    return true;
                 }
-                return true;
             }
         }
+
         throw new Exception('Movimento Inválido');
     }
 
